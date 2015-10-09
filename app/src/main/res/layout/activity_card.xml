@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_fl"
+    android:layout_width="140dp"
+    android:layout_height="140dp"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="13" >
+
+    <ImageView
+        android:id="@+id/card_bg"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/profile" />
+
+    <TextView
+        android:id="@+id/card_title"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal"
+        android:text="快速配料"
+        android:textSize="18sp" >
+    </TextView>
+
+</LinearLayout>

@@ -1,0 +1,151 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.swings.night_sec.ActivityRu">
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/include_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_text_ru_bianma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/bianma"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_text_ru_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/tiaoma"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+
+        <EditText
+            android:id="@+id/edit_text_ru_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/mingcheng"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_text_ru_fukuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/fukuan"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_text_ru_kezhong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/kezhong"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_text_ru_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/zhongliang"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+
+        <EditText
+            android:id="@+id/edit_text_ru_length"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/changdu"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+
+        <EditText
+            android:id="@+id/edit_text_ru_cjbz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/cjbz"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+
+        <EditText
+            android:id="@+id/edit_text_ru_shijian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:clickable="false"
+            android:drawableLeft="@mipmap/shijian"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+        <EditText
+
+            android:id="@+id/edit_text_ru_yonghu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:drawableLeft="@mipmap/yonghu"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ru_ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="1px"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ru_btn_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_cancle" />
+
+        <Button
+            android:id="@+id/ru_btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_ok" />
+    </LinearLayout>
+</RelativeLayout>

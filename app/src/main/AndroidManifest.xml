@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.swings.night_sec" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name="org.litepal.LitePalApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/icon_logo"
+        android:label="@string/app_name"
+        android:theme="@style/DrawerLayoutTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".Splash"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about_app" />
+        <activity
+            android:name=".ActivityRu"
+            android:label="@string/title_ru"
+            android:theme="@style/DrawerLayoutTheme" />
+        <activity
+            android:name=".ActivityOut"
+            android:label="快速出库"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".ActivityOut_Second"
+            android:label="快速出库"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".ActivityInfo"
+            android:label="信息查询"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".ActivityPan"
+            android:label="产品盘点"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/action_settings" />
+        <activity
+            android:name=".Activity_pan_detail"
+            android:label="@string/title_activity_activity_pan_detail" />
+        <activity
+            android:name=".ActivityRu_before"
+            android:label="@string/title_activity_activity_ru_before"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".ActivityIp"
+            android:label="@string/title_activity_activity_ip" >
+        </activity>
+        <activity
+            android:name=".Activity_Ru_off_list"
+            android:label="@string/title_activity_activity__ru_off_list" >
+        </activity>
+        <activity
+            android:name=".Activity_Ru_off_detail"
+            android:label="@string/title_activity_activity__ru_off_detail" >
+        </activity>
+        <activity
+            android:name=".ActivityOut_detail"
+            android:label="@string/title_activity_activity_out_detail" >
+        </activity>
+        <activity
+            android:name=".Ruku"
+            android:label="@string/title_activity_ruku" >
+        </activity>
+        <activity
+            android:name=".Tuiku"
+            android:label="@string/title_activity_tuiku" >
+        </activity>
+        <activity
+            android:name=".Tuiku_Detail"
+            android:label="@string/title_activity_tuiku__detail" >
+        </activity>
+    </application>
+
+</manifest>

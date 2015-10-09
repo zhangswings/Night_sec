@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.swings.night_sec.ActivityRu_before">
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/include_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/before_ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/out_ll_bottom"
+        android:layout_below="@id/appbar"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/input_cangku_info"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:spinnerMode="dialog"
+            android:id="@+id/cangku_spinner"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/cangku_info"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/banzu_ll"
+            android:entries="@array/chejian"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/banzu_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/out_ll_bottom"
+        android:layout_below="@id/before_ll_content"
+        android:layout_margin="16dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="请选择班组编号"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:spinnerMode="dialog"
+            android:id="@+id/banzu_spinner"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/banzu_info"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/banzu_ll"
+            android:entries="@array/banzu"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/before_ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/before_btn_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_cancle" />
+
+        <Button
+            android:id="@+id/before_btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btn_ok" />
+    </LinearLayout>
+
+
+</RelativeLayout>

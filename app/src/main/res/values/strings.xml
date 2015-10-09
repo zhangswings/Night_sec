@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">康华纸业</string>
+    <string name="banzu_info">选择班组</string>
+    <string name="cangku_info">选择仓库</string>
+    <string name="copyright">Kanghua Paper Co.,LTD ©Copyright 2015</string>
+    <string name="title_login">用户登陆</string>
+    <string name="title_ru">快速入库</string>
+    <string name="title_out">快速出库</string>
+    <string name="title_ghs">请选择客户</string>
+    <string name="title_ruku">请输入入库仓库</string>
+    <string name="title_pan">产品盘点</string>
+    <string name="title_info">信息查询</string>
+    <string name="hint_username">用户名</string>
+    <string name="hint_password">密码</string>
+    <string name="button_login">登 录</string>
+    <string name="button_cancle">取 消</string>
+    <string name="kanghua">郑州康华纸业有限公司</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">系统设置</string>
+    <string name="action_about">关于应用</string>
+    <string name="title_activity_splash">动画页</string>
+    <string name="title_activity_login">用户登录</string>
+    <string name="navigation_index">我的主页</string>
+    <string name="navigation_book">产品盘点</string>
+    <string name="navigation_example">快速入库</string>
+    <string name="navigation_my_blog">快速出库</string>
+    <string name="navigation_about">信息查询</string>
+    <string name="navigation_tuiku">产品退库</string>
+
+
+    <string name="btn_ok">确认</string>
+    <string name="btn_back">返回</string>
+    <string name="btn_cancle">取消</string>
+    <string name="press_again_exit_app">再按一次退出程序</string>
+
+
+    <string name="title_book">书籍</string>
+
+    <string name="hint_info">请在列表选择供应商信息</string>
+    <string name="hint_info_info">请输入查询的产品编号</string>
+    <string name="hint_info_out">请输入出库单号...</string>
+    <string name="hint_info_pan">请输入盘点单号</string>
+    <string name="about_app">版本信息</string>
+    <string name="login_info">正在登录，请稍后...</string>
+
+    <string name="search">搜索</string>
+    <string name="input_hint">请输入关键字</string>
+    <string name="input_cangku_info">请选择仓库编号</string>
+    <string name="default_search_keyword">花千骨</string>
+
+    <string name="title_activity_activity_ru">快速入库</string>
+    <string name="title_activity_activity_pan_detail">盘点详情</string>
+    <string name="title_activity_activity_ru_before">入库仓库</string>
+    <string name="title_activity_activity_ip">ActivityIp</string>
+    <string name="title_activity_activity__ru_off_list">Activity_Ru_off_list</string>
+    <string name="title_activity_activity__ru_off_detail">Activity_Ru_off_detail</string>
+    <string name="title_activity_activity_out_detail">ActivityOut_detail</string>
+    <string name="title_activity_ruku">Ruku</string>
+    <string name="title_activity_tuiku">Tuiku</string>
+    <string name="title_activity_tuiku__detail">Tuiku_Detail</string>
+</resources>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setting_layout_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".MainWeatherActivity" >
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/include_toolbar" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbarStyle="outsideOverlay" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff" >
+
+            <TextView
+                android:id="@+id/content_setting1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingTop="12dip"
+                android:text="系统设置"
+                android:textColor="#000000"
+                android:textSize="14.5dip" />
+
+            <View
+                android:id="@+id/setting_sting1"
+                android:layout_width="340dip"
+                android:layout_height="0.5dip"
+                android:layout_below="@id/content_setting1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dip"
+                android:background="#606060" />
+
+            <LinearLayout
+                android:id="@+id/setting_linear1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setting_sting1"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:id="@+id/setting_view_1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="10dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="服务器设置"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_view_4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="20dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="保存登录信息"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+                    <TextView
+                        android:id="@+id/text_isSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dip"
+                        android:text="否"
+                        android:textColor="#ff311b"
+                        android:textSize="17dp"
+                         />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/setting_layout_main_body2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/setting_linear1"
+                android:layout_marginTop="62dip"
+                android:background="#ffffff" >
+
+                <TextView
+                    android:id="@+id/content_setting2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:text="其他设置"
+                    android:textColor="#000000"
+                    android:textSize="14.5dip" />
+
+                <View
+                    android:id="@+id/setting_sting2"
+                    android:layout_width="340dip"
+                    android:layout_height="0.5dip"
+                    android:layout_below="@id/content_setting2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="3dip"
+                    android:background="#606060" />
+            </RelativeLayout>
+
+            <LinearLayout
+                
+                android:id="@+id/setting_linear2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setting_layout_main_body2"
+                android:orientation="vertical" >
+
+                <RelativeLayout  android:visibility="gone"
+                    android:id="@+id/setting_view_8"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="10dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="新手导航"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_view_9"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="20dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="意见反馈"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_view_10"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="20dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="版本更新"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_view_12"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginBottom="20dip"
+                    android:layout_marginTop="20dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="版本信息"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
