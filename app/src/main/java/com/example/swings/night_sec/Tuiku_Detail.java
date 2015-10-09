@@ -138,17 +138,17 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                 params.put("content", content_str);
                                                 params.put("detail", detail_str);
                                                 //如果选择"04"仓库，即为散货，其他仓库为单货
-                                                params.put("rtype", ck.equals("04")?"3":"2");
+                                                params.put("rtype", ck.equals("04") ? "3" : "2");
                                                 Log.d("zhang", content_str);
-                                                Log.d("zhang",detail_str);
+                                                Log.d("zhang", detail_str);
                                                 progressDialog.setTitle("上传中...");
                                                 progressDialog.setMessage("正在上传数据，请稍后...");
                                                 progressDialog.setCancelable(true);
                                                 progressDialog.show();
                                                 //设置重复请求次数，间隔
-                                                client.setMaxRetriesAndTimeout(3, 2000);
+                                                client.setMaxRetriesAndTimeout(5, 3000);
+                                                client.setTimeout(3000);
                                                 //设置超时时间，默认10s
-                                                client.setTimeout(2 * 1000);
                                                 client.post(Tuiku_Detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/AddReturnStore", params, new AsyncHttpResponseHandler() {
                                                     @Override
                                                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

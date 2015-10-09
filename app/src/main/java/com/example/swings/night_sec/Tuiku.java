@@ -82,17 +82,9 @@ public class Tuiku extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        getSupportActionBar()
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-                .
-
-                        setHomeButtonEnabled(true);
-
-        getSupportActionBar()
-
-                .
-
-                        setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
 
@@ -104,11 +96,9 @@ public class Tuiku extends AppCompatActivity {
                                              }
 
         );
-        client = new
-
-                AsyncHttpClient();
+        client = new AsyncHttpClient();
         //设置超时
-        client.setMaxRetriesAndTimeout(5, 2000);
+        client.setMaxRetriesAndTimeout(5, 3000);
         client.setTimeout(3000);
         lists = new ArrayList<Map<String, String>>();
 

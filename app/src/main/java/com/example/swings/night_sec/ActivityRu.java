@@ -99,9 +99,9 @@ public class ActivityRu extends AppCompatActivity {
         ButterKnife.inject(this);
         client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-        client.setMaxRetriesAndTimeout(3, 2000);
+        client.setMaxRetriesAndTimeout(5, 3000);
+        client.setTimeout(3000);
         //设置超时时间，默认10s
-        client.setTimeout(2 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         // 初始化振动器
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
