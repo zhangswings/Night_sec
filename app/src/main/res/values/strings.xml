@@ -17,6 +17,7 @@
     <string name="kanghua">郑州康华纸业有限公司</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">系统设置</string>
+    <string name="action_ruku_list">已扫描列表</string>
     <string name="action_about">关于应用</string>
     <string name="title_activity_splash">动画页</string>
     <string name="title_activity_login">用户登录</string>
@@ -58,4 +59,5 @@
     <string name="title_activity_ruku">Ruku</string>
     <string name="title_activity_tuiku">Tuiku</string>
     <string name="title_activity_tuiku__detail">Tuiku_Detail</string>
+    <string name="title_activity_ruku__detail">Ruku_Detail</string>
 </resources>

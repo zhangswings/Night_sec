@@ -36,6 +36,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -219,10 +220,15 @@ public class Ruku extends AppCompatActivity {
                                         } catch (DocumentException de) {
                                             Log.e("de", de.toString());
                                         }
-                                        showToast(info);
-                                        clearEditText();
 
-//                                        showToast("全部上传成功!");
+                                        if ("成功".equals(info.substring(1, info.length() - 1))) {
+                                            clearEditText();
+                                            showToast("全部上传成功!");
+                                        } else {
+                                            showToast(info);
+                                        }
+
+
 
                                     }
                                 }
@@ -465,6 +471,10 @@ public class Ruku extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent();
+            intent.setClass(Ruku.this, Ruku_Detail.class);
+            intent.putExtra("ruku_list", (Serializable) lists);
+            startActivity(intent);
             return true;
         }
 

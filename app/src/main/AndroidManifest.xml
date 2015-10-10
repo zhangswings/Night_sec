@@ -90,6 +90,9 @@
             android:name=".Tuiku_Detail"
             android:label="@string/title_activity_tuiku__detail" >
         </activity>
+        <activity
+            android:name=".Ruku_Detail"
+            android:label="@string/title_activity_ruku__detail"></activity>
     </application>
 
 </manifest>
