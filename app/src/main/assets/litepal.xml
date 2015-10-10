@@ -34,5 +34,8 @@
     <list>
         <mapping class="com.example.swings.night_sec.Reader"></mapping>
         <mapping class="com.example.swings.night_sec.Papers"></mapping>
+        <mapping class="com.example.swings.night_sec.Pan"></mapping>
+        <mapping class="com.example.swings.night_sec.Bianma"></mapping>
+        <mapping class="com.example.swings.night_sec.Tiaoma"></mapping>
     </list>
 </litepal>

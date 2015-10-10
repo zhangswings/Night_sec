@@ -27,10 +27,29 @@
             android:hint="@string/hint_info_pan"
             android:singleLine="true" />
 
-        <ListView
-            android:id="@+id/pan_gongyingshang_list"
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:text="请输入仓库信息"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:spinnerMode="dialog"
+            android:id="@+id/cangku_spinner"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="50dp"
+            android:prompt="@string/cangku_info"
+            android:background="#2ecb71"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/banzu_ll"
+            android:entries="@array/chejian" />
     </LinearLayout>
 
     <LinearLayout
