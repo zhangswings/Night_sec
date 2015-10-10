@@ -59,8 +59,9 @@ public class ActivityOut extends AppCompatActivity {
     private List<Map<String, String>> lists;
     private AsyncHttpClient client;
     SharedPreferences preferences;
-    private String ghs="";
-    private String ghsname="";
+    private String ghs = "";
+    private String ghsname = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,46 +81,23 @@ public class ActivityOut extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_ghs);
-
         setSupportActionBar(toolbar);
-
-        getSupportActionBar()
-
-                .
-
-                        setHomeButtonEnabled(true);
-
-        getSupportActionBar()
-
-                .
-
-                        setDisplayHomeAsUpEnabled(true);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-
-                                             {
-                                                 @Override
-                                                 public void onClick(View view) {
-                                                     onBackPressed();
-                                                 }
-                                             }
-
-        );
-        client = new
-
-                AsyncHttpClient();
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        client = new AsyncHttpClient();
         //设置超时
         client.setMaxRetriesAndTimeout(5, 2000);
         client.setTimeout(3000);
         lists = new ArrayList<Map<String, String>>();
 
-        adapter = new
-
-                SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{
-                "name", "id"
-        }
-
-                , new int[]
+        adapter = new SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{"name", "id"
+        }, new int[]
 
                 {
                         R.id.ghs_name, R.id.ghs_id
@@ -158,7 +136,7 @@ public class ActivityOut extends AppCompatActivity {
                                     {
                                         @Override
                                         public void onClick(View v) {
-                                            if (TextUtils.isEmpty(outEditText.getText())|| ghs.length() < 1 || ghsname.length() < 1) {
+                                            if (TextUtils.isEmpty(outEditText.getText()) || ghs.length() < 1 || ghsname.length() < 1) {
                                                 outEditText.setShakeAnimation();
                                                 //设置提示
                                                 showToast("客户信息不能为空!");
@@ -175,7 +153,7 @@ public class ActivityOut extends AppCompatActivity {
 //                                                    String[] ghsxinxi = outEditText.getText().toString().trim().split("\\/");
                                                     intent.putExtra("ghs", ghs);
                                                     intent.putExtra("ghsname", ghsname);
-                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString());
+                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString().substring(0, 2));
                                                     startActivity(intent);
                                                     //清空
                                                     outEditText.setText("");
@@ -188,80 +166,78 @@ public class ActivityOut extends AppCompatActivity {
         //输入两个字符开始提示
         outEditText.setThreshold(2);
 
-        outEditText.addTextChangedListener(new
+        outEditText.addTextChangedListener(new TextWatcher() {
+                                               @Override
+                                               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                               }
 
-                                                   TextWatcher() {
-                                                       @Override
-                                                       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                                       }
-
-                                                       @Override
-                                                       public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                                           String str = s.toString();
-                                                           if (str.length() > 0) {
-                                                               RequestParams params = new RequestParams();
-                                                               params.put("Id", str);
-                                                               params.put("top", "10");
-                                                               client.cancelRequests(ActivityOut.this, true);
-                                                               client.post(ActivityOut.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetSupplier", params, new AsyncHttpResponseHandler() {
-                                                                           @Override
-                                                                           public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                               if (statusCode == 200) {
-                                                                                   String info = "";
-                                                                                   String text = new String(responseBody);
-                                                                                   Log.d("zhang", text + ">>>>>zhang");
-                                                                                   try {
-                                                                                       Document document = DocumentHelper.parseText(text);
-                                                                                       Element element = document.getRootElement();
-                                                                                       info = element.getText();
-                                                                                       Gson gson = new Gson();
-                                                                                       Type type = new TypeToken<List<KeHu>>() {
-                                                                                       }.getType();
-                                                                                       List<KeHu> keHus = gson.fromJson(info, type);
-                                                                                       String[] temp = new String[keHus.size()];
-                                                                                       if (keHus.size() > 0) {
-                                                                                           outGongyingshangList.setVisibility(View.VISIBLE);
-                                                                                           lists.clear();
-                                                                                           for (int i = 0; i < keHus.size(); i++) {
-                                                                                               temp[i] = keHus.get(i).getSupplierName();
+                                               @Override
+                                               public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                   String str = s.toString();
+                                                   if (str.length() > 0) {
+                                                       RequestParams params = new RequestParams();
+                                                       params.put("Id", str);
+                                                       params.put("top", "10");
+                                                       client.cancelRequests(ActivityOut.this, true);
+                                                       client.post(ActivityOut.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetSupplier", params, new AsyncHttpResponseHandler() {
+                                                                   @Override
+                                                                   public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                       if (statusCode == 200) {
+                                                                           String info = "";
+                                                                           String text = new String(responseBody);
+                                                                           Log.d("zhang", text + ">>>>>zhang");
+                                                                           try {
+                                                                               Document document = DocumentHelper.parseText(text);
+                                                                               Element element = document.getRootElement();
+                                                                               info = element.getText();
+                                                                               Gson gson = new Gson();
+                                                                               Type type = new TypeToken<List<KeHu>>() {
+                                                                               }.getType();
+                                                                               List<KeHu> keHus = gson.fromJson(info, type);
+                                                                               String[] temp = new String[keHus.size()];
+                                                                               if (keHus.size() > 0) {
+                                                                                   outGongyingshangList.setVisibility(View.VISIBLE);
+                                                                                   lists.clear();
+                                                                                   for (int i = 0; i < keHus.size(); i++) {
+                                                                                       temp[i] = keHus.get(i).getSupplierName();
 //                                                                                       Log.d("coun", temp[i]);
-                                                                                               Map<String, String> map = new HashMap<String, String>();
-                                                                                               map.put("name", keHus.get(i).getSupplierName());
-                                                                                               map.put("id", keHus.get(i).getSupplierId());
-                                                                                               lists.add(map);
-                                                                                           }
-                                                                                           adapter.notifyDataSetChanged();
-                                                                                       } else {
-                                                                                           showToast("所查询客户信息不存在");
-                                                                                           outGongyingshangList.setVisibility(View.GONE);
-                                                                                       }
-
-                                                                                   } catch (DocumentException de) {
-                                                                                       Log.e("de", de.toString());
+                                                                                       Map<String, String> map = new HashMap<String, String>();
+                                                                                       map.put("name", keHus.get(i).getSupplierName());
+                                                                                       map.put("id", keHus.get(i).getSupplierId());
+                                                                                       lists.add(map);
                                                                                    }
+                                                                                   adapter.notifyDataSetChanged();
+                                                                               } else {
+                                                                                   showToast("所查询客户信息不存在");
+                                                                                   outGongyingshangList.setVisibility(View.GONE);
                                                                                }
 
-                                                                           }
-
-                                                                           @Override
-                                                                           public void onFailure(
-                                                                                   int statusCode, Header[] headers,
-                                                                                   byte[] responseBody, Throwable error) {
-                                                                               showToast(error.toString());
+                                                                           } catch (DocumentException de) {
+                                                                               Log.e("de", de.toString());
                                                                            }
                                                                        }
 
-                                                               );
-                                                           } else {
-                                                               outGongyingshangList.setVisibility(View.GONE);
-                                                           }
-                                                       }
+                                                                   }
 
-                                                       @Override
-                                                       public void afterTextChanged(Editable s) {
+                                                                   @Override
+                                                                   public void onFailure(
+                                                                           int statusCode, Header[] headers,
+                                                                           byte[] responseBody, Throwable error) {
+                                                                       showToast(error.toString());
+                                                                   }
+                                                               }
 
-                                                       }
+                                                       );
+                                                   } else {
+                                                       outGongyingshangList.setVisibility(View.GONE);
                                                    }
+                                               }
+
+                                               @Override
+                                               public void afterTextChanged(Editable s) {
+
+                                               }
+                                           }
 
         );
 

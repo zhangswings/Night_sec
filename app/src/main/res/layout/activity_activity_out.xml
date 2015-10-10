@@ -62,7 +62,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:prompt="@string/cangku_info"
             android:background="#2ecb71"
             android:layout_alignParentLeft="true"

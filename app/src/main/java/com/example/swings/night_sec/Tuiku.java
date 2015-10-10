@@ -164,7 +164,7 @@ public class Tuiku extends AppCompatActivity {
 //                                                    String[] ghsxinxi = outEditText.getText().toString().trim().split("\\/");
                                                     intent.putExtra("ghs", ghs);
                                                     intent.putExtra("ghsname", ghsname);
-                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString());
+                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString().substring(0, 2));
                                                     startActivity(intent);
                                                     //清空
                                                     outEditText.setText("");

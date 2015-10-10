@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         //创建数据库
         Connector.getDatabase();
         List<Papers> papers = DataSupport.where("paper_status='0' and paper_chejian=" + "'02'").find(Papers.class);
-        showToast(papers.toString());
+//        showToast(papers.toString());
 //        Reader reader=new Reader();
 //        reader.setName("zhangq");
 //        reader.setPrice(12);

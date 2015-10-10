@@ -82,12 +82,12 @@ public class ActivityRu_before extends AppCompatActivity {
         beforeBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DataSupport.where("paper_status='0' and paper_chejian='" + cangkuSpinner.getSelectedItem().toString() + "'").find(Papers.class).isEmpty()) {
+                if (DataSupport.where("paper_status='0' and paper_chejian='" + cangkuSpinner.getSelectedItem().toString().substring(0, 2) + "'").find(Papers.class).isEmpty()) {
                     //跳转下个页面出库
                     Intent intent = new Intent(ActivityRu_before.this, Ruku.class);
                     //传入供货商信息
-                    intent.putExtra("ruku", cangkuSpinner.getSelectedItem().toString());
-                    intent.putExtra("banzu", banzuSpinner.getSelectedItem().toString());
+                    intent.putExtra("ruku", cangkuSpinner.getSelectedItem().toString().substring(0, 2));
+                    intent.putExtra("banzu", banzuSpinner.getSelectedItem().toString().substring(0, 1));
                     startActivity(intent);
                     //清空
                 } else {
@@ -100,8 +100,8 @@ public class ActivityRu_before extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(ActivityRu_before.this, Activity_Ru_off_list.class);
-                            intent.putExtra("ruku", cangkuSpinner.getSelectedItem().toString());
-                            intent.putExtra("banzu", banzuSpinner.getSelectedItem().toString());
+                            intent.putExtra("ruku", cangkuSpinner.getSelectedItem().toString().substring(0, 2));
+                            intent.putExtra("banzu", banzuSpinner.getSelectedItem().toString().substring(0, 1));
                             startActivity(intent);
                         }
                     });
