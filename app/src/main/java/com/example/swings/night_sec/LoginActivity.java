@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
         Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
         DataSupport.deleteAll(Pan.class);
+        DataSupport.deleteAll(Tiaoma.class);
+        DataSupport.deleteAll(Bianma.class);
         Log.d("zhang", DataSupport.findAll(Pan.class).toString());
         Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
         Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());

@@ -135,6 +135,11 @@ public class ActivityInfo extends AppCompatActivity {
                                         StringBuilder builder=new StringBuilder();
 
                                         builder.append("操作人：").append( materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
+                                        if("已出库".equals(materialStatus.get(0).getStatus().trim())){
+                                            builder.append("\n客户信息：").append(materialStatus.get(0).getSupplierName());
+                                            Log.d("zhang",builder.toString());
+                                        }
+
 
                                         infoText.setText(builder);
                                     } else {
@@ -235,7 +240,10 @@ public class ActivityInfo extends AppCompatActivity {
                                         builder.append("条码：").append(barcodes[1]).append("\n物料：").append(barcodes[2]).append("\n重量：").append(barcodes[5]).append("\n克重：").append(barcodes[4]).append("\n长度：").append(barcodes[6]).append("\n幅宽：").append(barcodes[3]).append("\n");
 
                                         builder.append("操作人：").append( materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
-
+                                        if("已出库".equals(materialStatus.get(0).getStatus().trim())){
+                                            builder.append("\n客户信息：").append(materialStatus.get(0).getSupplierName());
+                                            Log.d("zhang",builder.toString());
+                                        }
                                         infoText.setText(builder);
                                     } else {
                                         showToast("所查询条码信息不存在");

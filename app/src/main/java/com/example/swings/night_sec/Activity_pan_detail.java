@@ -167,6 +167,7 @@ public class Activity_pan_detail extends AppCompatActivity {
 
             }
         });
+        ruBtnOk.setText("上传");
         ruBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,21 +181,18 @@ public class Activity_pan_detail extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //获取产品信息，全部上次
                         //Todo
-                        if (!lists.isEmpty()) {
+                        if (!DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).isEmpty()) {
                             progressDialog.setTitle("上传中...");
                             progressDialog.setMessage("正在上传数据，请稍后...");
                             progressDialog.setCancelable(true);
                             progressDialog.show();
                             String builder_Detail = "";
-                            if (lists.size() == 1) {
-                                builder_Detail = lists.get(0).get("bianma") + "," + lists.get(0).get("tiaoma") + "," + lists.get(0).get("weight") + "," + lists.get(0).get("length");
-
+                            if (DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size() == 1) {
+                                builder_Detail = DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(0).getTiaoma_id();
                             } else {
                                 String detail_str = "";
-                                for (int i = 0; i < lists.size(); i++) {
-                                    final int a = i;
-                                    final String tiaoma = lists.get(a).get("tiaoma");
-                                    detail_str += lists.get(i).get("bianma") + "," + lists.get(i).get("tiaoma") + "," + lists.get(i).get("weight") + "," + lists.get(i).get("length") + "|";
+                                for (int i = 0; i <  DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size(); i++) {
+                                    detail_str += DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(i).getTiaoma_id() + ",";
 
                                 }
                                 builder_Detail = detail_str.substring(0, detail_str.length() - 1);
@@ -205,12 +203,10 @@ public class Activity_pan_detail extends AppCompatActivity {
                             //传递参数
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String builder_Content = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + chejian_str + "," + pandian;
-//                                //Content:(oper,time,store,group) 操作人、上传时间、仓库(车间)、班组
-                            Log.d("content", builder_Content);
                             Log.d("detail", builder_Detail);
+                            Log.d("store", getIntent().getStringExtra("ck"));
 //                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
-                            params.put("store", builder_Content);
+                            params.put("store", getIntent().getStringExtra("ck"));
                             params.put("detail", builder_Detail);
                             client.post(Activity_pan_detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetPD_Info", params, new AsyncHttpResponseHandler() {
 
@@ -231,10 +227,15 @@ public class Activity_pan_detail extends AppCompatActivity {
                                             Log.e("de", de.toString());
                                         }
 
-                                        if ("成功".equals(info.substring(1, info.length() - 1))) {
+                                        if ("true".equals(info)) {
                                             clearEditText();
                                             showToast("全部上传成功!");
+                                            DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+//                                            DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).de
+                                            DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
+                                            finish();
                                         } else {
+
                                             showToast(info);
                                         }
 
@@ -248,7 +249,7 @@ public class Activity_pan_detail extends AppCompatActivity {
 
                                     AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Activity_pan_detail.this);
                                     exitbuilder.setTitle("系统提示");
-                                    exitbuilder.setMessage("未上传成功!\n网络错误,是否将该条码信息保存到本地?");
+                                    exitbuilder.setMessage("未上传成功!\n请检查网络后重新上传.");
                                     exitbuilder.setIcon(R.mipmap.circle);
                                     exitbuilder.setCancelable(false);
                                     exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -256,7 +257,6 @@ public class Activity_pan_detail extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
-                                            showToast("该条码已存在");
                                         }
                                     });
                                     exitbuilder.setNegativeButton("取消", null);
