@@ -1,4 +1,4 @@
-package com.example.swings.night_sec;
+package com.example.swings.night_sec.module;
 
 import org.litepal.crud.DataSupport;
 

@@ -11,9 +11,10 @@
     <LinearLayout
         android:id="@+id/info_ll_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/appbar"
         android:layout_margin="16dp"
+        android:layout_above="@+id/info_ll_bottom"
         android:orientation="vertical">
 
         <com.example.swings.night_sec.ClearEditText
@@ -27,10 +28,12 @@
             android:hint="@string/hint_info_info"
             android:singleLine="true" />
 
-        <ListView
-            android:id="@+id/info_gongyingshang_list"
+        <TextView
+            android:textColor="#2a1120"
+            android:textSize="16dp"
+            android:id="@+id/info_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"></TextView>
     </LinearLayout>
 
     <LinearLayout

@@ -32,10 +32,10 @@
         </list>
     -->
     <list>
-        <mapping class="com.example.swings.night_sec.Reader"></mapping>
-        <mapping class="com.example.swings.night_sec.Papers"></mapping>
-        <mapping class="com.example.swings.night_sec.Pan"></mapping>
-        <mapping class="com.example.swings.night_sec.Bianma"></mapping>
-        <mapping class="com.example.swings.night_sec.Tiaoma"></mapping>
+        <mapping class="com.example.swings.night_sec.module.Reader"></mapping>
+        <mapping class="com.example.swings.night_sec.module.Papers"></mapping>
+        <mapping class="com.example.swings.night_sec.module.Pan"></mapping>
+        <mapping class="com.example.swings.night_sec.module.Bianma"></mapping>
+        <mapping class="com.example.swings.night_sec.module.Tiaoma"></mapping>
     </list>
 </litepal>

@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.Pan;
+
+import org.litepal.crud.DataSupport;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -77,13 +81,17 @@ public class ActivityPan extends AppCompatActivity {
                     panEditText.setShakeAnimation();
                     showToast("单号不能为空!");
                 } else {
-
+                    if (DataSupport.where("pan_id = "+panEditText.getText().toString()).find(Pan.class).isEmpty()) {
                     //跳转下一个页面
                     Intent intent = new Intent(ActivityPan.this, Activity_pan_detail.class);
                     intent.putExtra("pandian", panEditText.getText().toString());
                     intent.putExtra("ck", cangkuSpinner.getSelectedItem().toString().substring(0, 2));
                     startActivity(intent);
-                    panEditText.setText("");
+                        panEditText.setText("");
+                    } else {
+                        panEditText.setShakeAnimation();
+                        showToast("该盘点单号已存在，请重新输入!");
+                    }
                 }
             }
         });

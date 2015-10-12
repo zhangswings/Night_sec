@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.Papers;
+
 import org.litepal.crud.DataSupport;
 
 import butterknife.ButterKnife;

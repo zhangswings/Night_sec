@@ -13,27 +13,41 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cz.msebera.android.httpclient.Header;
 
 public class ActivityInfo extends AppCompatActivity {
 
     @InjectView(R.id.info_editText)
     ClearEditText infoEditText;
-    @InjectView(R.id.info_gongyingshang_list)
-    ListView infoGongyingshangList;
     @InjectView(R.id.info_btn_back)
     Button infoBtnBack;
     @InjectView(R.id.info_btn_ok)
@@ -41,12 +55,23 @@ public class ActivityInfo extends AppCompatActivity {
     private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+    @InjectView(R.id.appbar)
+    AppBarLayout appbar;
+    @InjectView(R.id.info_text)
+    TextView infoText;
+    @InjectView(R.id.info_ll_content)
+    LinearLayout infoLlContent;
+    @InjectView(R.id.info_ll_bottom)
+    LinearLayout infoLlBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_info);
         ButterKnife.inject(this);
+        builder=new StringBuilder();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_info);
         setSupportActionBar(toolbar);
@@ -59,6 +84,8 @@ public class ActivityInfo extends AppCompatActivity {
             }
         });
         client = new AsyncHttpClient();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        ip_str=preferences.getString("ip", "192.168.0.187");
         progressDialog = new ProgressDialog(ActivityInfo.this);
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -69,15 +96,63 @@ public class ActivityInfo extends AppCompatActivity {
         });
         // 初始化振动器
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        infoBtnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        infoBtnOk.setText("查询");
         infoBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                infoText.setText("");
                 if (TextUtils.isEmpty(infoEditText.getText()) || infoEditText.getText().toString().isEmpty()) {
                     infoEditText.setShakeAnimation();
                     //设置提示
                     showToast("查询信息不能为空!");
                 } else {
+                    RequestParams params = new RequestParams();
+                    params.put("id", infoEditText.getText().toString().trim());
+                    client.cancelRequests(ActivityInfo.this, true);
+                    client.post(ActivityInfo.this, "http://" + ip_str + ":8092/Service1.asmx/GetMaterialStatus", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if (statusCode == 200) {
+                                String info = "";
+                                String text = new String(responseBody);
+                                Log.d("zhang", text + ">>>>>zhang");
+                                try {
+                                    Document document = DocumentHelper.parseText(text);
+                                    Element element = document.getRootElement();
+                                    info = element.getText();
+                                    Gson gson = new Gson();
+                                    Type type = new TypeToken<List<MaterialStatus>>() {
+                                    }.getType();
+                                    List<MaterialStatus> materialStatus = gson.fromJson(info, type);
+                                    String[] temp = new String[materialStatus.size()];
+                                    if (materialStatus.size() > 0) {
+                                        StringBuilder builder=new StringBuilder();
 
+                                        builder.append("操作人：").append( materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
+
+                                        infoText.setText(builder);
+                                    } else {
+                                        showToast("所查询条码信息不存在");
+                                        infoText.setText("所查询条码信息不存在");
+                                    }
+
+                                } catch (DocumentException de) {
+                                    Log.e("de", de.toString());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            showToast(error.toString());
+                        }
+                    });
                 }
             }
         });
@@ -101,8 +176,8 @@ public class ActivityInfo extends AppCompatActivity {
         // exitbuilder.create();
         exitbuilder.show();
     }
-
-
+    StringBuilder builder;
+    private String ip_str;
     private final static String SCAN_ACTION = "urovo.rcv.message";// 扫描结束action
     private Vibrator mVibrator;
     private ScanManager mScanManager;
@@ -117,13 +192,14 @@ public class ActivityInfo extends AppCompatActivity {
             // TODO Auto-generated method stub
             soundpool.play(soundid, 1, 1, 0, 0, 1);
             infoEditText.setText("");
-
+            infoText.setText("");
             mVibrator.vibrate(100);
 
             byte[] barcode = intent.getByteArrayExtra("barocode");
             int barocodelen = intent.getIntExtra("length", 0);
             byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-            android.util.Log.i("debug", "----codetype--" + temp);
+            Log.i("debug", "----codetype--" + temp);
+            builder.delete(0, builder.length());
             try {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
@@ -133,7 +209,49 @@ public class ActivityInfo extends AppCompatActivity {
 //                            ) {
 //                        Log.d("wan", str);
 //                    }
+                   infoText.setText(builder);
                     infoEditText.setText(barcodes[1]);
+                    RequestParams params = new RequestParams();
+                    params.put("id", barcodes[1]);
+                    client.cancelRequests(ActivityInfo.this, true);
+                    client.post(ActivityInfo.this, "http://" + ip_str + ":8092/Service1.asmx/GetMaterialStatus", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if (statusCode == 200) {
+                                String info = "";
+                                String text = new String(responseBody);
+                                Log.d("zhang", text + ">>>>>zhang");
+                                try {
+                                    Document document = DocumentHelper.parseText(text);
+                                    Element element = document.getRootElement();
+                                    info = element.getText();
+                                    Gson gson = new Gson();
+                                    Type type = new TypeToken<List<MaterialStatus>>() {
+                                    }.getType();
+                                    List<MaterialStatus> materialStatus = gson.fromJson(info, type);
+                                    String[] temp = new String[materialStatus.size()];
+                                    if (materialStatus.size() > 0) {
+                                        StringBuilder builder=new StringBuilder();
+                                        builder.append("条码：").append(barcodes[1]).append("\n物料：").append(barcodes[2]).append("\n重量：").append(barcodes[5]).append("\n克重：").append(barcodes[4]).append("\n长度：").append(barcodes[6]).append("\n幅宽：").append(barcodes[3]).append("\n");
+
+                                        builder.append("操作人：").append( materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
+
+                                        infoText.setText(builder);
+                                    } else {
+                                        showToast("所查询条码信息不存在");
+                                    }
+
+                                } catch (DocumentException de) {
+                                    Log.e("de", de.toString());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            showToast(error.toString());
+                        }
+                    });
                 } else {
                     showToast("条码格式不正确!");
                 }
@@ -177,6 +295,7 @@ public class ActivityInfo extends AppCompatActivity {
         soundpool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 100); // MODE_RINGTONE
         soundid = soundpool.load("/etc/Scan_new.ogg", 1);
     }
+
     /**
      * 显示Toast消息
      *

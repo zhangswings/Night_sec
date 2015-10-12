@@ -27,6 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.Bianma;
+import com.example.swings.night_sec.module.Pan;
+import com.example.swings.night_sec.module.Tiaoma;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -35,6 +38,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -106,6 +110,12 @@ public class Activity_pan_detail extends AppCompatActivity {
         setContentView(R.layout.activity_ruku);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
+        Pan pan=new Pan();
+        pan.setCangku(getIntent().getStringExtra("ck"));
+        pan.setPan_id(getIntent().getStringExtra("pandian"));
+//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        pan.setDate(new Date());
+        pan.save();
         lists = new ArrayList<Map<String, String>>();
         client = new AsyncHttpClient();
         //设置重复请求次数，间隔
@@ -200,9 +210,9 @@ public class Activity_pan_detail extends AppCompatActivity {
                             Log.d("content", builder_Content);
                             Log.d("detail", builder_Detail);
 //                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
-                            params.put("Content", builder_Content);
-                            params.put("Detail", builder_Detail);
-                            client.post(Activity_pan_detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
+                            params.put("store", builder_Content);
+                            params.put("detail", builder_Detail);
+                            client.post(Activity_pan_detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetPD_Info", params, new AsyncHttpResponseHandler() {
 
 
                                 @Override
@@ -290,6 +300,7 @@ public class Activity_pan_detail extends AppCompatActivity {
     private String[] barcodes = null;
     private BroadcastReceiver mScanReceiver = new BroadcastReceiver() {
 
+
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
@@ -319,6 +330,7 @@ public class Activity_pan_detail extends AppCompatActivity {
 //                        editTextRuShijian.setText(barcodes[9]);
 //                        editTextRuYonghu.setText(barcodes[10]);
 
+
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("name", barcodes[2]);
                         map.put("bianma", barcodes[0]);
@@ -332,10 +344,49 @@ public class Activity_pan_detail extends AppCompatActivity {
                         map.put("tag", String.valueOf(lists.size()));
                         lists.add(map);
                         thisEditText.setText(barcodes[1]);
+                        Tiaoma tiaoma=new Tiaoma();
+                        if (DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).isEmpty()){
+                            Bianma bianma=new Bianma();
+                            bianma.setBianma_id(barcodes[0]);
+                            bianma.setFukuan(barcodes[3]);
+                            bianma.setKezhong(barcodes[4]);
+                            bianma.setWuliao(barcodes[2]);
+                            bianma.setNums(1);
+
+                            tiaoma.setTiaoma_id(barcodes[1]);
+                            tiaoma.setLength(barcodes[6]);
+                            tiaoma.setWeight(barcodes[5]);
+                            tiaoma.setBianma_id(barcodes[0]);
+                            tiaoma.setBid(barcodes[0]);
+                            tiaoma.setPid(getIntent().getStringExtra("pandian"));
+                            tiaoma.setBianma(bianma);
+                            tiaoma.save();
+                            bianma.getBianma_tiaoma().add(tiaoma);
+                            bianma.save();
+                            Pan pan=DataSupport.where("pan_id = '"+getIntent().getStringExtra("pandian")+"'").find(Pan.class).get(0);
+                            pan.getPan_bianma().add(bianma);
+                            pan.save();
+                        }else{
+                            Bianma bianma=DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).get(0);
+                            tiaoma.setTiaoma_id(barcodes[1]);
+                            tiaoma.setLength(barcodes[6]);
+                            tiaoma.setWeight(barcodes[5]);
+                            tiaoma.setBianma(bianma);
+                            tiaoma.save();
+                           int nums= bianma.getNums()+1;
+                            bianma.setNums(nums);
+                            bianma.getBianma_tiaoma().add(tiaoma);
+                            bianma.save();
+                            Pan pan=DataSupport.where("pan_id = '"+getIntent().getStringExtra("pandian")+"'").find(Pan.class).get(0);
+                            pan.getPan_bianma().add(bianma);
+                            pan.setStatus("1");
+                            pan.save();
+                        }
                         if (lists.size() > 1) {
                             preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                         }
-                        scanNum.setText(String.valueOf(lists.size()) + "件");
+
+                        scanNum.setText(String.valueOf(DataSupport.findAll(Bianma.class).size()) + "件");
                     } else {
                         showToast("条码对应车间(仓库)不符!");
                         barcodes = null;

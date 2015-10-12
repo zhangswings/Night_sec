@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.Bianma;
+import com.example.swings.night_sec.module.Pan;
+import com.example.swings.night_sec.module.Tiaoma;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -30,8 +33,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -79,10 +80,17 @@ public class LoginActivity extends AppCompatActivity {
         receiver.onReceive(this, null);
         //创建数据库
         Connector.getDatabase();
-        List<Papers> papers = DataSupport.where("paper_status='0' and paper_chejian=" + "'02'").find(Papers.class);
+//        List<Papers> papers = DataSupport.where("paper_status='0' and paper_chejian=" + "'02'").find(Papers.class);
+        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
+        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
+        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
+        DataSupport.deleteAll(Pan.class);
+        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
+        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
+        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
 //        showToast(papers.toString());
 //        Reader reader=new Reader();
-//        reader.setName("zhangq");
+//       reader.setName("zhangq");
 //        reader.setPrice(12);
 //        if (reader.save()){
 //            Toast.makeText(this,reader.save()+"保存成功！",Toast.LENGTH_LONG).show();

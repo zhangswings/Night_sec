@@ -1,4 +1,4 @@
-package com.example.swings.night_sec;
+package com.example.swings.night_sec.module;
 
 import org.litepal.crud.DataSupport;
 
@@ -20,7 +20,28 @@ public class Tiaoma extends DataSupport {
                 ", weight='" + weight + '\'' +
                 ", length='" + length + '\'' +
                 ", bianma=" + bianma +
+                ", bid='" + bid + '\'' +
+                ", pid='" + pid + '\'' +
                 '}';
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    private String bid;
+    private String pid;
+
+    public String getBid() {
+        return bid;
+    }
+
+    public void setBid(String bid) {
+        this.bid = bid;
     }
 
     public String getTiaoma_id() {
