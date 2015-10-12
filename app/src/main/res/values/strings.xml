@@ -60,4 +60,5 @@
     <string name="title_activity_tuiku">Tuiku</string>
     <string name="title_activity_tuiku__detail">Tuiku_Detail</string>
     <string name="title_activity_ruku__detail">Ruku_Detail</string>
+    <string name="title_activity_activity_pan_load">Activity_pan_load</string>
 </resources>

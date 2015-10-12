@@ -40,12 +40,14 @@ public class ActivityPan extends AppCompatActivity {
     LinearLayout outLlContent;
     @InjectView(R.id.pan_ll_bottom)
     LinearLayout panLlBottom;
+    Button panButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_pan);
         ButterKnife.inject(this);
+        panButton= (Button) findViewById(R.id.pan_button);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_pan);
         setSupportActionBar(toolbar);
@@ -66,6 +68,13 @@ public class ActivityPan extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+        panButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getApplicationContext(),Activity_pan_load.class);
+                startActivity(intent);
             }
         });
         panBtnBack.setOnClickListener(new View.OnClickListener() {

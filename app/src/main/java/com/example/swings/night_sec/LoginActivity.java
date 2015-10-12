@@ -81,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
         //创建数据库
         Connector.getDatabase();
 //        List<Papers> papers = DataSupport.where("paper_status='0' and paper_chejian=" + "'02'").find(Papers.class);
-        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
-        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
-        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
-        DataSupport.deleteAll(Pan.class);
-        DataSupport.deleteAll(Tiaoma.class);
-        DataSupport.deleteAll(Bianma.class);
+//        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
+//        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
+//        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
+//        DataSupport.deleteAll(Pan.class);
+//        DataSupport.deleteAll(Tiaoma.class);
+//        DataSupport.deleteAll(Bianma.class);
         Log.d("zhang", DataSupport.findAll(Pan.class).toString());
         Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
         Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());

@@ -111,17 +111,19 @@ public class Activity_pan_detail extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
         Pan pan=new Pan();
+        pan.setUser(preferences.getString("user","admin"));
         pan.setCangku(getIntent().getStringExtra("ck"));
         pan.setPan_id(getIntent().getStringExtra("pandian"));
+        pan.setStatus("0");
 //        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         pan.setDate(new Date());
         pan.save();
         lists = new ArrayList<Map<String, String>>();
         client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-        client.setMaxRetriesAndTimeout(3, 2000);
+//        client.setMaxRetriesAndTimeout(3, 2000);
         //设置超时时间，默认10s
-        client.setTimeout(2 * 1000);
+//        client.setTimeout(2 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         chejian_str = getIntent().getStringExtra("ck");
         pandian = getIntent().getStringExtra("pandian");
@@ -495,6 +497,12 @@ public class Activity_pan_detail extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 client.cancelRequests(Activity_pan_detail.this, true);
+                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).size()>0){
+                    Pan pan=DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
+                    //盘点未上传
+                    pan.setStatus("2");
+                    pan.save();
+                }
                 finish();
             }
         });

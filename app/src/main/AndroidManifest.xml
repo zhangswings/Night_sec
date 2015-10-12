@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.swings.night_sec">
+    package="com.example.swings.night_sec" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -12,14 +12,14 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon_logo"
         android:label="@string/app_name"
-        android:theme="@style/DrawerLayoutTheme">
+        android:theme="@style/DrawerLayoutTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".Splash"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,32 +64,36 @@
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ActivityIp"
-            android:label="@string/title_activity_activity_ip"></activity>
+            android:label="@string/title_activity_activity_ip" />
         <activity
             android:name=".Activity_Ru_off_list"
             android:label="@string/title_activity_activity__ru_off_list"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".Activity_Ru_off_detail"
             android:label="@string/title_activity_activity__ru_off_detail"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".ActivityOut_detail"
-            android:label="@string/title_activity_activity_out_detail"></activity>
+            android:label="@string/title_activity_activity_out_detail" />
         <activity
             android:name=".Ruku"
-            android:label="@string/title_activity_ruku"></activity>
+            android:label="@string/title_activity_ruku" />
         <activity
             android:name=".Tuiku"
-            android:label="@string/title_activity_tuiku"></activity>
+            android:label="@string/title_activity_tuiku" />
         <activity
             android:name=".Tuiku_Detail"
             android:label="@string/title_activity_tuiku__detail"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
             android:name=".Ruku_Detail"
             android:label="@string/title_activity_ruku__detail"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+        <activity
+            android:name=".Activity_pan_load"
+            android:label="@string/title_activity_activity_pan_load" >
+        </activity>
     </application>
 
 </manifest>
