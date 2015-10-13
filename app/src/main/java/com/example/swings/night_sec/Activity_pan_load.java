@@ -66,7 +66,7 @@ public class Activity_pan_load extends AppCompatActivity {
             //盘点单号
             map.put("id",pan.getPan_id());
             //盘点单状态
-            map.put("status",pan.getStatus());
+            map.put("status",pan.getStatus().equals("0")?"未上传":"已上传");
             //盘点单仓库
             map.put("ck",pan.getCangku());
             //日期
@@ -79,7 +79,9 @@ public class Activity_pan_load extends AppCompatActivity {
         listOffListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showToast("订单号:" + lists.get(position).get("id") + " 状态:" + lists.get(position).get("status"));
+                boolean temp=lists.get(position).get("status").equals("0");
+                String status= temp ?"未上传":"已上传";
+                showToast("订单号:" + lists.get(position).get("id") + " 状态:" +status);
                 Intent intent=new Intent(Activity_pan_load.this,Activity_pan_load_list.class);
                 intent.putExtra("pan",lists.get(position).get("id"));
                 startActivity(intent);

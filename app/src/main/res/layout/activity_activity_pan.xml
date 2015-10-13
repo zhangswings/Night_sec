@@ -81,6 +81,8 @@
         android:layout_height="wrap_content"
         android:text="查看未上传盘点单信息"
         android:id="@+id/pan_button"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_above="@+id/pan_ll_bottom"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
