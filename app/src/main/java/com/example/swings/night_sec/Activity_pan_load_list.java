@@ -1,6 +1,5 @@
 package com.example.swings.night_sec;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +12,10 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.example.swings.night_sec.module.Pan;
+import com.example.swings.night_sec.module.Tiaoma;
 
 import org.litepal.crud.DataSupport;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +24,7 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class Activity_pan_load extends AppCompatActivity {
+public class Activity_pan_load_list extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -41,14 +38,15 @@ public class Activity_pan_load extends AppCompatActivity {
     LinearLayout listLlButtom;
     List<Map<String, String>> lists;
     SimpleAdapter adapter;
-
+    String pan="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_pan_load);
         ButterKnife.inject(this);
+        pan=getIntent().getStringExtra("pan");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("未上传盘点信息");
+        toolbar.setTitle("盘点单："+pan );
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,31 +56,30 @@ public class Activity_pan_load extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         lists = new ArrayList<Map<String, String>>();
-        List<Pan> pans = DataSupport.where("status = 0").find(Pan.class);
-        for (Pan pan : pans
+        List<Tiaoma> tiaomas = DataSupport.where("pid = "+pan).find(Tiaoma.class);
+        for (Tiaoma tiaoma : tiaomas
                 ) {
             Map<String, String> map=new HashMap<String, String>();
-            //盘点单号
-            map.put("id",pan.getPan_id());
-            //盘点单状态
-            map.put("status",pan.getStatus());
-            //盘点单仓库
-            map.put("ck",pan.getCangku());
-            //日期
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            map.put("date",format.format(pan.getDate()));
+            //条码号
+            map.put("id", tiaoma.getBianma_id());
+            //编码号
+            map.put("status",tiaoma.getBid());
+            //重量
+            map.put("ck",tiaoma.getWeight());
+            //长度
+//            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            map.put("date",tiaoma.getLength());
             lists.add(map);
         }
-        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_pandian,new String[]{"id","ck","status","date"},new int[]{R.id.text_pandian,R.id.text_ck,R.id.text_status,R.id.text_date});
+        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_paper,new String[]{"id","ck","status","date"},new int[]{R.id.texts_tiaoma,R.id.texts_bianma,R.id.texts_weight,R.id.texts_length});
         listOffListview.setAdapter(adapter);
         listOffListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showToast("订单号:" + lists.get(position).get("id") + " 状态:" + lists.get(position).get("status"));
-                Intent intent=new Intent(Activity_pan_load.this,Activity_pan_load_list.class);
-                intent.putExtra("pan",lists.get(position).get("id"));
-                startActivity(intent);
+                showToast("条码号:" + lists.get(position).get("id") + " 长度:" + lists.get(position).get("date"));
+//                Intent intent=new Intent(Activity_pan_load.this,)
             }
         });
 

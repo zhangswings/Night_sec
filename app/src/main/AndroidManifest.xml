@@ -94,6 +94,10 @@
             android:name=".Activity_pan_load"
             android:label="@string/title_activity_activity_pan_load" >
         </activity>
+        <activity
+            android:name=".Activity_pan_load_list"
+            android:label="@string/title_activity_activity_pan_load_list" >
+        </activity>
     </application>
 
 </manifest>
