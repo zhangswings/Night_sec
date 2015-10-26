@@ -32,7 +32,7 @@
     <string name="btn_ok">确认</string>
     <string name="btn_back">返回</string>
     <string name="btn_cancle">取消</string>
-    <string name="press_again_exit_app">再按一次退出程序</string>
+    <string name="press_again_exit_app">请再按一次退出程序</string>
 
 
     <string name="title_book">书籍</string>

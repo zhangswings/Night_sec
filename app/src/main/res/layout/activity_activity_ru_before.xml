@@ -84,20 +84,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_margin="16dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/before_btn_cancle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_lightred_red"
             android:layout_weight="1"
+            android:layout_marginRight="2dp"
             android:text="@string/btn_cancle" />
 
         <Button
+            android:background="@drawable/btn_lightred_green"
             android:id="@+id/before_btn_ok"
             android:layout_width="0dp"
+            android:layout_marginLeft="2dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/btn_ok" />

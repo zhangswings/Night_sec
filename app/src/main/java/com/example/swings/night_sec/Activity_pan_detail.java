@@ -3,6 +3,7 @@ package com.example.swings.night_sec;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -258,7 +259,17 @@ public class Activity_pan_detail extends AppCompatActivity {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-
+                                            Intent intent=null;
+                                            //判断手机系统的版本  即API大于10 就是3.0或以上版本
+                                            if(android.os.Build.VERSION.SDK_INT>10){
+                                                intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                                            }else{
+                                                intent = new Intent();
+                                                ComponentName component = new ComponentName("com.android.settings","com.android.settings.WirelessSettings");
+                                                intent.setComponent(component);
+                                                intent.setAction("android.intent.action.VIEW");
+                                            }
+                                            startActivity(intent);
                                         }
                                     });
                                     exitbuilder.setNegativeButton("取消", null);
@@ -494,15 +505,15 @@ public class Activity_pan_detail extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Activity_pan_detail.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您是否要退出吗?");
+        exitbuilder.setMessage("是否继续退出?");
         exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 client.cancelRequests(Activity_pan_detail.this, true);
-                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Bianma.class).size()>0){
+                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size()>0){
                     Pan pan=DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                     //盘点未上传
                     pan.setStatus("2");
@@ -515,7 +526,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                 finish();
             }
         });
-        exitbuilder.setNegativeButton("取消", null);
+        exitbuilder.setNegativeButton("否", null);
         // exitbuilder.create();
         exitbuilder.show();
     }

@@ -49,13 +49,15 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
+            android:background="@drawable/btn_lightred_green"
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/button_login" />
 
         <Button
-
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_lightred_red"
             android:id="@+id/btnCancle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

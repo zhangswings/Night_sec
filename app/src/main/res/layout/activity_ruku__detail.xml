@@ -53,11 +53,15 @@
         <Button
             android:id="@+id/out_btn_cancle"
             android:layout_width="0dp"
+            android:background="@drawable/btn_lightred_red"
+            android:layout_marginRight="2dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/btn_cancle" />
 
         <Button
+            android:background="@drawable/btn_lightred_green"
+            android:layout_marginLeft="2dp"
             android:id="@+id/out_btn_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

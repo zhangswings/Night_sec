@@ -99,9 +99,9 @@ public class SettingActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(SettingActivity.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您是否要退出吗?");
+        exitbuilder.setMessage("是否继续退出?");
         exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -109,7 +109,7 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
             }
         });
-        exitbuilder.setNegativeButton("取消", null);
+        exitbuilder.setNegativeButton("否", null);
         // exitbuilder.create();
         exitbuilder.show();
     }

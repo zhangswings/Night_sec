@@ -19,8 +19,10 @@
 
         <Button
             android:id="@+id/pre_btn"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_lightred_green"
             android:text="上一条" />
 
         <com.example.swings.night_sec.ClearEditText
@@ -47,7 +49,9 @@
         android:orientation="horizontal">
 
         <Button
+            android:background="@drawable/btn_lightred_green"
             android:id="@+id/this_btn"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="当前扫描" />
@@ -207,13 +211,17 @@
         android:orientation="horizontal">
 
         <Button
+            android:background="@drawable/btn_lightred_red"
             android:id="@+id/ip_btn_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginRight="2dp"
             android:text="@string/btn_back" />
 
         <Button
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/btn_lightred_green"
             android:id="@+id/ip_btn_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -312,7 +312,7 @@ public class Ruku extends AppCompatActivity {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
                 barcodes = barcodeStr.split("\\|");
-                if (barcodes.length > 10 && !lists.toString().contains(barcodes[1])) {
+                if (barcodes.length > 10 ) {
                     if (lists.toString().contains(barcodes[1])) {
                         showToast("该条码已添加!");
                     } else {

@@ -100,7 +100,7 @@ public class Tuiku extends AppCompatActivity {
         client = new AsyncHttpClient();
         //设置超时
         client.setMaxRetriesAndTimeout(5, 3000);
-        client.setTimeout(3000);
+        client.setTimeout(5 * 1000);
         lists = new ArrayList<Map<String, String>>();
 
         adapter = new
@@ -262,9 +262,9 @@ public class Tuiku extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Tuiku.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您确定要返回吗?");
+        exitbuilder.setMessage("是否继续退出?");
         exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -272,7 +272,7 @@ public class Tuiku extends AppCompatActivity {
                 finish();
             }
         });
-        exitbuilder.setNegativeButton("取消", null);
+        exitbuilder.setNegativeButton("否", null);
         // exitbuilder.create();
         exitbuilder.show();
     }

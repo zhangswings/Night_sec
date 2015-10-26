@@ -115,7 +115,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                 String detail_str = "";
                                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                 //操作人、客户编号、客户、订单号、备注
-                                                content_str = preferences.getString("user", "admin") + "," + ghs+ "," +ghsname+","+",";
+                                                content_str = preferences.getString("user", "admin") + "," + ghs + "," + ghsname + "," + ",";
                                                 StringBuilder detail_builder = new StringBuilder();
                                                 if (lists.size() > 1) {
                                                     for (int i = 0; i < lists.size(); i++) {
@@ -145,7 +145,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                 progressDialog.show();
                                                 //设置重复请求次数，间隔
                                                 client.setMaxRetriesAndTimeout(5, 3000);
-                                                client.setTimeout(3000);
+                                                client.setTimeout(5*1000);
                                                 //设置超时时间，默认10s
                                                 client.post(Tuiku_Detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/AddReturnStore", params, new AsyncHttpResponseHandler() {
                                                     @Override
@@ -200,14 +200,14 @@ public class Tuiku_Detail extends AppCompatActivity {
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(Tuiku_Detail.this,ActivityOut_detail.class);
-                intent.putExtra("bianma",lists.get(position).get("bianma"));
-                intent.putExtra("tiaoma",lists.get(position).get("tiaoma"));
-                intent.putExtra("name",lists.get(position).get("name"));
-                intent.putExtra("kezhong",lists.get(position).get("kezhong"));
-                intent.putExtra("fukuan",lists.get(position).get("fukuan"));
-                intent.putExtra("weight",lists.get(position).get("weight"));
-                intent.putExtra("length",lists.get(position).get("length"));
+                Intent intent = new Intent(Tuiku_Detail.this, ActivityOut_detail.class);
+                intent.putExtra("bianma", lists.get(position).get("bianma"));
+                intent.putExtra("tiaoma", lists.get(position).get("tiaoma"));
+                intent.putExtra("name", lists.get(position).get("name"));
+                intent.putExtra("kezhong", lists.get(position).get("kezhong"));
+                intent.putExtra("fukuan", lists.get(position).get("fukuan"));
+                intent.putExtra("weight", lists.get(position).get("weight"));
+                intent.putExtra("length", lists.get(position).get("length"));
                 startActivity(intent);
             }
         });
@@ -255,17 +255,31 @@ public class Tuiku_Detail extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Tuiku_Detail.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您确定返回吗?");
-        exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        if (lists.isEmpty()) {
+            exitbuilder.setMessage("是否继续退出?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                finish();
-            }
-        });
-        exitbuilder.setNegativeButton("取消", null);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    finish();
+                }
+            });
+            exitbuilder.setNegativeButton("否", null);
+        } else {
+            exitbuilder.setMessage("您还有未上传的退库信息，是否继续退出?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    finish();
+                }
+            });
+            exitbuilder.setNegativeButton("否", null);
+        }
         // exitbuilder.create();
         exitbuilder.show();
     }

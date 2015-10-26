@@ -92,7 +92,7 @@ public class ActivityOut extends AppCompatActivity {
         client = new AsyncHttpClient();
         //设置超时
         client.setMaxRetriesAndTimeout(5, 2000);
-        client.setTimeout(3000);
+        client.setTimeout(5*1000);
         lists = new ArrayList<Map<String, String>>();
 
         adapter = new SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{"name", "id"

@@ -31,6 +31,7 @@
         <Button
             android:id="@+id/list_btn_cancle"
             android:layout_width="0dp"
+            android:background="@drawable/btn_lightred_red"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/btn_cancle" />

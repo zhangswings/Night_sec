@@ -135,6 +135,8 @@
         android:orientation="horizontal">
 
         <Button
+            android:background="@drawable/btn_lightred_red"
+            android:layout_marginRight="2dp"
             android:id="@+id/ru_btn_cancle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -142,6 +144,8 @@
             android:text="@string/btn_cancle" />
 
         <Button
+            android:background="@drawable/btn_lightred_green"
+            android:layout_marginLeft="2dp"
             android:id="@+id/ru_btn_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
