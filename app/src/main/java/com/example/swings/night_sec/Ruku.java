@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.device.ScanManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -111,7 +112,7 @@ public class Ruku extends AppCompatActivity {
         //设置重复请求次数，间隔
         client.setMaxRetriesAndTimeout(3, 2000);
         //设置超时时间，默认10s
-        client.setTimeout(2 * 1000);
+        client.setTimeout(5 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         chejian_str = getIntent().getStringExtra("ruku");
         banzu_str = getIntent().getStringExtra("banzu");
@@ -160,116 +161,120 @@ public class Ruku extends AppCompatActivity {
         ruBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(Ruku.this);
-                builder.setIcon(R.mipmap.right);
-                builder.setTitle("全部上传");
-                builder.setMessage("请确认是否全部上次服务器?");
-                builder.setNegativeButton("否", null);
-                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //获取产品信息，全部上次
-                        //Todo
-                        if (!lists.isEmpty()) {
-                            progressDialog.setTitle("上传中...");
-                            progressDialog.setMessage("正在上传数据，请稍后...");
-                            progressDialog.setCancelable(true);
-                            progressDialog.show();
-                            String builder_Detail = "";
-                            if (lists.size() == 1) {
-                                builder_Detail = lists.get(0).get("bianma") + "," + lists.get(0).get("tiaoma") + "," + lists.get(0).get("weight") + "," + lists.get(0).get("length");
-
-                            } else {
-                                String detail_str = "";
-                                for (int i = 0; i < lists.size(); i++) {
-                                    final int a = i;
-                                    final String tiaoma = lists.get(a).get("tiaoma");
-                                    detail_str += lists.get(i).get("bianma") + "," + lists.get(i).get("tiaoma") + "," + lists.get(i).get("weight") + "," + lists.get(i).get("length") + "|";
-
-                                }
-                                builder_Detail = detail_str.substring(0, detail_str.length() - 1);
-
-                            }
-                            final RequestParams params = new RequestParams();
-
-                            //传递参数
-
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String builder_Content = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + chejian_str + "," + banzu_str;
-//                                //Content:(oper,time,store,group) 操作人、上传时间、仓库(车间)、班组
-                            Log.d("content", builder_Content);
-                            Log.d("detail", builder_Detail);
-//                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
-                            params.put("Content", builder_Content);
-                            params.put("Detail", builder_Detail);
-                            client.post(Ruku.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
-
-
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                    progressDialog.dismiss();
-                                    if (statusCode == 200) {
-                                        String info = "";
-                                        String text = new String(responseBody);
-                                        Log.d("zhang", text + ">>>>>zhang");
-                                        try {
-                                            Document document = DocumentHelper.parseText(text);
-                                            Element element = document.getRootElement();
-                                            info = element.getText();
-
-                                        } catch (DocumentException de) {
-                                            Log.e("de", de.toString());
-                                        }
-
-                                        if ("成功".equals(info.substring(1, info.length() - 1))) {
-                                            clearEditText();
-                                            showToast("全部上传成功!");
-                                        } else {
-                                            showToast(info);
-                                        }
-
-
-
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                    progressDialog.dismiss();
-
-                                    AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Ruku.this);
-                                    exitbuilder.setTitle("系统提示");
-                                    exitbuilder.setMessage("未上传成功!\n网络错误,是否将该条码信息保存到本地?");
-                                    exitbuilder.setIcon(R.mipmap.circle);
-                                    exitbuilder.setCancelable(false);
-                                    exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            showToast("该条码已存在");
-                                        }
-                                    });
-                                    exitbuilder.setNegativeButton("取消", null);
-                                    // exitbuilder.create();
-                                    exitbuilder.show();
-
-                                }
-                            });
-//                            lists.clear();
-//                            adapter.notifyDataSetChanged();
-                        } else {
-                            showToast("数据列表为空");
-                        }
-
-                    }
-                });
-                builder.create().show();
-
+                upload();
             }
         });
     }
 
+    private void upload() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Ruku.this);
+        builder.setIcon(R.mipmap.right);
+        builder.setTitle("全部上传");
+        builder.setMessage("请确认是否全部上次服务器?");
+        builder.setNegativeButton("否", null);
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //获取产品信息，全部上次
+                //Todo
+                if (!lists.isEmpty()) {
+                    progressDialog.setTitle("上传中...");
+                    progressDialog.setMessage("正在上传数据，请稍后...");
+                    progressDialog.setCancelable(true);
+                    progressDialog.show();
+                    String builder_Detail = "";
+                    if (lists.size() == 1) {
+                        builder_Detail = lists.get(0).get("bianma") + "," + lists.get(0).get("tiaoma") + "," + lists.get(0).get("weight") + "," + lists.get(0).get("length");
+
+                    } else {
+                        String detail_str = "";
+                        for (int i = 0; i < lists.size(); i++) {
+                            final int a = i;
+                            final String tiaoma = lists.get(a).get("tiaoma");
+                            detail_str += lists.get(i).get("bianma") + "," + lists.get(i).get("tiaoma") + "," + lists.get(i).get("weight") + "," + lists.get(i).get("length") + "|";
+
+                        }
+                        builder_Detail = detail_str.substring(0, detail_str.length() - 1);
+
+                    }
+                    final RequestParams params = new RequestParams();
+
+                    //传递参数
+
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String builder_Content = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + chejian_str + "," + banzu_str;
+//                                //Content:(oper,time,store,group) 操作人、上传时间、仓库(车间)、班组
+                    Log.d("content", builder_Content);
+                    Log.d("detail", builder_Detail);
+//                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
+                    params.put("Content", builder_Content);
+                    params.put("Detail", builder_Detail);
+                    client.post(Ruku.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
+
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            progressDialog.dismiss();
+                            if (statusCode == 200) {
+                                String info = "";
+                                String text = new String(responseBody);
+                                Log.d("zhang", text + ">>>>>zhang");
+                                try {
+                                    Document document = DocumentHelper.parseText(text);
+                                    Element element = document.getRootElement();
+                                    info = element.getText();
+
+                                } catch (DocumentException de) {
+                                    Log.e("de", de.toString());
+                                }
+
+                                if ("\"成功\"".equals(info)) {
+                                    MediaPlayer.create(Ruku.this, R.raw.ru_suc).start();
+                                    clearEditText();
+                                    showToast("全部上传成功!");
+                                } else {
+                                    MediaPlayer.create(Ruku.this, R.raw.fail).start();
+                                    showToast(info);
+                                }
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            progressDialog.dismiss();
+
+                            AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Ruku.this);
+                            exitbuilder.setTitle("系统提示");
+                            exitbuilder.setMessage("未上传成功!\n网络错误,是否将该条码信息保存到本地?");
+                            exitbuilder.setIcon(R.mipmap.circle);
+                            exitbuilder.setCancelable(false);
+                            exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    showToast("该条码已存在");
+                                }
+                            });
+                            exitbuilder.setNegativeButton("取消", null);
+                            // exitbuilder.create();
+                            exitbuilder.show();
+
+                        }
+                    });
+//                            lists.clear();
+//                            adapter.notifyDataSetChanged();
+                } else {
+                    showToast("数据列表为空");
+                }
+
+            }
+        });
+        builder.create().show();
+    }
 
     /**
      * 初始化扫描头
@@ -308,45 +313,46 @@ public class Ruku extends AppCompatActivity {
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
                 barcodes = barcodeStr.split("\\|");
                 if (barcodes.length > 10 && !lists.toString().contains(barcodes[1])) {
-                    if (barcodes[7].equals(getIntent().getStringExtra("ruku"))) {
-                        editTextRuBianma.setText(barcodes[0]);
-                        editTextRuCode.setText(barcodes[1]);
-                        editTextRuName.setText(barcodes[2]);
-                        editTextRuFukuan.setText(barcodes[3]);
-                        editTextRuKezhong.setText(barcodes[4]);
-                        editTextRuWeight.setText(barcodes[5]);
-                        editTextRuLength.setText(barcodes[6]);
-                        editTextRuCjbz.setText(barcodes[7] + "/" + barcodes[8]);
-//                        editTextRuShijian.setText(barcodes[9]);
-//                        editTextRuYonghu.setText(barcodes[10]);
-
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("name", barcodes[2]);
-                        map.put("bianma", barcodes[0]);
-                        map.put("tiaoma", barcodes[1]);
-                        map.put("weight", barcodes[5]);
-                        map.put("length", barcodes[6]);
-                        map.put("kezhong", barcodes[4]);
-                        map.put("fukuan", barcodes[3]);
-                        map.put("chejian", barcodes[7]);
-                        map.put("banzu", barcodes[8]);
-                        map.put("tag", String.valueOf(lists.size()));
-                        lists.add(map);
-                        thisEditText.setText(barcodes[1]);
-                        if (lists.size() > 1) {
-                            preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
-                        }
-                        scanNum.setText(String.valueOf(lists.size()) + "件");
-                    } else {
-                        showToast("条码对应车间(仓库)不符!");
-                        barcodes = null;
-                    }
-                } else {
                     if (lists.toString().contains(barcodes[1])) {
                         showToast("该条码已添加!");
                     } else {
-                        showToast("条码格式不对！");
+
+                        if (barcodes[7].equals(getIntent().getStringExtra("ruku"))) {
+                            editTextRuBianma.setText(barcodes[0]);
+                            editTextRuCode.setText(barcodes[1]);
+                            editTextRuName.setText(barcodes[2]);
+                            editTextRuFukuan.setText(barcodes[3]);
+                            editTextRuKezhong.setText(barcodes[4]);
+                            editTextRuWeight.setText(barcodes[5]);
+                            editTextRuLength.setText(barcodes[6]);
+                            editTextRuCjbz.setText(barcodes[7] + "/" + barcodes[8]);
+//                        editTextRuShijian.setText(barcodes[9]);
+//                        editTextRuYonghu.setText(barcodes[10]);
+
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("name", barcodes[2]);
+                            map.put("bianma", barcodes[0]);
+                            map.put("tiaoma", barcodes[1]);
+                            map.put("weight", barcodes[5]);
+                            map.put("length", barcodes[6]);
+                            map.put("kezhong", barcodes[4]);
+                            map.put("fukuan", barcodes[3]);
+                            map.put("chejian", barcodes[7]);
+                            map.put("banzu", barcodes[8]);
+                            map.put("tag", String.valueOf(lists.size()));
+                            lists.add(map);
+                            thisEditText.setText(barcodes[1]);
+                            if (lists.size() > 1) {
+                                preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
+                            }
+                            scanNum.setText(String.valueOf(lists.size()) + "件");
+                        } else {
+                            showToast("条码对应车间(仓库)不符!");
+                            barcodes = null;
+                        }
                     }
+                } else {
+                    showToast("条码格式不对！");
                     barcodes = null;
 //                    Toast.makeText(RuKu.this, "条码格式不对！", Toast.LENGTH_LONG).show();
                 }
@@ -436,22 +442,46 @@ public class Ruku extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Ruku.this);
-        exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您是否要退出吗?");
-        exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        if (lists.isEmpty()) {
+            AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Ruku.this);
+            exitbuilder.setTitle("系统提示");
+            exitbuilder.setMessage("是否继续退出?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                client.cancelRequests(Ruku.this, true);
-                finish();
-            }
-        });
-        exitbuilder.setNegativeButton("取消", null);
-        // exitbuilder.create();
-        exitbuilder.show();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    client.cancelRequests(Ruku.this, true);
+                    finish();
+                }
+            });
+            exitbuilder.setNegativeButton("取消", null);
+            // exitbuilder.create();
+            exitbuilder.show();
+        } else {
+            AlertDialog.Builder exitbuilder = new AlertDialog.Builder(Ruku.this);
+            exitbuilder.setTitle("系统提示");
+            exitbuilder.setMessage("扫描信息还未上传，是否需要立刻上传吗?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    upload();
+                    // TODO Auto-generated method stub
+                }
+            });
+            exitbuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    client.cancelRequests(Ruku.this, true);
+                    finish();
+                }
+            });
+            // exitbuilder.create();
+            exitbuilder.show();
+        }
     }
 
 

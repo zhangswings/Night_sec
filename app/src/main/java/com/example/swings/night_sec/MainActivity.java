@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements BackHandledFragme
         setupDrawerContent(mNavigationView);
 // 准备要添加的数据条目
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        Integer[] imgs = {R.mipmap.icon_ru, R.mipmap.icon_chu, R.mipmap.icon_pan, R.mipmap.icon_info,R.mipmap.icon_logo};
-        String names[] = {"快速入库", "快速出库", "产品盘点", "信息查询","产品退库"};
+        Integer[] imgs = {R.mipmap.icon_ru, R.mipmap.icon_chu, R.mipmap.icon_pan, R.mipmap.icon_info, R.mipmap.icon_logo};
+        String names[] = {"快速入库", "快速出库", "产品盘点", "信息查询", "产品退库"};
         for (int i = 1; i <= names.length; i++) {
             Map<String, Object> item = new HashMap<String, Object>();
             item.put("imageItem", imgs[i - 1]);// 添加图像资源的ID
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements BackHandledFragme
             }
         });
     }
+
 
     /**
      * 侧边菜单选项

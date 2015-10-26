@@ -247,7 +247,7 @@ public class ActivityOut extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(ActivityOut.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您是否要退出吗?");
+        exitbuilder.setMessage("是否继续退出?");
         exitbuilder.setIcon(R.mipmap.circle);
         exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 

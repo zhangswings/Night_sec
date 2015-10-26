@@ -59,7 +59,7 @@ public class Activity_pan_load extends AppCompatActivity {
             }
         });
         lists = new ArrayList<Map<String, String>>();
-        List<Pan> pans = DataSupport.where("status = 0").find(Pan.class);
+        List<Pan> pans = DataSupport.where("status = 2").find(Pan.class);
         for (Pan pan : pans
                 ) {
             Map<String, String> map=new HashMap<String, String>();
@@ -80,8 +80,8 @@ public class Activity_pan_load extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 boolean temp=lists.get(position).get("status").equals("0");
-                String status= temp ?"未上传":"已上传";
-                showToast("订单号:" + lists.get(position).get("id") + " 状态:" +status);
+//                String status= temp?"未上传":"已上传";
+                showToast("订单号:" + lists.get(position).get("id"));
                 Intent intent=new Intent(Activity_pan_load.this,Activity_pan_load_list.class);
                 intent.putExtra("pan",lists.get(position).get("id"));
                 startActivity(intent);

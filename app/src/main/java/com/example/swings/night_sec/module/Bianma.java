@@ -13,6 +13,7 @@ public class Bianma extends DataSupport {
     private String wuliao;
     private String kezhong;
     private String fukuan;
+    private String pan_id;
     private Pan pan;
     private int nums = 0;
     private List<Tiaoma> bianma_tiaoma = new ArrayList<Tiaoma>();
@@ -24,10 +25,19 @@ public class Bianma extends DataSupport {
                 ", wuliao='" + wuliao + '\'' +
                 ", kezhong='" + kezhong + '\'' +
                 ", fukuan='" + fukuan + '\'' +
+                ", pan_id='" + pan_id + '\'' +
                 ", pan=" + pan +
                 ", nums=" + nums +
                 ", bianma_tiaoma=" + bianma_tiaoma +
                 '}';
+    }
+
+    public String getPan_id() {
+        return pan_id;
+    }
+
+    public void setPan_id(String pan_id) {
+        this.pan_id = pan_id;
     }
 
     public String getBianma_id() {

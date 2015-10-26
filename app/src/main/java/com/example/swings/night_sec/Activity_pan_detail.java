@@ -353,6 +353,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                             bianma.setFukuan(barcodes[3]);
                             bianma.setKezhong(barcodes[4]);
                             bianma.setWuliao(barcodes[2]);
+                            bianma.setPan_id(getIntent().getStringExtra("pandian"));
                             bianma.setNums(1);
 
                             tiaoma.setTiaoma_id(barcodes[1]);
@@ -365,11 +366,12 @@ public class Activity_pan_detail extends AppCompatActivity {
                             tiaoma.save();
                             bianma.getBianma_tiaoma().add(tiaoma);
                             bianma.save();
-                            Pan pan=DataSupport.where("pan_id = '"+getIntent().getStringExtra("pandian")+"'").find(Pan.class).get(0);
+                            Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                             pan.getPan_bianma().add(bianma);
+                            pan.setStatus("0");
                             pan.save();
                         }else{
-                            Bianma bianma=DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).get(0);
+                            Bianma bianma=DataSupport.where("bianma_id = "+ barcodes[0]).find(Bianma.class).get(0);
                             tiaoma.setTiaoma_id(barcodes[1]);
                             tiaoma.setLength(barcodes[6]);
                             tiaoma.setWeight(barcodes[5]);
@@ -379,16 +381,16 @@ public class Activity_pan_detail extends AppCompatActivity {
                             bianma.setNums(nums);
                             bianma.getBianma_tiaoma().add(tiaoma);
                             bianma.save();
-                            Pan pan=DataSupport.where("pan_id = '"+getIntent().getStringExtra("pandian")+"'").find(Pan.class).get(0);
+                            Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                             pan.getPan_bianma().add(bianma);
-                            pan.setStatus("1");
+                            pan.setStatus("0");
                             pan.save();
                         }
                         if (lists.size() > 1) {
                             preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                         }
-
-                        scanNum.setText(String.valueOf(DataSupport.findAll(Bianma.class).size()) + "件");
+                        int num=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0).getPan_bianma().size()+1;
+                        scanNum.setText( num+ "件");
                     } else {
                         showToast("条码对应车间(仓库)不符!");
                         barcodes = null;
@@ -435,7 +437,7 @@ public class Activity_pan_detail extends AppCompatActivity {
 
     private void clearEditText() {
         lists.clear();
-        scanNum.setText(String.valueOf(lists.size()) + "件");
+        scanNum.setText("0件");
         thisEditText.setText("");
         preEditText.setText("");
         editTextRuBianma.setText("");
@@ -448,6 +450,9 @@ public class Activity_pan_detail extends AppCompatActivity {
         editTextRuCjbz.setText("");
 //        editTextRuShijian.setText("");
 //        editTextRuYonghu.setText("");
+//        DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+        DataSupport.deleteAll(Bianma.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+        DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
     }
 
     private void clearString() {
@@ -497,11 +502,15 @@ public class Activity_pan_detail extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 client.cancelRequests(Activity_pan_detail.this, true);
-                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).size()>0){
+                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Bianma.class).size()>0){
                     Pan pan=DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                     //盘点未上传
                     pan.setStatus("2");
                     pan.save();
+                }else{
+                    DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+                    DataSupport.deleteAll(Bianma.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+                    DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
                 }
                 finish();
             }
@@ -536,6 +545,12 @@ public class Activity_pan_detail extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     /**

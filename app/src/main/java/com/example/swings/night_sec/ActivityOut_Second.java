@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.device.ScanManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -115,7 +116,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                 String detail_str = "";
                                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                 //操作人、时间。仓库(车间)、客户编号、客户
-                                                content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + ck + "," + ghs+ "," +ghsname;
+                                                content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + ck + "," + ghs + "," + ghsname;
                                                 StringBuilder detail_builder = new StringBuilder();
                                                 if (lists.size() > 1) {
                                                     for (int i = 0; i < lists.size(); i++) {
@@ -136,7 +137,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                 params.put("Content", content_str);
                                                 params.put("Detail", detail_str);
                                                 Log.d("zhang", content_str);
-                                                Log.d("zhang",detail_str);
+                                                Log.d("zhang", detail_str);
                                                 progressDialog.setTitle("上传中...");
                                                 progressDialog.setMessage("正在上传数据，请稍后...");
                                                 progressDialog.setCancelable(true);
@@ -161,15 +162,23 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                             } catch (DocumentException de) {
                                                                 Log.e("de", de.toString());
                                                             }
-                                                            showToast(info);
+                                                            if ("\"成功\"".equals(info)) {
+                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                showToast("全部出库成功!");
+                                                                finish();
+                                                            } else {
+                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                showToast(info);
+                                                            }
                                                             barcodes = null;
                                                         }
-                                                        finish();
+
                                                     }
 
                                                     @Override
                                                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                                         progressDialog.dismiss();
+                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
                                                         showToast(error.toString());
                                                     }
                                                 });
@@ -198,14 +207,14 @@ public class ActivityOut_Second extends AppCompatActivity {
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(ActivityOut_Second.this,ActivityOut_detail.class);
-                intent.putExtra("bianma",lists.get(position).get("bianma"));
-                intent.putExtra("tiaoma",lists.get(position).get("tiaoma"));
-                intent.putExtra("name",lists.get(position).get("name"));
-                intent.putExtra("kezhong",lists.get(position).get("kezhong"));
-                intent.putExtra("fukuan",lists.get(position).get("fukuan"));
-                intent.putExtra("weight",lists.get(position).get("weight"));
-                intent.putExtra("length",lists.get(position).get("length"));
+                Intent intent = new Intent(ActivityOut_Second.this, ActivityOut_detail.class);
+                intent.putExtra("bianma", lists.get(position).get("bianma"));
+                intent.putExtra("tiaoma", lists.get(position).get("tiaoma"));
+                intent.putExtra("name", lists.get(position).get("name"));
+                intent.putExtra("kezhong", lists.get(position).get("kezhong"));
+                intent.putExtra("fukuan", lists.get(position).get("fukuan"));
+                intent.putExtra("weight", lists.get(position).get("weight"));
+                intent.putExtra("length", lists.get(position).get("length"));
                 startActivity(intent);
             }
         });
@@ -253,18 +262,33 @@ public class ActivityOut_Second extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(ActivityOut_Second.this);
         exitbuilder.setTitle("系统提示");
-        exitbuilder.setMessage("您是否要退出吗?");
-        exitbuilder.setIcon(R.mipmap.circle);
-        exitbuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        if (lists.isEmpty()) {
+            exitbuilder.setMessage("是否继续退出?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                finish();
-            }
-        });
-        exitbuilder.setNegativeButton("取消", null);
-        // exitbuilder.create();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    finish();
+                }
+            });
+            exitbuilder.setNegativeButton("否", null);
+            // exitbuilder.create();
+        } else {
+            exitbuilder.setMessage("您还有未上传的出库信息，是否要继续退出?");
+            exitbuilder.setIcon(R.mipmap.circle);
+            exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    finish();
+                }
+            });
+            exitbuilder.setNegativeButton("否", null);
+            // exitbuilder.create();
+        }
         exitbuilder.show();
     }
 

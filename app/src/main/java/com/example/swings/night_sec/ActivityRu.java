@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.device.ScanManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -89,7 +90,7 @@ public class ActivityRu extends AppCompatActivity {
     private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
-
+    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,10 +184,21 @@ public class ActivityRu extends AppCompatActivity {
                                     Document document = DocumentHelper.parseText(text);
                                     Element element = document.getRootElement();
                                     info = element.getText();
+                                    if ("\"成功\"".equals(info)){
+                                        mediaPlayer=MediaPlayer.create(ActivityRu.this,R.raw.ru_suc);
+                                        mediaPlayer.start();
+                                        Log.d("tag","成功");
+                                    }else{
+                                        mediaPlayer=MediaPlayer.create(ActivityRu.this,R.raw.fail);
+                                        mediaPlayer.start();
+                                        Log.d("tag", "失败");
+                                    }
 
                                 } catch (DocumentException de) {
                                     Log.e("de", de.toString());
                                 }
+                                mediaPlayer=MediaPlayer.create(ActivityRu.this,R.raw.ru_suc);
+                                mediaPlayer.start();
                                 showToast(info);
                                 barcodes = null;
                                 clearEditText();

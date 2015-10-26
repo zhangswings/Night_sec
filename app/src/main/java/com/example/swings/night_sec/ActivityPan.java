@@ -16,7 +16,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.Pan;
-import com.example.swings.night_sec.module.Tiaoma;
 
 import org.litepal.crud.DataSupport;
 
@@ -128,9 +127,9 @@ public class ActivityPan extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-       if( DataSupport.where("pid = "+getIntent().getStringExtra("pan")).find(Tiaoma.class).isEmpty()){
-           DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pan"));
-       }
+//       if( DataSupport.where("pid = "+getIntent().getStringExtra("pan")).find(Tiaoma.class).isEmpty()){
+//           DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pan"));
+//       }
     }
 
     /**
