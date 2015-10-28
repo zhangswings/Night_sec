@@ -400,8 +400,8 @@ public class Activity_pan_detail extends AppCompatActivity {
                         if (lists.size() > 1) {
                             preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                         }
-                        int num=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0).getPan_bianma().size()+1;
-                        scanNum.setText( num+ "件");
+//                        int num=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Bianma.class).get(0).getNums();
+                        scanNum.setText( lists.size()+ "件");
                     } else {
                         showToast("条码对应车间(仓库)不符!");
                         barcodes = null;
@@ -513,7 +513,7 @@ public class Activity_pan_detail extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 client.cancelRequests(Activity_pan_detail.this, true);
-                if(DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size()>0){
+                if(DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size()>0){
                     Pan pan=DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                     //盘点未上传
                     pan.setStatus("2");

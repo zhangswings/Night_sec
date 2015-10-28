@@ -15,7 +15,7 @@ public class Pan extends DataSupport {
     private String cangku;
     private String user;
     private List<Bianma> pan_bianma = new ArrayList<Bianma>();
-    private String status="0";
+    private String status="2";
 
     @Override
     public String toString() {

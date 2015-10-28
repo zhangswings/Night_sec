@@ -66,7 +66,7 @@ public class Activity_pan_load extends AppCompatActivity {
             //盘点单号
             map.put("id",pan.getPan_id());
             //盘点单状态
-            map.put("status",pan.getStatus().equals("0")?"未上传":"已上传");
+            map.put("status",pan.getStatus().equals("2")?"未上传":"已上传");
             //盘点单仓库
             map.put("ck",pan.getCangku());
             //日期
