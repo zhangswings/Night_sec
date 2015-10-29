@@ -8,6 +8,9 @@ import org.litepal.crud.DataSupport;
 public class ChukuInfo extends DataSupport {
     //客户
     private String kehu;
+    //客户编码
+    private String ghs;
+
     //车牌号
     private String chepai;
     //车间、仓库
@@ -15,33 +18,6 @@ public class ChukuInfo extends DataSupport {
     //班组
     private String banzu;
 
-    @Override
-    public String toString() {
-        return "ChukuInfo{" +
-                "kehu='" + kehu + '\'' +
-                ", chepai='" + chepai + '\'' +
-                ", chejian='" + chejian + '\'' +
-                ", banzu='" + banzu + '\'' +
-                ", nama='" + nama + '\'' +
-                ", bianma='" + bianma + '\'' +
-                ", tiaoma='" + tiaoma + '\'' +
-                ", fukuan='" + fukuan + '\'' +
-                ", weight='" + weight + '\'' +
-                ", kezhong='" + kezhong + '\'' +
-                ", lenght='" + lenght + '\'' +
-                ", status='" + status + '\'' +
-                ", caozuoren='" + caozuoren + '\'' +
-                ", time='" + time + '\'' +
-                '}';
-    }
-
-    public String getBanzu() {
-        return banzu;
-    }
-
-    public void setBanzu(String banzu) {
-        this.banzu = banzu;
-    }
 
     //名称
     private String nama;
@@ -58,11 +34,48 @@ public class ChukuInfo extends DataSupport {
     //长度
     private String lenght;
     //状态
-    private String status="已扫描";
+    private String status = "0";
     //操作人
     private String caozuoren;
     //时间
     private String time;
+
+    @Override
+    public String toString() {
+        return "ChukuInfo{" +
+                "kehu='" + kehu + '\'' +
+                ", ghs='" + ghs + '\'' +
+                ", chepai='" + chepai + '\'' +
+                ", chejian='" + chejian + '\'' +
+                ", banzu='" + banzu + '\'' +
+                ", nama='" + nama + '\'' +
+                ", bianma='" + bianma + '\'' +
+                ", tiaoma='" + tiaoma + '\'' +
+                ", fukuan='" + fukuan + '\'' +
+                ", weight='" + weight + '\'' +
+                ", kezhong='" + kezhong + '\'' +
+                ", lenght='" + lenght + '\'' +
+                ", status='" + status + '\'' +
+                ", caozuoren='" + caozuoren + '\'' +
+                ", time='" + time + '\'' +
+                '}';
+    }
+
+    public String getGhs() {
+        return ghs;
+    }
+
+    public void setGhs(String ghs) {
+        this.ghs = ghs;
+    }
+
+    public String getBanzu() {
+        return banzu;
+    }
+
+    public void setBanzu(String banzu) {
+        this.banzu = banzu;
+    }
 
     public String getKehu() {
         return kehu;

@@ -15,7 +15,8 @@
         android:layout_above="@+id/out_btn_guaqi"
         android:layout_below="@id/appbar"
 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="fill_parent"
@@ -68,6 +69,14 @@
             android:gravity="center"
             android:hint="请输入车牌号信息"
             android:singleLine="true" />
+
+        <TextView
+            android:layout_width="283dp"
+            android:layout_height="wrap_content"
+            android:text="挂起信息"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.80" />
 
     </LinearLayout>
 

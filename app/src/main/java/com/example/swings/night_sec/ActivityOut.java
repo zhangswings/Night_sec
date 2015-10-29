@@ -19,8 +19,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.ChukuInfo;
 import com.example.swings.night_sec.module.KeHu;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +34,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.litepal.crud.DataSupport;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -67,12 +70,15 @@ public class ActivityOut extends AppCompatActivity {
     ListView outGongyingshangList;
     @InjectView(R.id.outChepaihao)
     ClearEditText outChepaihao;
+    @InjectView(R.id.textView)
+    TextView textView;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
     private AsyncHttpClient client;
     SharedPreferences preferences;
     private String ghs = "";
     private String ghsname = "";
+    List<ChukuInfo> chukuInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,23 @@ public class ActivityOut extends AppCompatActivity {
         client.setMaxRetriesAndTimeout(5, 2000);
         client.setTimeout(5 * 1000);
         lists = new ArrayList<Map<String, String>>();
+        chukuInfos = DataSupport.where("status = 2").find(ChukuInfo.class);
+        if (chukuInfos.size() > 0) {
+            StringBuilder strbuilder = new StringBuilder();
+            strbuilder.append("挂起信息\n");
+            strbuilder.append("客户：" + chukuInfos.get(0).getKehu() + "\n");
+            strbuilder.append("车牌号：" + chukuInfos.get(0).getChepai() + "\n");
+            float weight = 0;
+            for (int i = 0; i < chukuInfos.size(); i++) {
+                strbuilder.append("条码：" + chukuInfos.get(i).getTiaoma());
+                strbuilder.append("车间：" + chukuInfos.get(i).getChejian() );
+                strbuilder.append("重量：" + chukuInfos.get(i).getWeight() + "\n");
+                weight += Float.parseFloat(chukuInfos.get(i).getWeight());
+            }
 
+            strbuilder.append("总重量：" + weight + "\n");
+            textView.setText(strbuilder);
+        }
         adapter = new SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{"name", "id"
         }, new int[]
 
@@ -148,26 +170,47 @@ public class ActivityOut extends AppCompatActivity {
                                                     showToast("输入信息有误，请不要输入,(逗号)");
                                                 } else if (!ghsname.equals(outEditText.getText().toString().trim())) {
                                                     showToast("客户信息有误，请在列表中点击选择");
+                                                } else if (!TextUtils.isEmpty(outChepaihao.getText())) {
+
+                                                    if (DataSupport.where("chepai=" + outChepaihao.getText().toString()).find(ChukuInfo.class).isEmpty()) {  //跳转下个页面出库
+                                                        Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
+                                                        //传入客户信息&&仓库信息
+                                                        intent.putExtra("ghs", ghs);
+                                                        intent.putExtra("ghsname", ghsname);
+                                                        intent.putExtra("chepaihao", outChepaihao.getText().toString());
+                                                        startActivity(intent);
+                                                        //清空
+                                                        outEditText.setText("");
+                                                    } else {
+                                                        showToast("该车辆已经挂起，请在点击查看挂起信息继续操作！");
+                                                    }
                                                 } else {
-                                                    //跳转下个页面出库
-                                                    Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
-                                                    //传入客户信息&&仓库信息
-//                                                    String[] ghsxinxi = outEditText.getText().toString().trim().split("\\/");
-                                                    intent.putExtra("ghs", ghs);
-                                                    intent.putExtra("ghsname", ghsname);
-//                                                    intent.putExtra("chepaihao", ghsname);
-
-
-//                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString().substring(0, 2));
-                                                    startActivity(intent);
-                                                    //清空
-                                                    outEditText.setText("");
+                                                    outChepaihao.setShakeAnimation();
+                                                    showToast("车牌号信息不能为空!");
                                                 }
                                             }
+
                                         }
                                     }
 
         );
+        outBtnGuaqi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (chukuInfos.size() > 0) {
+                    Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
+                    //传入客户信息&&仓库信息
+                    intent.putExtra("ghs", chukuInfos.get(0).getGhs());
+                    intent.putExtra("ghsname", chukuInfos.get(0).getKehu());
+                    intent.putExtra("chepaihao", chukuInfos.get(0).getChepai());
+                    intent.putExtra("guaqi", "guaqi");
+                    startActivity(intent);
+                } else {
+                    showToast("挂起信息不存在！");
+                }
+            }
+        });
         //输入两个字符开始提示
         outEditText.setThreshold(2);
 
