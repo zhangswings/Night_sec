@@ -11,10 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,10 @@ public class Ruku_Detail extends AppCompatActivity {
     Button outBtnCancle;
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
+    @InjectView(R.id.sacn_num)
+    TextView sacnNum;
+    @InjectView(R.id.out_ll_bottom)
+    LinearLayout outLlBottom;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
 
@@ -65,6 +72,7 @@ public class Ruku_Detail extends AppCompatActivity {
 
         lists = new ArrayList<Map<String, String>>();
         lists = (List<Map<String, String>>) getIntent().getSerializableExtra("ruku_list");
+        sacnNum.setText("已扫描："+lists.size()+"件");
         adapter = new SimpleAdapter(this, lists, R.layout.item_paper, new String[]{"name", "kezhong", "fukuan", "weight"}, new int[]{R.id.text_name, R.id.text_kezhong, R.id.text_fukuan, R.id.text_weight});
         outGongyingshangList.setAdapter(adapter);
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -94,6 +102,7 @@ public class Ruku_Detail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         lists.remove(position);
+                        sacnNum.setText("已扫描：" + lists.size() + "件");
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -117,6 +126,9 @@ public class Ruku_Detail extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
+                Intent intent =new Intent();
+                intent.putExtra("ruku_list", (Serializable) lists);
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });

@@ -316,7 +316,6 @@ public class Activity_pan_detail extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
             soundpool.play(soundid, 1, 1, 0, 0, 1);
             // id_EditText.setText("");
 
@@ -379,7 +378,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                             bianma.save();
                             Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                             pan.getPan_bianma().add(bianma);
-                            pan.setStatus("0");
+                            pan.setStatus("2");
                             pan.save();
                         }else{
                             Bianma bianma=DataSupport.where("bianma_id = "+ barcodes[0]).find(Bianma.class).get(0);
@@ -394,7 +393,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                             bianma.save();
                             Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                             pan.getPan_bianma().add(bianma);
-                            pan.setStatus("0");
+                            pan.setStatus("2");
                             pan.save();
                         }
                         if (lists.size() > 1) {

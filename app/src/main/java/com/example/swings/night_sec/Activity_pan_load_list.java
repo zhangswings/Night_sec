@@ -64,16 +64,14 @@ public class Activity_pan_load_list extends AppCompatActivity {
             Map<String, String> map=new HashMap<String, String>();
             //条码号
             map.put("id", tiaoma.getBianma_id());
-            //编码号
-            map.put("status",tiaoma.getBid());
             //重量
-            map.put("ck",tiaoma.getWeight());
+            map.put("ck",tiaoma.getLength());
             //长度
 //            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            map.put("date",tiaoma.getLength());
+            map.put("date",tiaoma.getWeight());
             lists.add(map);
         }
-        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_paper,new String[]{"id","ck","status","date"},new int[]{R.id.texts_tiaoma,R.id.texts_bianma,R.id.texts_weight,R.id.texts_length});
+        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_detail,new String[]{"id","status","date"},new int[]{R.id.texts_tiaoma,R.id.texts_weight,R.id.texts_length});
         listOffListview.setAdapter(adapter);
         listOffListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

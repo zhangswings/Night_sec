@@ -21,8 +21,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -57,6 +59,10 @@ public class Tuiku_Detail extends AppCompatActivity {
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
     private static AsyncHttpClient client;
+    @InjectView(R.id.sacn_num)
+    TextView sacnNum;
+    @InjectView(R.id.out_ll_bottom)
+    LinearLayout outLlBottom;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
     String ghs = "";
@@ -145,7 +151,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                 progressDialog.show();
                                                 //设置重复请求次数，间隔
                                                 client.setMaxRetriesAndTimeout(5, 3000);
-                                                client.setTimeout(5*1000);
+                                                client.setTimeout(5 * 1000);
                                                 //设置超时时间，默认10s
                                                 client.post(Tuiku_Detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/AddReturnStore", params, new AsyncHttpResponseHandler() {
                                                     @Override
@@ -224,6 +230,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         lists.remove(position);
+                        sacnNum.setText("已扫描："+lists.size()+"件");
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -328,7 +335,7 @@ public class Tuiku_Detail extends AppCompatActivity {
             byte[] barcode = intent.getByteArrayExtra("barocode");
             int barocodelen = intent.getIntExtra("length", 0);
             byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-            android.util.Log.i("debug", "----codetype--" + temp);
+            Log.i("debug", "----codetype--" + temp);
             try {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
@@ -364,7 +371,7 @@ public class Tuiku_Detail extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
+            sacnNum.setText("已扫描："+lists.size()+"件");
 
         }
 

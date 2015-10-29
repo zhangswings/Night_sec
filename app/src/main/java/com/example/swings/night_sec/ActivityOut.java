@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -15,9 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.KeHu;
@@ -44,16 +45,28 @@ import cz.msebera.android.httpclient.Header;
 
 public class ActivityOut extends AppCompatActivity {
 
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+    @InjectView(R.id.appbar)
+    AppBarLayout appbar;
     @InjectView(R.id.out_editText)
     AutoEditText outEditText;
-    @InjectView(R.id.out_gongyingshang_list)
-    ListView outGongyingshangList;
+
+    @InjectView(R.id.out_ll_content)
+    LinearLayout outLlContent;
+    @InjectView(R.id.out_btn_guaqi)
+    Button outBtnGuaqi;
     @InjectView(R.id.out_btn_cancle)
     Button outBtnCancle;
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
-    @InjectView(R.id.cangku_spinner)
-    Spinner outCangku;
+    @InjectView(R.id.out_ll_bottom)
+    LinearLayout outLlBottom;
+    @InjectView(R.id.out_gongyingshang_list)
+    ListView outGongyingshangList;
+    @InjectView(R.id.outChepaihao)
+    ClearEditText outChepaihao;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
     private AsyncHttpClient client;
@@ -66,17 +79,7 @@ public class ActivityOut extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_out);
         ButterKnife.inject(this);
-        outCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                showToast("选择了仓库 " + outCangku.getSelectedItem());
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                showToast("你还未选择!");
-            }
-        });
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_ghs);
@@ -92,7 +95,7 @@ public class ActivityOut extends AppCompatActivity {
         client = new AsyncHttpClient();
         //设置超时
         client.setMaxRetriesAndTimeout(5, 2000);
-        client.setTimeout(5*1000);
+        client.setTimeout(5 * 1000);
         lists = new ArrayList<Map<String, String>>();
 
         adapter = new SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{"name", "id"
@@ -152,7 +155,10 @@ public class ActivityOut extends AppCompatActivity {
 //                                                    String[] ghsxinxi = outEditText.getText().toString().trim().split("\\/");
                                                     intent.putExtra("ghs", ghs);
                                                     intent.putExtra("ghsname", ghsname);
-                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString().substring(0, 2));
+//                                                    intent.putExtra("chepaihao", ghsname);
+
+
+//                                                    intent.putExtra("ck", outCangku.getSelectedItem().toString().substring(0, 2));
                                                     startActivity(intent);
                                                     //清空
                                                     outEditText.setText("");

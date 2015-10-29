@@ -87,16 +87,15 @@ public class Ruku extends AppCompatActivity {
     EditText editTextRuCjbz;
     @InjectView(R.id.ll_content)
     LinearLayout llContent;
-    @InjectView(R.id.scan_num)
-    TextView scanNum;
     @InjectView(R.id.ip_btn_back)
     Button ruBtnCancle;
     @InjectView(R.id.ip_btn_ok)
     Button ruBtnOk;
     private static AsyncHttpClient client;
+    private  TextView mScanNum;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
-    private List<Map<String, String>> lists;
+    private List<Map<String, String>> lists=new ArrayList<Map<String, String>>();
     private String chejian_str;
     private String banzu_str;
 
@@ -107,7 +106,8 @@ public class Ruku extends AppCompatActivity {
         setContentView(R.layout.activity_ruku);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
-        lists = new ArrayList<Map<String, String>>();
+        mScanNum= (TextView) findViewById(R.id.scan_num);
+        mScanNum.setText(lists.size() + "件");
         client = new AsyncHttpClient();
         //设置重复请求次数，间隔
         client.setMaxRetriesAndTimeout(3, 2000);
@@ -312,8 +312,9 @@ public class Ruku extends AppCompatActivity {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
                 barcodes = barcodeStr.split("\\|");
-                if (barcodes.length > 10 ) {
+                if (barcodes.length > 10) {
                     if (lists.toString().contains(barcodes[1])) {
+                        MediaPlayer.create(Ruku.this, R.raw.tiaoma_added).start();
                         showToast("该条码已添加!");
                     } else {
 
@@ -345,14 +346,16 @@ public class Ruku extends AppCompatActivity {
                             if (lists.size() > 1) {
                                 preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                             }
-                            scanNum.setText(String.valueOf(lists.size()) + "件");
+                            mScanNum.setText(lists.size() + "件");
                         } else {
                             showToast("条码对应车间(仓库)不符!");
+                            MediaPlayer.create(Ruku.this, R.raw.cangku_err).start();
                             barcodes = null;
                         }
                     }
                 } else {
                     showToast("条码格式不对！");
+                    MediaPlayer.create(Ruku.this, R.raw.tiaoma_err).start();
                     barcodes = null;
 //                    Toast.makeText(RuKu.this, "条码格式不对！", Toast.LENGTH_LONG).show();
                 }
@@ -389,7 +392,7 @@ public class Ruku extends AppCompatActivity {
 
     private void clearEditText() {
         lists.clear();
-        scanNum.setText(String.valueOf(lists.size()) + "件");
+        mScanNum.setText(lists.size() + "件");
         thisEditText.setText("");
         preEditText.setText("");
         editTextRuBianma.setText("");
@@ -504,11 +507,56 @@ public class Ruku extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(Ruku.this, Ruku_Detail.class);
             intent.putExtra("ruku_list", (Serializable) lists);
-            startActivity(intent);
+//            startActivity(intent);
+            startActivityForResult(intent, 1);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static final int REQUSET = 1;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Ruku.REQUSET && resultCode == RESULT_OK) {
+            clearEditText();
+            lists = (List<Map<String, String>>) data.getSerializableExtra("ruku_list");
+            if (lists.size() > 1) {
+                preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
+                thisEditText.setText(lists.get(lists.size() - 1).get("tiaoma"));
+                editTextRuBianma.setText(lists.get(lists.size() - 1).get("bianma"));
+                editTextRuCode.setText(lists.get(lists.size() - 1).get("tiaoma"));
+                editTextRuName.setText(lists.get(lists.size() - 1).get("name"));
+                editTextRuFukuan.setText(lists.get(lists.size() - 1).get("fukuan"));
+                editTextRuKezhong.setText(lists.get(lists.size() - 1).get("kezhong"));
+                editTextRuWeight.setText(lists.get(lists.size() - 1).get("weight"));
+                editTextRuLength.setText(lists.get(lists.size() - 1).get("length"));
+                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian")+"/"+lists.get(lists.size() - 1).get("banzu"));
+
+            } else if (lists.size() == 1) {
+                thisEditText.setText(lists.get(lists.size() - 1).get("tiaoma"));
+                editTextRuBianma.setText(lists.get(lists.size() - 1).get("bianma"));
+                editTextRuCode.setText(lists.get(lists.size() - 1).get("tiaoma"));
+                editTextRuName.setText(lists.get(lists.size() - 1).get("name"));
+                editTextRuFukuan.setText(lists.get(lists.size() - 1).get("fukuan"));
+                editTextRuKezhong.setText(lists.get(lists.size() - 1).get("kezhong"));
+                editTextRuWeight.setText(lists.get(lists.size() - 1).get("weight"));
+                editTextRuLength.setText(lists.get(lists.size() - 1).get("length"));
+                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian")+"/"+lists.get(lists.size() - 1).get("banzu"));
+
+
+            }
+//            showToast(lists.size()+">>"+lists.toString());
+            mScanNum.setText(lists.size() + "件");
+//            Log.d("zhang",lists.toString());
+//            Toast.makeText(
+//                    this,
+//                    "requestCode=" + requestCode + ":" + "resultCode=" + resultCode+">>>"+lists.toString(),
+//                    Toast.LENGTH_LONG).show();
+//            mScanNum.setText(lists.size() + "件");
+        }
     }
 
     /**

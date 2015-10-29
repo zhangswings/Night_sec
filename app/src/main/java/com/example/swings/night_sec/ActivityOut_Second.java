@@ -17,15 +17,18 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.swings.night_sec.module.ChukuInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -59,11 +62,17 @@ public class ActivityOut_Second extends AppCompatActivity {
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
     private static AsyncHttpClient client;
+    @InjectView(R.id.sacn_num)
+    TextView sacnNum;
+    @InjectView(R.id.out_ll_bottom)
+    LinearLayout outLlBottom;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
     String ghs = "";
     String ghsname = "";
     String ck = "";
+    String chepaihao = "";
+    String kehu = "";
 
     ProgressDialog progressDialog;
     SharedPreferences preferences;
@@ -71,15 +80,17 @@ public class ActivityOut_Second extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //全屏显示
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_activity_out_second);
         ButterKnife.inject(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         client = new AsyncHttpClient();
         ghs = getIntent().getStringExtra("ghs");
         ghsname = getIntent().getStringExtra("ghsname");
-        ck = getIntent().getStringExtra("ck");
+//        ck = getIntent().getStringExtra("ck");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("仓库" + ck + "&" + ghsname);
+        toolbar.setTitle( ghsname);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -109,7 +120,7 @@ public class ActivityOut_Second extends AppCompatActivity {
         outBtnOk.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            if (!TextUtils.isEmpty(outEditText.getText()) && !lists.isEmpty()) {
+                                            if (!lists.isEmpty()) {
                                                 RequestParams params = new RequestParams();
                                                 //传递参数
                                                 String content_str = "";
@@ -231,6 +242,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         lists.remove(position);
+                        sacnNum.setText("已扫描："+lists.size()+"件");
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -336,7 +348,7 @@ public class ActivityOut_Second extends AppCompatActivity {
             byte[] barcode = intent.getByteArrayExtra("barocode");
             int barocodelen = intent.getIntExtra("length", 0);
             byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-            android.util.Log.i("debug", "----codetype--" + temp);
+            Log.i("debug", "----codetype--" + temp);
             try {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
@@ -346,7 +358,7 @@ public class ActivityOut_Second extends AppCompatActivity {
 //                            ) {
 //                        Log.d("wan", str);
 //                    }
-                    if (ck.equals(barcodes[7])) {
+//                    if (ck.equals(barcodes[7])) {
                         if (!lists.toString().contains(barcodes[1])) {
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("name", barcodes[2]);
@@ -359,20 +371,42 @@ public class ActivityOut_Second extends AppCompatActivity {
                             lists.add(map);
                             adapter.notifyDataSetChanged();
                             outEditText.setText(barcodes[1]);
+                            ChukuInfo chukuInfo=new ChukuInfo();
+                            chukuInfo.setStatus("已扫描");
+
+                            chukuInfo.setBianma(barcodes[0]);
+                            chukuInfo.setTiaoma(barcodes[1]);
+                            chukuInfo.setNama(barcodes[2]);
+                            chukuInfo.setFukuan(barcodes[3]);
+                            chukuInfo.setKezhong(barcodes[4]);
+                            chukuInfo.setWeight(barcodes[5]);
+                            chukuInfo.setLenght(barcodes[6]);
+                            chukuInfo.setChejian(barcodes[7]);
+                            chukuInfo.setBanzu(barcodes[8]);
+                            chukuInfo.setTime(barcodes[9]);
+                            chukuInfo.setCaozuoren(barcodes[10]);
+
+                            chukuInfo.setChepai(chepaihao);
+                            chukuInfo.setKehu(kehu);
+                            chukuInfo.save();
+
                         } else {
                             showToast("该条码已添加!");
+                            MediaPlayer.create(ActivityOut_Second.this, R.raw.tiaoma_added).start();
                         }
-                    } else {
-                        showToast("该条码对应车间(仓库)有误!");
-                    }
+//                    } else {
+//                        MediaPlayer.create(ActivityOut_Second.this, R.raw.cangku_err).start();
+//                        showToast("该条码对应车间(仓库)有误!");
+//                    }
 
                 } else {
                     showToast("条码格式不正确!");
+                    MediaPlayer.create(ActivityOut_Second.this, R.raw.tiaoma_err).start();
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-
+            sacnNum.setText("已扫描："+lists.size()+"件");
 
         }
 

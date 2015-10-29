@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         client = new AsyncHttpClient();
 //        client.setMaxRetriesAndTimeout(3, 2000);
-        client.setTimeout(5 * 1000);
+//        client.setTimeout(5 * 1000);
 //        client.setResponseTimeout(2*1000);
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

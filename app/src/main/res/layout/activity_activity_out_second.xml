@@ -25,48 +25,61 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:drawableLeft="@mipmap/right"
             android:gravity="center"
             android:hint="请扫描出库产品条码"
             android:singleLine="true" />
-
+        <TextView
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:id="@+id/sacn_num"
+            android:textColor="#ff3023"
+            android:textSize="16sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="已扫描：0件" />
         <ListView
             android:id="@+id/out_gongyingshang_list"
             android:layout_width="match_parent"
-            android:divider="#2ecb71"
-            android:dividerHeight="1px"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"></ListView>
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:layout_marginRight="10dp"
+            android:divider="#2ecb71"
+            android:dividerHeight="1px"></ListView>
+
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/out_ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/out_btn_cancle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginRight="2dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_lightred_red"
-            android:text="@string/btn_cancle" />
+            android:text="挂起" />
 
         <Button
             android:id="@+id/out_btn_ok"
             android:layout_width="0dp"
-            android:layout_marginLeft="2dp"
-            android:background="@drawable/btn_lightred_green"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:layout_weight="1"
-            android:text="@string/btn_ok" />
+            android:background="@drawable/btn_lightred_green"
+            android:text="上传" />
     </LinearLayout>
 </RelativeLayout>

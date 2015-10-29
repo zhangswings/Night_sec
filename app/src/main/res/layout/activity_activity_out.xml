@@ -12,7 +12,7 @@
         android:id="@+id/out_ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/out_ll_bottom"
+        android:layout_above="@+id/out_btn_guaqi"
         android:layout_below="@id/appbar"
 
         android:orientation="vertical">
@@ -53,26 +53,33 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
-            android:text="请输入仓库信息"
+            android:text="请输入车牌号信息"
             android:textSize="18sp" />
 
-        <Spinner
-            android:spinnerMode="dialog"
-            android:id="@+id/cangku_spinner"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+        <com.example.swings.night_sec.ClearEditText
+            android:id="@+id/outChepaihao"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:prompt="@string/cangku_info"
-            android:background="#2ecb71"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/banzu_ll"
-            android:entries="@array/chejian"
-            />
-
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:drawableLeft="@mipmap/right"
+            android:gravity="center"
+            android:hint="请输入车牌号信息"
+            android:singleLine="true" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/out_btn_guaqi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/out_ll_bottom"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/btn_lightred_red"
+        android:text="查看挂起出库信息" />
 
     <LinearLayout
         android:id="@+id/out_ll_bottom"
@@ -85,19 +92,19 @@
         <Button
             android:id="@+id/out_btn_cancle"
             android:layout_width="0dp"
-            android:background="@drawable/btn_lightred_red"
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_weight="1"
+            android:background="@drawable/btn_lightred_red"
             android:text="@string/btn_cancle" />
 
         <Button
             android:id="@+id/out_btn_ok"
             android:layout_width="0dp"
-            android:background="@drawable/btn_lightred_green"
-            android:layout_marginLeft="2dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:layout_weight="1"
+            android:background="@drawable/btn_lightred_green"
             android:text="@string/btn_ok" />
     </LinearLayout>
 </RelativeLayout>
