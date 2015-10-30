@@ -331,13 +331,15 @@ public class ActivityOut extends AppCompatActivity {
             sb.append("挂起信息\n");
             sb.append("客户：" + Chukus.get(0).getKehu() + "\n");
             sb.append("车牌号：" + Chukus.get(0).getChepai() + "\n");
-            sb.append((numck_01 > 0 ? "车间:01 "  + "总重量:" + numck_01 + "\n" : "") + (numck_02 > 0 ? "车间:02 " + "总重量:" + numck_02 + "\n" : "") + (numck_03 > 0 ? "车间:03 "  + "总重量:" + numck_03 + "\n" : "") + (numck_04 > 0 ? "车间:04" + "总重量:" + numck_04 + "\n" : "") + (numck_05 > 0 ? "车间:05" + "总重量:" + numck_05 + "\n" : ""));
+            sb.append((numck_01 > 0 ? "车间:01"   + " 总件数:"+strck_01+ " 总重量:" + numck_01+"\n" : "") + (numck_02 > 0 ? "车间:02"   + " 总件数:"+strck_02+ " 总重量:" + numck_02+ "\n" : "") + (numck_03 > 0 ? "车间:03"  + " 总件数:"+strck_03 + " 总重量:" + numck_03 + "\n" : "") + (numck_04 > 0 ? "车间:04" +  " 总件数:"+strck_04+" 总重量:" + numck_04  + "\n" : "") + (numck_05 > 0 ? "车间:05" +  " 总件数:"+strck_05 +" 总重量:" + numck_05 + "\n" : ""));
             sb.append("总重量：" + (numck_01+numck_02+numck_03+numck_04+numck_05) + "\n");
             textView.setText(sb);
         }else{
             textView.setText("挂起信息为空!");
         }
     }
+
+
 
     /**
      * 显示Toast消息

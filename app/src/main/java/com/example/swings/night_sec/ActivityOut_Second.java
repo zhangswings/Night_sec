@@ -18,10 +18,12 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -131,6 +133,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                 map.put("length", chukuInfo.getLenght());
                 map.put("kezhong", chukuInfo.getKezhong());
                 map.put("fukuan", chukuInfo.getFukuan());
+                map.put("chejian", chukuInfo.getChejian());
                 lists.add(map);
             }
             sacnNum.setText("已扫描：" + lists.size() + "件");
@@ -139,33 +142,59 @@ public class ActivityOut_Second extends AppCompatActivity {
         outBtnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!lists.isEmpty()) {
-                    if (DataSupport.where("  status = '2'").find(ChukuInfo.class).isEmpty() || !DataSupport.where("chepai = " + chepaihao + " and status = '2'").find(ChukuInfo.class).isEmpty()) {
-                        List<ChukuInfo> ChukuInfos = DataSupport.where("chepai = " + chepaihao + " and status = '1'").find(ChukuInfo.class);
-                        Log.d("zhang", ChukuInfos.toString());
-                        int temp = 0;
-                        if (ChukuInfos.size() > 0) {
-                            for (ChukuInfo chukuinfo : ChukuInfos
-                                    ) {
-                                chukuinfo.setStatus("2");
-                                if (chukuinfo.save()) {
-                                    temp++;
+
+                AlertDialog.Builder nextBuilder = new AlertDialog.Builder(ActivityOut_Second.this);
+                nextBuilder.setTitle("请输入车牌号进行二次确认");
+                nextBuilder.setIcon(R.mipmap.right);
+                LayoutInflater factory = LayoutInflater.from(ActivityOut_Second.this);
+                View view = factory.inflate(R.layout.alert_dialog, null);
+                final EditText editText = (EditText) view.findViewById(R.id.editText);
+                final TextView textView = (TextView) view.findViewById(R.id.textView2);
+                textView.setText("请输入车牌号:" + chepaihao);
+                nextBuilder.setView(view);
+                nextBuilder.setPositiveButton("确认挂起", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        textView.setText("请输入车牌号:" + chepaihao);
+                        String chepaihao_str = editText.getText().toString();
+                        if (chepaihao.equals(chepaihao_str)) {
+                            showToast("输入正确");
+                            if (!lists.isEmpty()) {
+                                if (DataSupport.where("  status = '2'").find(ChukuInfo.class).isEmpty() || !DataSupport.where("chepai = " + chepaihao + " and status = '2'").find(ChukuInfo.class).isEmpty()) {
+                                    List<ChukuInfo> ChukuInfos = DataSupport.where("chepai = " + chepaihao + " and status = '1'").find(ChukuInfo.class);
+                                    Log.d("zhang", ChukuInfos.toString());
+                                    int temp = 0;
+                                    if (ChukuInfos.size() > 0) {
+                                        for (ChukuInfo chukuinfo : ChukuInfos
+                                                ) {
+                                            chukuinfo.setStatus("2");
+                                            if (chukuinfo.save()) {
+                                                temp++;
+                                            }
+                                        }
+                                        if (temp == ChukuInfos.size()) {
+                                            showToast("已全部挂起！");
+                                            onBackPressed();
+                                        }
+                                    } else {
+                                        showToast("已全部挂起！");
+                                        onBackPressed();
+                                    }
+                                } else {
+                                    showToast("已有挂起车辆！不能再次挂起！");
                                 }
-                            }
-                            if (temp == ChukuInfos.size()) {
-                                showToast("已全部挂起！");
-                                onBackPressed();
+                            } else {
+                                showToast("需挂起出货信息为空！");
                             }
                         } else {
-                            showToast("已全部挂起！");
-                            onBackPressed();
+                            showToast("输入错误，请重新操作!");
                         }
-                    } else {
-                        showToast("已有挂起车辆！不能再次挂起！");
                     }
-                } else {
-                    showToast("需挂起出货信息为空！");
-                }
+                });
+                nextBuilder.setNegativeButton("取消", null);
+                nextBuilder.create().show();
+
+
             }
         });
         //上传按钮
@@ -228,347 +257,483 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
 
-
-                                                        RequestParams params = new RequestParams();
-                                                        //传递参数
-                                                        String content_str = "";
-                                                        String detail_str = "";
-                                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                                        //操作人、时间。仓库(车间)、客户编号、客户、车牌号
-                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + ck + "," + ghs + "," + kehu;
-                                                        List<ChukuInfo> Chukus;
+                                                        AlertDialog.Builder nextBuilder = new AlertDialog.Builder(ActivityOut_Second.this);
+                                                        nextBuilder.setTitle("请输入车牌号进行二次确认");
+                                                        nextBuilder.setIcon(R.mipmap.right);
+                                                        LayoutInflater factory = LayoutInflater.from(ActivityOut_Second.this);
+                                                        View view = factory.inflate(R.layout.alert_dialog, null);
+                                                        final EditText editText = (EditText) view.findViewById(R.id.editText);
+                                                        final TextView textView = (TextView) view.findViewById(R.id.textView2);
+                                                        textView.setText("请输入车牌号:" + chepaihao);
+                                                        nextBuilder.setView(view);
+                                                        nextBuilder.setPositiveButton("确认上传", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                textView.setText("请输入车牌号:" + chepaihao);
+                                                                String chepaihao_str = editText.getText().toString();
+                                                                if (chepaihao.equals(chepaihao_str)) {
+                                                                    showToast("输入正确");
+                                                                    RequestParams params = new RequestParams();
+                                                                    //传递参数
+                                                                    String content_str = "";
+                                                                    String detail_str = "";
+                                                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                                    //操作人、时间。仓库(车间)、客户编号、客户、车牌号
+                                                                    content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + ck + "," + ghs + "," + kehu;
+                                                                    List<ChukuInfo> Chukus;
 //                                                if (("guaqi").equals(getIntent().getStringExtra("guaqi"))) {
 //                                                    //挂起出库车辆信息
 //                                                    Chukus = DataSupport.where("chepai = " + chepaihao + " and status = '2'").find(ChukuInfo.class);
 //                                                } else {
-                                                        //当前出库车辆信息
-                                                        Chukus = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
+                                                                    //当前出库车辆信息
+                                                                    Chukus = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
 
 //                                                }
 
-                                                        int strck_01 = 0, strck_02 = 0, strck_03 = 0, strck_04 = 0, strck_05 = 0;
+                                                                    int strck_01 = 0, strck_02 = 0, strck_03 = 0, strck_04 = 0, strck_05 = 0;
 //                                                content_str);
 //                                                Log.d("zhang", detail_str);
-                                                        String content_str_01, content_str_02, content_str_03, content_str_04, content_str_05;
-                                                        StringBuilder detail_str_01 = new StringBuilder();
-                                                        StringBuilder detail_str_02 = new StringBuilder();
-                                                        StringBuilder detail_str_03 = new StringBuilder();
-                                                        StringBuilder detail_str_04 = new StringBuilder();
-                                                        StringBuilder detail_str_05 = new StringBuilder();
-                                                        for (int i = 0; i < Chukus.size(); i++) {
-                                                            switch (Chukus.get(i).getChejian()) {
-                                                                case "01":
-                                                                    strck_01 += 1;
+                                                                    String content_str_01, content_str_02, content_str_03, content_str_04, content_str_05;
+                                                                    StringBuilder detail_str_01 = new StringBuilder();
+                                                                    StringBuilder detail_str_02 = new StringBuilder();
+                                                                    StringBuilder detail_str_03 = new StringBuilder();
+                                                                    StringBuilder detail_str_04 = new StringBuilder();
+                                                                    StringBuilder detail_str_05 = new StringBuilder();
+                                                                    for (int i = 0; i < Chukus.size(); i++) {
+                                                                        switch (Chukus.get(i).getChejian()) {
+                                                                            case "01":
+                                                                                strck_01 += 1;
+                                                                                if (strck_01 > 0) {
+                                                                                    detail_str_01.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                                }
+                                                                                if (strck_01 == 1) {
+                                                                                    accountnum += 1;
+                                                                                }
+                                                                                break;
+                                                                            case "02":
+                                                                                strck_02 += 1;
+                                                                                if (strck_02 > 0) {
+                                                                                    detail_str_02.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                                }
+                                                                                if (strck_02 == 1) {
+                                                                                    accountnum += 1;
+                                                                                }
+                                                                                break;
+                                                                            case "03":
+                                                                                strck_03 += 1;
+                                                                                if (strck_03 > 0) {
+                                                                                    detail_str_03.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                                }
+                                                                                if (strck_03 == 1) {
+                                                                                    accountnum += 1;
+                                                                                }
+                                                                                break;
+                                                                            case "04":
+                                                                                strck_04 += 1;
+                                                                                if (strck_04 > 0) {
+                                                                                    detail_str_04.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                                }
+                                                                                if (strck_04 == 1) {
+                                                                                    accountnum += 1;
+                                                                                }
+                                                                                break;
+                                                                            case "05":
+                                                                                strck_05 += 1;
+                                                                                if (strck_05 > 0) {
+                                                                                    detail_str_05.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                                }
+                                                                                if (strck_05 == 1) {
+                                                                                    accountnum += 1;
+                                                                                }
+                                                                                break;
+                                                                        }
+                                                                    }
                                                                     if (strck_01 > 0) {
-                                                                        detail_str_01.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                        detail_str = detail_str_01.substring(0, detail_str_01.length() - 1);
+                                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "01" + "," + ghs + "," + kehu + "," + chepaihao;
+                                                                        RequestParams params_01 = new RequestParams();
+                                                                        params.put("Content", content_str);
+                                                                        params.put("Detail", detail_str);
+                                                                        Log.d("zhang", content_str);
+                                                                        Log.d("zhang", detail_str);
+                                                                        //设置重复请求次数，间隔
+                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+                                                                        //设置超时时间，默认10s
+                                                                        client.setTimeout(5 * 1000);
+                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                            @Override
+                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                                if (statusCode == 200) {
+                                                                                    progressDialog.dismiss();
+                                                                                    String info = "";
+                                                                                    String text = new String(responseBody);
+                                                                                    Log.d("zhang", text + ">>>>>zhang");
+                                                                                    try {
+                                                                                        Document document = DocumentHelper.parseText(text);
+                                                                                        Element element = document.getRootElement();
+                                                                                        info = element.getText();
+
+                                                                                    } catch (DocumentException de) {
+                                                                                        Log.e("de", de.toString());
+                                                                                    }
+                                                                                    if ("\"成功\"".equals(info)) {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                        chukunum += 1;
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '01'");
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        if (!chukuInfos.isEmpty()) {
+                                                                                            for (ChukuInfo chukuInfo : chukuInfos
+                                                                                                    ) {
+                                                                                                Map<String, String> map = new HashMap<String, String>();
+                                                                                                map.put("name", chukuInfo.getNama());
+                                                                                                map.put("bianma", chukuInfo.getBianma());
+                                                                                                map.put("tiaoma", chukuInfo.getTiaoma());
+                                                                                                map.put("weight", chukuInfo.getWeight());
+                                                                                                map.put("length", chukuInfo.getLenght());
+                                                                                                map.put("kezhong", chukuInfo.getKezhong());
+                                                                                                map.put("fukuan", chukuInfo.getFukuan());
+                                                                                                map.put("chejian", chukuInfo.getChejian());
+                                                                                                lists.add(map);
+                                                                                            }
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+                                                                                        } else {
+                                                                                            lists.clear();
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+
+                                                                                        }
+                                                                                        if (chukunum == accountnum) {
+                                                                                            showToast("全部出库成功!");
+                                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                            finish();
+                                                                                        }
+                                                                                    } else {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                        showToast(info);
+                                                                                    }
+                                                                                    barcodes = null;
+                                                                                }
+
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                                progressDialog.dismiss();
+                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                showToast(error.toString());
+                                                                            }
+                                                                        });
                                                                     }
-                                                                    if (strck_01 == 1) {
-                                                                        accountnum += 1;
-                                                                    }
-                                                                    break;
-                                                                case "02":
-                                                                    strck_02 += 1;
                                                                     if (strck_02 > 0) {
-                                                                        detail_str_02.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                        detail_str = detail_str_02.substring(0, detail_str_02.length() - 1);
+                                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "02" + "," + ghs + "," + kehu + "," + chepaihao;
+                                                                        RequestParams params_01 = new RequestParams();
+                                                                        params.put("Content", content_str);
+                                                                        params.put("Detail", detail_str);
+                                                                        Log.d("zhang", content_str);
+                                                                        Log.d("zhang", detail_str);
+                                                                        //设置重复请求次数，间隔
+                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+                                                                        //设置超时时间，默认10s
+                                                                        client.setTimeout(5 * 1000);
+                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                            @Override
+                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                                if (statusCode == 200) {
+                                                                                    progressDialog.dismiss();
+                                                                                    String info = "";
+                                                                                    String text = new String(responseBody);
+                                                                                    Log.d("zhang", text + ">>>>>zhang");
+                                                                                    try {
+                                                                                        Document document = DocumentHelper.parseText(text);
+                                                                                        Element element = document.getRootElement();
+                                                                                        info = element.getText();
+
+                                                                                    } catch (DocumentException de) {
+                                                                                        Log.e("de", de.toString());
+                                                                                    }
+                                                                                    if ("\"成功\"".equals(info)) {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                        chukunum += 1;
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '02'");
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        if (!chukuInfos.isEmpty()) {
+                                                                                            for (ChukuInfo chukuInfo : chukuInfos
+                                                                                                    ) {
+                                                                                                Map<String, String> map = new HashMap<String, String>();
+                                                                                                map.put("name", chukuInfo.getNama());
+                                                                                                map.put("bianma", chukuInfo.getBianma());
+                                                                                                map.put("tiaoma", chukuInfo.getTiaoma());
+                                                                                                map.put("weight", chukuInfo.getWeight());
+                                                                                                map.put("length", chukuInfo.getLenght());
+                                                                                                map.put("kezhong", chukuInfo.getKezhong());
+                                                                                                map.put("fukuan", chukuInfo.getFukuan());
+                                                                                                map.put("chejian", chukuInfo.getChejian());
+                                                                                                lists.add(map);
+                                                                                            }
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+                                                                                        } else {
+                                                                                            lists.clear();
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+
+                                                                                        }
+                                                                                        if (chukunum == accountnum) {
+                                                                                            showToast("全部出库成功!");
+                                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                            finish();
+                                                                                        }
+                                                                                    } else {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                        showToast(info);
+                                                                                    }
+                                                                                    barcodes = null;
+                                                                                }
+
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                                progressDialog.dismiss();
+                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                showToast(error.toString());
+                                                                            }
+                                                                        });
                                                                     }
-                                                                    if (strck_02 == 1) {
-                                                                        accountnum += 1;
-                                                                    }
-                                                                    break;
-                                                                case "03":
-                                                                    strck_03 += 1;
                                                                     if (strck_03 > 0) {
-                                                                        detail_str_03.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                        detail_str = detail_str_03.substring(0, detail_str_03.length() - 1);
+                                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "03" + "," + ghs + "," + kehu + "," + chepaihao;
+                                                                        RequestParams params_01 = new RequestParams();
+                                                                        params.put("Content", content_str);
+                                                                        params.put("Detail", detail_str);
+                                                                        Log.d("zhang", content_str);
+                                                                        Log.d("zhang", detail_str);
+                                                                        //设置重复请求次数，间隔
+                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+                                                                        //设置超时时间，默认10s
+                                                                        client.setTimeout(5 * 1000);
+                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                            @Override
+                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                                if (statusCode == 200) {
+                                                                                    progressDialog.dismiss();
+                                                                                    String info = "";
+                                                                                    String text = new String(responseBody);
+                                                                                    Log.d("zhang", text + ">>>>>zhang");
+                                                                                    try {
+                                                                                        Document document = DocumentHelper.parseText(text);
+                                                                                        Element element = document.getRootElement();
+                                                                                        info = element.getText();
+
+                                                                                    } catch (DocumentException de) {
+                                                                                        Log.e("de", de.toString());
+                                                                                    }
+                                                                                    if ("\"成功\"".equals(info)) {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                        chukunum += 1;
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '03'");
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        if (!chukuInfos.isEmpty()) {
+                                                                                            for (ChukuInfo chukuInfo : chukuInfos
+                                                                                                    ) {
+                                                                                                Map<String, String> map = new HashMap<String, String>();
+                                                                                                map.put("name", chukuInfo.getNama());
+                                                                                                map.put("bianma", chukuInfo.getBianma());
+                                                                                                map.put("tiaoma", chukuInfo.getTiaoma());
+                                                                                                map.put("weight", chukuInfo.getWeight());
+                                                                                                map.put("length", chukuInfo.getLenght());
+                                                                                                map.put("kezhong", chukuInfo.getKezhong());
+                                                                                                map.put("fukuan", chukuInfo.getFukuan());
+                                                                                                map.put("chejian", chukuInfo.getChejian());
+                                                                                                lists.add(map);
+                                                                                            }
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+                                                                                        } else {
+                                                                                            lists.clear();
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+
+                                                                                        }
+                                                                                        if (chukunum == accountnum) {
+                                                                                            showToast("全部出库成功!");
+                                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                            finish();
+                                                                                        }
+                                                                                    } else {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                        showToast(info);
+                                                                                    }
+                                                                                    barcodes = null;
+                                                                                }
+
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                                progressDialog.dismiss();
+                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                showToast(error.toString());
+                                                                            }
+                                                                        });
                                                                     }
-                                                                    if (strck_03 == 1) {
-                                                                        accountnum += 1;
-                                                                    }
-                                                                    break;
-                                                                case "04":
-                                                                    strck_04 += 1;
                                                                     if (strck_04 > 0) {
-                                                                        detail_str_04.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
+                                                                        detail_str = detail_str_04.substring(0, detail_str_04.length() - 1);
+                                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "04" + "," + ghs + "," + kehu + "," + chepaihao;
+                                                                        RequestParams params_01 = new RequestParams();
+                                                                        params.put("Content", content_str);
+                                                                        params.put("Detail", detail_str);
+                                                                        Log.d("zhang", content_str);
+                                                                        Log.d("zhang", detail_str);
+                                                                        //设置重复请求次数，间隔
+                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+                                                                        //设置超时时间，默认10s
+                                                                        client.setTimeout(5 * 1000);
+                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                            @Override
+                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                                if (statusCode == 200) {
+                                                                                    progressDialog.dismiss();
+                                                                                    String info = "";
+                                                                                    String text = new String(responseBody);
+                                                                                    Log.d("zhang", text + ">>>>>zhang");
+                                                                                    try {
+                                                                                        Document document = DocumentHelper.parseText(text);
+                                                                                        Element element = document.getRootElement();
+                                                                                        info = element.getText();
+
+                                                                                    } catch (DocumentException de) {
+                                                                                        Log.e("de", de.toString());
+                                                                                    }
+                                                                                    if ("\"成功\"".equals(info)) {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                        chukunum += 1;
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '04'");
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        if (!chukuInfos.isEmpty()) {
+                                                                                            for (ChukuInfo chukuInfo : chukuInfos
+                                                                                                    ) {
+                                                                                                Map<String, String> map = new HashMap<String, String>();
+                                                                                                map.put("name", chukuInfo.getNama());
+                                                                                                map.put("bianma", chukuInfo.getBianma());
+                                                                                                map.put("tiaoma", chukuInfo.getTiaoma());
+                                                                                                map.put("weight", chukuInfo.getWeight());
+                                                                                                map.put("length", chukuInfo.getLenght());
+                                                                                                map.put("kezhong", chukuInfo.getKezhong());
+                                                                                                map.put("fukuan", chukuInfo.getFukuan());
+                                                                                                map.put("chejian", chukuInfo.getChejian());
+                                                                                                lists.add(map);
+                                                                                            }
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+                                                                                        } else {
+                                                                                            lists.clear();
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+
+                                                                                        }
+                                                                                        if (chukunum == accountnum) {
+                                                                                            showToast("全部出库成功!");
+                                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                            finish();
+                                                                                        }
+                                                                                    } else {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                        showToast(info);
+                                                                                    }
+                                                                                    barcodes = null;
+                                                                                }
+
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                                progressDialog.dismiss();
+                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                showToast(error.toString());
+                                                                            }
+                                                                        });
                                                                     }
-                                                                    if (strck_04 == 1) {
-                                                                        accountnum += 1;
-                                                                    }
-                                                                    break;
-                                                                case "05":
-                                                                    strck_05 += 1;
                                                                     if (strck_05 > 0) {
-                                                                        detail_str_05.append(Chukus.get(i).getBianma() + "," + Chukus.get(i).getTiaoma() + "," + Chukus.get(i).getWeight() + "," + Chukus.get(i).getLenght() + "|");
-                                                                    }
-                                                                    if (strck_05 == 1) {
-                                                                        accountnum += 1;
-                                                                    }
-                                                                    break;
-                                                            }
-                                                        }
-                                                        if (strck_01 > 0) {
-                                                            detail_str = detail_str_01.substring(0, detail_str_01.length() - 1);
-                                                            content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "01" + "," + ghs + "," + kehu + "," + chepaihao;
-                                                            RequestParams params_01 = new RequestParams();
-                                                            params.put("Content", content_str);
-                                                            params.put("Detail", detail_str);
-                                                            Log.d("zhang", content_str);
-                                                            Log.d("zhang", detail_str);
-                                                            //设置重复请求次数，间隔
-                                                            client.setMaxRetriesAndTimeout(3, 2000);
-                                                            //设置超时时间，默认10s
-                                                            client.setTimeout(5 * 1000);
-                                                            client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
-                                                                @Override
-                                                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                    if (statusCode == 200) {
-                                                                        progressDialog.dismiss();
-                                                                        String info = "";
-                                                                        String text = new String(responseBody);
-                                                                        Log.d("zhang", text + ">>>>>zhang");
-                                                                        try {
-                                                                            Document document = DocumentHelper.parseText(text);
-                                                                            Element element = document.getRootElement();
-                                                                            info = element.getText();
+                                                                        detail_str = detail_str_05.substring(0, detail_str_05.length() - 1);
+                                                                        content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "05" + "," + ghs + "," + kehu + "," + chepaihao;
+                                                                        RequestParams params_01 = new RequestParams();
+                                                                        params.put("Content", content_str);
+                                                                        params.put("Detail", detail_str);
+                                                                        Log.d("zhang", content_str);
+                                                                        Log.d("zhang", detail_str);
+                                                                        //设置重复请求次数，间隔
+                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+                                                                        //设置超时时间，默认10s
+                                                                        client.setTimeout(5 * 1000);
+                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                            @Override
+                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                                                                if (statusCode == 200) {
+                                                                                    progressDialog.dismiss();
+                                                                                    String info = "";
+                                                                                    String text = new String(responseBody);
+                                                                                    Log.d("zhang", text + ">>>>>zhang");
+                                                                                    try {
+                                                                                        Document document = DocumentHelper.parseText(text);
+                                                                                        Element element = document.getRootElement();
+                                                                                        info = element.getText();
 
-                                                                        } catch (DocumentException de) {
-                                                                            Log.e("de", de.toString());
-                                                                        }
-                                                                        if ("\"成功\"".equals(info)) {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                            chukunum += 1;
-                                                                            if (chukunum == accountnum) {
-                                                                                showToast("全部出库成功!");
-                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                                finish();
+                                                                                    } catch (DocumentException de) {
+                                                                                        Log.e("de", de.toString());
+                                                                                    }
+                                                                                    if ("\"成功\"".equals(info)) {
+
+                                                                                        chukunum += 1;
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '05'");
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        if (!chukuInfos.isEmpty()) {
+                                                                                            for (ChukuInfo chukuInfo : chukuInfos
+                                                                                                    ) {
+                                                                                                Map<String, String> map = new HashMap<String, String>();
+                                                                                                map.put("name", chukuInfo.getNama());
+                                                                                                map.put("bianma", chukuInfo.getBianma());
+                                                                                                map.put("tiaoma", chukuInfo.getTiaoma());
+                                                                                                map.put("weight", chukuInfo.getWeight());
+                                                                                                map.put("length", chukuInfo.getLenght());
+                                                                                                map.put("kezhong", chukuInfo.getKezhong());
+                                                                                                map.put("fukuan", chukuInfo.getFukuan());
+                                                                                                map.put("chejian", chukuInfo.getChejian());
+                                                                                                lists.add(map);
+                                                                                            }
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+                                                                                        } else {
+                                                                                            lists.clear();
+                                                                                            adapter.notifyDataSetChanged();
+                                                                                            sacnNum.setText("已扫描：" + lists.size() + "件");
+
+                                                                                        }
+
+                                                                                        if (chukunum == accountnum) {
+                                                                                            showToast("全部出库成功!");
+                                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
+                                                                                            finish();
+                                                                                        }
+                                                                                    } else {
+                                                                                        MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                        showToast(info);
+                                                                                    }
+                                                                                    barcodes = null;
+                                                                                }
+
                                                                             }
-                                                                        } else {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                            showToast(info);
-                                                                        }
-                                                                        barcodes = null;
-                                                                    }
 
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                    progressDialog.dismiss();
-                                                                    MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                    showToast(error.toString());
-                                                                }
-                                                            });
-                                                        }
-                                                        if (strck_02 > 0) {
-                                                            detail_str = detail_str_02.substring(0, detail_str_02.length() - 1);
-                                                            content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "02" + "," + ghs + "," + kehu + "," + chepaihao;
-                                                            RequestParams params_01 = new RequestParams();
-                                                            params.put("Content", content_str);
-                                                            params.put("Detail", detail_str);
-                                                            Log.d("zhang", content_str);
-                                                            Log.d("zhang", detail_str);
-                                                            //设置重复请求次数，间隔
-                                                            client.setMaxRetriesAndTimeout(3, 2000);
-                                                            //设置超时时间，默认10s
-                                                            client.setTimeout(5 * 1000);
-                                                            client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
-                                                                @Override
-                                                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                    if (statusCode == 200) {
-                                                                        progressDialog.dismiss();
-                                                                        String info = "";
-                                                                        String text = new String(responseBody);
-                                                                        Log.d("zhang", text + ">>>>>zhang");
-                                                                        try {
-                                                                            Document document = DocumentHelper.parseText(text);
-                                                                            Element element = document.getRootElement();
-                                                                            info = element.getText();
-
-                                                                        } catch (DocumentException de) {
-                                                                            Log.e("de", de.toString());
-                                                                        }
-                                                                        if ("\"成功\"".equals(info)) {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                            chukunum += 1;
-                                                                            if (chukunum == accountnum) {
-                                                                                showToast("全部出库成功!");
-                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                                finish();
+                                                                            @Override
+                                                                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                                                                progressDialog.dismiss();
+                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
+                                                                                showToast(error.toString());
                                                                             }
-                                                                        } else {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                            showToast(info);
-                                                                        }
-                                                                        barcodes = null;
+                                                                        });
                                                                     }
-
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                    progressDialog.dismiss();
-                                                                    MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                    showToast(error.toString());
-                                                                }
-                                                            });
-                                                        }
-                                                        if (strck_03 > 0) {
-                                                            detail_str = detail_str_03.substring(0, detail_str_03.length() - 1);
-                                                            content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "03" + "," + ghs + "," + kehu + "," + chepaihao;
-                                                            RequestParams params_01 = new RequestParams();
-                                                            params.put("Content", content_str);
-                                                            params.put("Detail", detail_str);
-                                                            Log.d("zhang", content_str);
-                                                            Log.d("zhang", detail_str);
-                                                            //设置重复请求次数，间隔
-                                                            client.setMaxRetriesAndTimeout(3, 2000);
-                                                            //设置超时时间，默认10s
-                                                            client.setTimeout(5 * 1000);
-                                                            client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
-                                                                @Override
-                                                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                    if (statusCode == 200) {
-                                                                        progressDialog.dismiss();
-                                                                        String info = "";
-                                                                        String text = new String(responseBody);
-                                                                        Log.d("zhang", text + ">>>>>zhang");
-                                                                        try {
-                                                                            Document document = DocumentHelper.parseText(text);
-                                                                            Element element = document.getRootElement();
-                                                                            info = element.getText();
-
-                                                                        } catch (DocumentException de) {
-                                                                            Log.e("de", de.toString());
-                                                                        }
-                                                                        if ("\"成功\"".equals(info)) {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                            chukunum += 1;
-                                                                            if (chukunum == accountnum) {
-                                                                                showToast("全部出库成功!");
-                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                                finish();
-                                                                            }
-                                                                        } else {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                            showToast(info);
-                                                                        }
-                                                                        barcodes = null;
-                                                                    }
-
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                    progressDialog.dismiss();
-                                                                    MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                    showToast(error.toString());
-                                                                }
-                                                            });
-                                                        }
-                                                        if (strck_04 > 0) {
-                                                            detail_str = detail_str_04.substring(0, detail_str_04.length() - 1);
-                                                            content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "04" + "," + ghs + "," + kehu + "," + chepaihao;
-                                                            RequestParams params_01 = new RequestParams();
-                                                            params.put("Content", content_str);
-                                                            params.put("Detail", detail_str);
-                                                            Log.d("zhang", content_str);
-                                                            Log.d("zhang", detail_str);
-                                                            //设置重复请求次数，间隔
-                                                            client.setMaxRetriesAndTimeout(3, 2000);
-                                                            //设置超时时间，默认10s
-                                                            client.setTimeout(5 * 1000);
-                                                            client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
-                                                                @Override
-                                                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                    if (statusCode == 200) {
-                                                                        progressDialog.dismiss();
-                                                                        String info = "";
-                                                                        String text = new String(responseBody);
-                                                                        Log.d("zhang", text + ">>>>>zhang");
-                                                                        try {
-                                                                            Document document = DocumentHelper.parseText(text);
-                                                                            Element element = document.getRootElement();
-                                                                            info = element.getText();
-
-                                                                        } catch (DocumentException de) {
-                                                                            Log.e("de", de.toString());
-                                                                        }
-                                                                        if ("\"成功\"".equals(info)) {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                            chukunum += 1;
-                                                                            if (chukunum == accountnum) {
-                                                                                showToast("全部出库成功!");
-                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                                finish();
-                                                                            }
-                                                                        } else {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                            showToast(info);
-                                                                        }
-                                                                        barcodes = null;
-                                                                    }
-
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                    progressDialog.dismiss();
-                                                                    MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                    showToast(error.toString());
-                                                                }
-                                                            });
-                                                        }
-                                                        if (strck_05 > 0) {
-                                                            detail_str = detail_str_05.substring(0, detail_str_05.length() - 1);
-                                                            content_str = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + "05" + "," + ghs + "," + kehu + "," + chepaihao;
-                                                            RequestParams params_01 = new RequestParams();
-                                                            params.put("Content", content_str);
-                                                            params.put("Detail", detail_str);
-                                                            Log.d("zhang", content_str);
-                                                            Log.d("zhang", detail_str);
-                                                            //设置重复请求次数，间隔
-                                                            client.setMaxRetriesAndTimeout(3, 2000);
-                                                            //设置超时时间，默认10s
-                                                            client.setTimeout(5 * 1000);
-                                                            client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
-                                                                @Override
-                                                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                                                    if (statusCode == 200) {
-                                                                        progressDialog.dismiss();
-                                                                        String info = "";
-                                                                        String text = new String(responseBody);
-                                                                        Log.d("zhang", text + ">>>>>zhang");
-                                                                        try {
-                                                                            Document document = DocumentHelper.parseText(text);
-                                                                            Element element = document.getRootElement();
-                                                                            info = element.getText();
-
-                                                                        } catch (DocumentException de) {
-                                                                            Log.e("de", de.toString());
-                                                                        }
-                                                                        if ("\"成功\"".equals(info)) {
-
-                                                                            chukunum += 1;
-                                                                            if (chukunum == accountnum) {
-                                                                                showToast("全部出库成功!");
-                                                                                MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
-                                                                                finish();
-                                                                            }
-                                                                        } else {
-                                                                            MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                            showToast(info);
-                                                                        }
-                                                                        barcodes = null;
-                                                                    }
-
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                                                    progressDialog.dismiss();
-                                                                    MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                    showToast(error.toString());
-                                                                }
-                                                            });
-                                                        }
 //                                                        StringBuilder detail_builder = new StringBuilder();
 //                                                        if (lists.size() > 1) {
 //                                                            for (int i = 0; i < lists.size(); i++) {
@@ -586,10 +751,19 @@ public class ActivityOut_Second extends AppCompatActivity {
 //                                                            String length_str = lists.get(0).get("length");
 //                                                            detail_str = bianma_str + "," + tiaoma_str + "," + weight_str + "," + length_str;
 //                                                        }
-                                                        progressDialog.setTitle("上传中...");
-                                                        progressDialog.setMessage("正在上传数据，请稍后...");
-                                                        progressDialog.setCancelable(true);
-                                                        progressDialog.show();
+                                                                    progressDialog.setTitle("上传中...");
+                                                                    progressDialog.setMessage("正在上传数据，请稍后...");
+                                                                    progressDialog.setCancelable(true);
+                                                                    progressDialog.show();
+                                                                } else {
+                                                                    showToast("输入错误，请重新操作!");
+                                                                }
+
+                                                            }
+                                                        });
+                                                        nextBuilder.setNegativeButton("取消", null);
+                                                        nextBuilder.create().show();
+
 
                                                     }
                                                 });
@@ -614,7 +788,7 @@ public class ActivityOut_Second extends AppCompatActivity {
 //
 //            lists.add(map);
 //        }
-        adapter = new SimpleAdapter(this, lists, R.layout.item_paper, new String[]{"name", "kezhong", "fukuan", "weight"}, new int[]{R.id.text_name, R.id.text_kezhong, R.id.text_fukuan, R.id.text_weight});
+        adapter = new SimpleAdapter(this, lists, R.layout.item_paper, new String[]{"name", "chejian", "kezhong", "fukuan", "weight"}, new int[]{R.id.text_name, R.id.text_chejian, R.id.text_kezhong, R.id.text_fukuan, R.id.text_weight});
         outGongyingshangList.setAdapter(adapter);
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -771,6 +945,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                         map.put("length", barcodes[6]);
                         map.put("kezhong", barcodes[4]);
                         map.put("fukuan", barcodes[3]);
+                        map.put("chejian", barcodes[7]);
                         lists.add(map);
                         adapter.notifyDataSetChanged();
                         outEditText.setText(barcodes[1]);
