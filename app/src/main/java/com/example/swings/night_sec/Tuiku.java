@@ -64,7 +64,7 @@ public class Tuiku extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activity_out);
+        setContentView(R.layout.activity_tuiku);
         ButterKnife.inject(this);
         outCangku.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

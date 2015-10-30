@@ -78,7 +78,7 @@ public class ActivityOut extends AppCompatActivity {
     SharedPreferences preferences;
     private String ghs = "";
     private String ghsname = "";
-    List<ChukuInfo> chukuInfos;
+    List<ChukuInfo> Chukus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,23 +103,7 @@ public class ActivityOut extends AppCompatActivity {
         client.setMaxRetriesAndTimeout(5, 2000);
         client.setTimeout(5 * 1000);
         lists = new ArrayList<Map<String, String>>();
-        chukuInfos = DataSupport.where("status = 2").find(ChukuInfo.class);
-        if (chukuInfos.size() > 0) {
-            StringBuilder strbuilder = new StringBuilder();
-            strbuilder.append("挂起信息\n");
-            strbuilder.append("客户：" + chukuInfos.get(0).getKehu() + "\n");
-            strbuilder.append("车牌号：" + chukuInfos.get(0).getChepai() + "\n");
-            float weight = 0;
-            for (int i = 0; i < chukuInfos.size(); i++) {
-                strbuilder.append("条码：" + chukuInfos.get(i).getTiaoma());
-                strbuilder.append("车间：" + chukuInfos.get(i).getChejian() );
-                strbuilder.append("重量：" + chukuInfos.get(i).getWeight() + "\n");
-                weight += Float.parseFloat(chukuInfos.get(i).getWeight());
-            }
 
-            strbuilder.append("总重量：" + weight + "\n");
-            textView.setText(strbuilder);
-        }
         adapter = new SimpleAdapter(this, lists, R.layout.item_ghs, new String[]{"name", "id"
         }, new int[]
 
@@ -172,7 +156,7 @@ public class ActivityOut extends AppCompatActivity {
                                                     showToast("客户信息有误，请在列表中点击选择");
                                                 } else if (!TextUtils.isEmpty(outChepaihao.getText())) {
 
-                                                    if (DataSupport.where("chepai=" + outChepaihao.getText().toString()).find(ChukuInfo.class).isEmpty()) {  //跳转下个页面出库
+                                                    if (DataSupport.where("chepai=" + outChepaihao.getText().toString()+" and status = '2'").find(ChukuInfo.class).isEmpty()) {  //跳转下个页面出库
                                                         Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
                                                         //传入客户信息&&仓库信息
                                                         intent.putExtra("ghs", ghs);
@@ -198,12 +182,12 @@ public class ActivityOut extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (chukuInfos.size() > 0) {
+                if (Chukus.size() > 0) {
                     Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
                     //传入客户信息&&仓库信息
-                    intent.putExtra("ghs", chukuInfos.get(0).getGhs());
-                    intent.putExtra("ghsname", chukuInfos.get(0).getKehu());
-                    intent.putExtra("chepaihao", chukuInfos.get(0).getChepai());
+                    intent.putExtra("ghs", Chukus.get(0).getGhs());
+                    intent.putExtra("ghsname", Chukus.get(0).getKehu());
+                    intent.putExtra("chepaihao", Chukus.get(0).getChepai());
                     intent.putExtra("guaqi", "guaqi");
                     startActivity(intent);
                 } else {
@@ -309,6 +293,50 @@ public class ActivityOut extends AppCompatActivity {
         exitbuilder.setNegativeButton("取消", null);
         // exitbuilder.create();
         exitbuilder.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Chukus = DataSupport.where("status = 2").find(ChukuInfo.class);
+
+        if (Chukus.size() > 0) {
+            int strck_01 = 0, strck_02 = 0, strck_03 = 0, strck_04 = 0, strck_05 = 0;
+            float numck_01 = 0, numck_02 = 0, numck_03 = 0, numck_04 = 0, numck_05 = 0;
+            for (int i = 0; i < Chukus.size(); i++) {
+                switch (Chukus.get(i).getChejian()) {
+                    case "01":
+                        numck_01 += Float.parseFloat(Chukus.get(i).getWeight());
+                        strck_01 += 1;
+                        break;
+                    case "02":
+                        numck_02 += Float.parseFloat(Chukus.get(i).getWeight());
+                        strck_02 += 1;
+                        break;
+                    case "03":
+                        numck_03 += Float.parseFloat(Chukus.get(i).getWeight());
+                        strck_03 += 1;
+                        break;
+                    case "04":
+                        numck_04 += Float.parseFloat(Chukus.get(i).getWeight());
+                        strck_04 += 1;
+                        break;
+                    case "05":
+                        numck_05 += Float.parseFloat(Chukus.get(i).getWeight());
+                        strck_05 += 1;
+                        break;
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append("挂起信息\n");
+            sb.append("客户：" + Chukus.get(0).getKehu() + "\n");
+            sb.append("车牌号：" + Chukus.get(0).getChepai() + "\n");
+            sb.append((numck_01 > 0 ? "车间:01 "  + "总重量:" + numck_01 + "\n" : "") + (numck_02 > 0 ? "车间:02 " + "总重量:" + numck_02 + "\n" : "") + (numck_03 > 0 ? "车间:03 "  + "总重量:" + numck_03 + "\n" : "") + (numck_04 > 0 ? "车间:04" + "总重量:" + numck_04 + "\n" : "") + (numck_05 > 0 ? "车间:05" + "总重量:" + numck_05 + "\n" : ""));
+            sb.append("总重量：" + (numck_01+numck_02+numck_03+numck_04+numck_05) + "\n");
+            textView.setText(sb);
+        }else{
+            textView.setText("挂起信息为空!");
+        }
     }
 
     /**

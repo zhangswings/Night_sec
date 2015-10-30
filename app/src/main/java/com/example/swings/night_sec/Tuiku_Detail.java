@@ -63,6 +63,8 @@ public class Tuiku_Detail extends AppCompatActivity {
     TextView sacnNum;
     @InjectView(R.id.out_ll_bottom)
     LinearLayout outLlBottom;
+    @InjectView(R.id.sacn_chepai)
+    TextView sacnChepai;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
     String ghs = "";
@@ -102,6 +104,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                 showToast("已取消上传");
             }
         });
+        sacnChepai.setVisibility(View.GONE);
         // 初始化振动器
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 //        outEditText.setText(ghs + ck);
@@ -230,7 +233,7 @@ public class Tuiku_Detail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         lists.remove(position);
-                        sacnNum.setText("已扫描："+lists.size()+"件");
+                        sacnNum.setText("已扫描：" + lists.size() + "件");
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -371,7 +374,7 @@ public class Tuiku_Detail extends AppCompatActivity {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            sacnNum.setText("已扫描："+lists.size()+"件");
+            sacnNum.setText("已扫描：" + lists.size() + "件");
 
         }
 
