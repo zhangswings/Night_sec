@@ -9,6 +9,7 @@
         layout="@layout/include_toolbar" />
 
     <ListView
+        android:listSelector="#440b2fff"
         android:divider="#2ecb71"
         android:dividerHeight="1px"
         android:id="@+id/list_off_listview"

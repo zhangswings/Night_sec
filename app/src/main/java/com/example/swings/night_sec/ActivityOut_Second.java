@@ -123,76 +123,90 @@ public class ActivityOut_Second extends AppCompatActivity {
 
         if (("guaqi").equals(getIntent().getStringExtra("guaqi"))) {
             List<ChukuInfo> chukuInfos = DataSupport.where("status = 2").find(ChukuInfo.class);
-            for (ChukuInfo chukuInfo : chukuInfos
-                    ) {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("name", chukuInfo.getNama());
-                map.put("bianma", chukuInfo.getBianma());
-                map.put("tiaoma", chukuInfo.getTiaoma());
-                map.put("weight", chukuInfo.getWeight());
-                map.put("length", chukuInfo.getLenght());
-                map.put("kezhong", chukuInfo.getKezhong());
-                map.put("fukuan", chukuInfo.getFukuan());
-                map.put("chejian", chukuInfo.getChejian());
-                lists.add(map);
+            if (!chukuInfos.isEmpty()) {
+                for (ChukuInfo chukuInfo : chukuInfos
+                        ) {
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("name", chukuInfo.getNama());
+                    map.put("bianma", chukuInfo.getBianma());
+                    map.put("tiaoma", chukuInfo.getTiaoma());
+                    map.put("weight", chukuInfo.getWeight());
+                    map.put("length", chukuInfo.getLenght());
+                    map.put("kezhong", chukuInfo.getKezhong());
+                    map.put("fukuan", chukuInfo.getFukuan());
+                    map.put("chejian", chukuInfo.getChejian());
+                    lists.add(map);
+                }
+                sacnNum.setText("已扫描：" + lists.size() + "件");
+            } else {
+                showToast("挂起出库信息为空!");
             }
-            sacnNum.setText("已扫描：" + lists.size() + "件");
+        } else {
+            List<ChukuInfo> chukuInfos = DataSupport.where("status = 1 and chepai = " + chepaihao).find(ChukuInfo.class);
+            if (!chukuInfos.isEmpty()) {
+                for (ChukuInfo chukuInfo : chukuInfos
+                        ) {
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("name", chukuInfo.getNama());
+                    map.put("bianma", chukuInfo.getBianma());
+                    map.put("tiaoma", chukuInfo.getTiaoma());
+                    map.put("weight", chukuInfo.getWeight());
+                    map.put("length", chukuInfo.getLenght());
+                    map.put("kezhong", chukuInfo.getKezhong());
+                    map.put("fukuan", chukuInfo.getFukuan());
+                    map.put("chejian", chukuInfo.getChejian());
+                    lists.add(map);
+                }
+                sacnNum.setText("已扫描：" + lists.size() + "件");
+            }
         }
         //挂起按钮
         outBtnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder nextBuilder = new AlertDialog.Builder(ActivityOut_Second.this);
-                nextBuilder.setTitle("请输入车牌号进行二次确认");
-                nextBuilder.setIcon(R.mipmap.right);
-                LayoutInflater factory = LayoutInflater.from(ActivityOut_Second.this);
-                View view = factory.inflate(R.layout.alert_dialog, null);
-                final EditText editText = (EditText) view.findViewById(R.id.editText);
-                final TextView textView = (TextView) view.findViewById(R.id.textView2);
-                textView.setText("请输入车牌号:" + chepaihao);
-                nextBuilder.setView(view);
-                nextBuilder.setPositiveButton("确认挂起", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        textView.setText("请输入车牌号:" + chepaihao);
-                        String chepaihao_str = editText.getText().toString();
-                        if (chepaihao.equals(chepaihao_str)) {
-                            showToast("输入正确");
-                            if (!lists.isEmpty()) {
-                                if (DataSupport.where("  status = '2'").find(ChukuInfo.class).isEmpty() || !DataSupport.where("chepai = " + chepaihao + " and status = '2'").find(ChukuInfo.class).isEmpty()) {
-                                    List<ChukuInfo> ChukuInfos = DataSupport.where("chepai = " + chepaihao + " and status = '1'").find(ChukuInfo.class);
-                                    Log.d("zhang", ChukuInfos.toString());
-                                    int temp = 0;
-                                    if (ChukuInfos.size() > 0) {
-                                        for (ChukuInfo chukuinfo : ChukuInfos
-                                                ) {
-                                            chukuinfo.setStatus("2");
-                                            if (chukuinfo.save()) {
-                                                temp++;
-                                            }
-                                        }
-                                        if (temp == ChukuInfos.size()) {
-                                            showToast("已全部挂起！");
-                                            onBackPressed();
-                                        }
-                                    } else {
-                                        showToast("已全部挂起！");
-                                        onBackPressed();
-                                    }
-                                } else {
-                                    showToast("已有挂起车辆！不能再次挂起！");
+
+                if (!lists.isEmpty()) {
+                    if (DataSupport.where("status = '2'").find(ChukuInfo.class).isEmpty() || !DataSupport.where("chepai = " + chepaihao + " and status = '2'").find(ChukuInfo.class).isEmpty()) {
+                        List<ChukuInfo> ChukuInfos = DataSupport.where("chepai = " + chepaihao + " and status = '1'").find(ChukuInfo.class);
+                        Log.d("zhang", ChukuInfos.toString());
+                        int temp = 0;
+                        if (ChukuInfos.size() > 0) {
+                            for (ChukuInfo chukuinfo : ChukuInfos
+                                    ) {
+                                chukuinfo.setStatus("2");
+                                if (chukuinfo.save()) {
+                                    temp++;
                                 }
-                            } else {
-                                showToast("需挂起出货信息为空！");
+                            }
+                            if (temp == ChukuInfos.size()) {
+                                showToast("已全部挂起！");
+                                AlertDialog.Builder exitbuilder = new AlertDialog.Builder(ActivityOut_Second.this);
+                                exitbuilder.setTitle("挂起信息提示");
+                                exitbuilder.setMessage("您已经挂起出库信息，是否要继续退出?");
+                                exitbuilder.setIcon(R.mipmap.circle);
+                                exitbuilder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // TODO Auto-generated method stub
+                                        finish();
+                                    }
+                                });
+                                exitbuilder.setNegativeButton("否", null);
+                                // exitbuilder.create();
+                            exitbuilder.show();
                             }
                         } else {
-                            showToast("输入错误，请重新操作!");
+                            showToast("已全部挂起！");
+                            onBackPressed();
                         }
+                    } else {
+                        showToast("已有挂起车辆！不能再次挂起！");
                     }
-                });
-                nextBuilder.setNegativeButton("取消", null);
-                nextBuilder.create().show();
+                } else {
+                    showToast("需挂起出货信息为空！");
+                }
 
 
             }
@@ -247,7 +261,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                     }
                                                 }
                                                 StringBuilder sb = new StringBuilder();
-                                                sb.append((numck_01 > 0 ? "车间:01 " + "总重量:" + numck_01 + "\n" : "") + (numck_02 > 0 ? "车间:02 " + "总重量:" + numck_02 + "\n" : "") + (numck_03 > 0 ? "车间:03 " + "总重量:" + numck_03 + "\n" : "") + (numck_04 > 0 ? "车间:04" + "总重量:" + numck_04 + "\n" : "") + (numck_05 > 0 ? "车间:05" + "总重量:" + numck_05 + "\n" : ""));
+                                                sb.append((numck_01 > 0 ? "车间:01 " + "总重量:" + numck_01 / 1000 + "吨\n" : "") + (numck_02 > 0 ? "车间:02 " + "总重量:" + numck_02 / 1000 + "吨\n" : "") + (numck_03 > 0 ? "车间:03 " + "总重量:" + numck_03 / 1000 + "吨\n" : "") + (numck_04 > 0 ? "车间:04" + "总重量:" + numck_04 / 1000 + "吨\n" : "") + (numck_05 > 0 ? "车间:05" + "总重量:" + numck_05 / 1000 + "吨\n" : ""));
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActivityOut_Second.this);
                                                 builder.setTitle("提示信息");
                                                 builder.setIcon(R.mipmap.right);
@@ -270,7 +284,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 textView.setText("请输入车牌号:" + chepaihao);
-                                                                String chepaihao_str = editText.getText().toString();
+                                                                final String chepaihao_str = editText.getText().toString();
                                                                 if (chepaihao.equals(chepaihao_str)) {
                                                                     showToast("输入正确");
                                                                     RequestParams params = new RequestParams();
@@ -379,8 +393,8 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                     if ("\"成功\"".equals(info)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
-                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '01'");
-                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '01' and chepai = " + chepaihao);
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
                                                                                         if (!chukuInfos.isEmpty()) {
                                                                                             for (ChukuInfo chukuInfo : chukuInfos
                                                                                                     ) {
@@ -456,8 +470,8 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                     if ("\"成功\"".equals(info)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
-                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '02'");
-                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '02' and chepai = " + chepaihao);
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
                                                                                         if (!chukuInfos.isEmpty()) {
                                                                                             for (ChukuInfo chukuInfo : chukuInfos
                                                                                                     ) {
@@ -533,8 +547,8 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                     if ("\"成功\"".equals(info)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
-                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '03'");
-                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '03' and chepai = " + chepaihao);
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
                                                                                         if (!chukuInfos.isEmpty()) {
                                                                                             for (ChukuInfo chukuInfo : chukuInfos
                                                                                                     ) {
@@ -610,8 +624,8 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                     if ("\"成功\"".equals(info)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
-                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '04'");
-                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '04' and chepai = " + chepaihao);
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
                                                                                         if (!chukuInfos.isEmpty()) {
                                                                                             for (ChukuInfo chukuInfo : chukuInfos
                                                                                                     ) {
@@ -687,8 +701,8 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                     if ("\"成功\"".equals(info)) {
 
                                                                                         chukunum += 1;
-                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '05'");
-                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepaihao = " + chepaihao).find(ChukuInfo.class);
+                                                                                        DataSupport.deleteAll(ChukuInfo.class, "chejian = '05' and chepai = " + chepaihao);
+                                                                                        List<ChukuInfo> chukuInfos = DataSupport.where("chepai = " + chepaihao).find(ChukuInfo.class);
                                                                                         if (!chukuInfos.isEmpty()) {
                                                                                             for (ChukuInfo chukuInfo : chukuInfos
                                                                                                     ) {
@@ -793,6 +807,7 @@ public class ActivityOut_Second extends AppCompatActivity {
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                outEditText.setText(lists.get(position).get("tiaoma"));
                 Intent intent = new Intent(ActivityOut_Second.this, ActivityOut_detail.class);
                 intent.putExtra("bianma", lists.get(position).get("bianma"));
                 intent.putExtra("tiaoma", lists.get(position).get("tiaoma"));

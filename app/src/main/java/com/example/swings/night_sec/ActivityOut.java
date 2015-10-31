@@ -13,9 +13,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -156,7 +158,7 @@ public class ActivityOut extends AppCompatActivity {
                                                     showToast("客户信息有误，请在列表中点击选择");
                                                 } else if (!TextUtils.isEmpty(outChepaihao.getText())) {
 
-                                                    if (DataSupport.where("chepai=" + outChepaihao.getText().toString()+" and status = '2'").find(ChukuInfo.class).isEmpty()) {  //跳转下个页面出库
+                                                    if (DataSupport.where("chepai=" + outChepaihao.getText().toString() + " and status = '2'").find(ChukuInfo.class).isEmpty()) {  //跳转下个页面出库
                                                         Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
                                                         //传入客户信息&&仓库信息
                                                         intent.putExtra("ghs", ghs);
@@ -181,15 +183,45 @@ public class ActivityOut extends AppCompatActivity {
         outBtnGuaqi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (Chukus.size() > 0) {
-                    Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
-                    //传入客户信息&&仓库信息
-                    intent.putExtra("ghs", Chukus.get(0).getGhs());
-                    intent.putExtra("ghsname", Chukus.get(0).getKehu());
-                    intent.putExtra("chepaihao", Chukus.get(0).getChepai());
-                    intent.putExtra("guaqi", "guaqi");
-                    startActivity(intent);
+                    final String chepaihao=Chukus.get(0).getChepai();
+                    AlertDialog.Builder nextBuilder = new AlertDialog.Builder(ActivityOut.this);
+                    nextBuilder.setTitle("请输入车牌号进行二次确认");
+                    nextBuilder.setIcon(R.mipmap.right);
+                    LayoutInflater factory = LayoutInflater.from(ActivityOut.this);
+                    View view = factory.inflate(R.layout.alert_dialog, null);
+                    final EditText editText = (EditText) view.findViewById(R.id.editText);
+                    final TextView textView = (TextView) view.findViewById(R.id.textView2);
+
+                    textView.setText("请输入车牌号:" + chepaihao);
+                    nextBuilder.setView(view);
+                    nextBuilder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            textView.setText("请输入车牌号:" + chepaihao);
+                            String chepaihao_str = editText.getText().toString();
+                            if (chepaihao.equals(chepaihao_str)) {
+                                showToast("输入正确");
+
+                                Intent intent = new Intent(ActivityOut.this, ActivityOut_Second.class);
+                                //传入客户信息&&仓库信息
+                                intent.putExtra("ghs", Chukus.get(0).getGhs());
+                                intent.putExtra("ghsname", Chukus.get(0).getKehu());
+                                intent.putExtra("chepaihao", Chukus.get(0).getChepai());
+                                intent.putExtra("guaqi", "guaqi");
+                                startActivity(intent);
+
+                        }
+
+                        else
+
+                        {
+                            showToast("输入错误，请重新操作!");
+                        }
+                    }
+                });
+                nextBuilder.setNegativeButton("取消", null);
+                nextBuilder.create().show();
                 } else {
                     showToast("挂起信息不存在！");
                 }
@@ -331,8 +363,8 @@ public class ActivityOut extends AppCompatActivity {
             sb.append("挂起信息\n");
             sb.append("客户：" + Chukus.get(0).getKehu() + "\n");
             sb.append("车牌号：" + Chukus.get(0).getChepai() + "\n");
-            sb.append((numck_01 > 0 ? "车间:01"   + " 总件数:"+strck_01+ " 总重量:" + numck_01+"\n" : "") + (numck_02 > 0 ? "车间:02"   + " 总件数:"+strck_02+ " 总重量:" + numck_02+ "\n" : "") + (numck_03 > 0 ? "车间:03"  + " 总件数:"+strck_03 + " 总重量:" + numck_03 + "\n" : "") + (numck_04 > 0 ? "车间:04" +  " 总件数:"+strck_04+" 总重量:" + numck_04  + "\n" : "") + (numck_05 > 0 ? "车间:05" +  " 总件数:"+strck_05 +" 总重量:" + numck_05 + "\n" : ""));
-            sb.append("总重量：" + (numck_01+numck_02+numck_03+numck_04+numck_05) + "\n");
+            sb.append((numck_01 > 0 ? "车间:01"   + " 总件数:"+strck_01+ " 总重量:" + numck_01/1000 + "吨\n" : "") + (numck_02 > 0 ? "车间:02"   + " 总件数:"+strck_02+ " 总重量:" + numck_02/1000 + "吨\n" : "") + (numck_03 > 0 ? "车间:03"  + " 总件数:"+strck_03 + " 总重量:" + numck_03 /1000 + "吨\n" : "") + (numck_04 > 0 ? "车间:04" +  " 总件数:"+strck_04+" 总重量:" + numck_04 /1000 + "吨\n" : "") + (numck_05 > 0 ? "车间:05" +  " 总件数:"+strck_05 +" 总重量:" + numck_05/1000 + "吨\n" : ""));
+            sb.append("总重量：" + (numck_01+numck_02+numck_03+numck_04+numck_05)/1000 + "吨\n");
             textView.setText(sb);
         }else{
             textView.setText("挂起信息为空!");
