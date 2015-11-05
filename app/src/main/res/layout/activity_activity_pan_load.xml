@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/list_ll_buttom"
         android:layout_below="@id/appbar"
-        android:layout_margin="16dp"></ListView>
+        android:layout_margin="10dp"></ListView>
 
     <LinearLayout
         android:id="@+id/list_ll_buttom"

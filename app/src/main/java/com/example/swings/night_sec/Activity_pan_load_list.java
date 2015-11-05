@@ -58,12 +58,12 @@ public class Activity_pan_load_list extends AppCompatActivity {
         });
 
         lists = new ArrayList<Map<String, String>>();
-        List<Tiaoma> tiaomas = DataSupport.where("pid = "+pan).find(Tiaoma.class);
+        List<Tiaoma> tiaomas = DataSupport.where("pid = "+getIntent().getStringExtra("pan")).find(Tiaoma.class);
         for (Tiaoma tiaoma : tiaomas
                 ) {
             Map<String, String> map=new HashMap<String, String>();
             //条码号
-            map.put("id", tiaoma.getBianma_id());
+            map.put("id", tiaoma.getTiaoma_id());
             //重量
             map.put("ck",tiaoma.getLength());
             //长度
@@ -71,12 +71,12 @@ public class Activity_pan_load_list extends AppCompatActivity {
             map.put("date",tiaoma.getWeight());
             lists.add(map);
         }
-        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_detail,new String[]{"id","status","date"},new int[]{R.id.texts_tiaoma,R.id.texts_weight,R.id.texts_length});
+        adapter=new SimpleAdapter(getApplicationContext(),lists,R.layout.item_detail,new String[]{"id","ck","date"},new int[]{R.id.text_name,R.id.text_fukuan,R.id.text_weight});
         listOffListview.setAdapter(adapter);
         listOffListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showToast("条码号:" + lists.get(position).get("id") + " 长度:" + lists.get(position).get("date"));
+                showToast("条码号:" + lists.get(position).get("id") + " 长度:" + lists.get(position).get("ck")+ " 重量:" + lists.get(position).get("date"));
 //                Intent intent=new Intent(Activity_pan_load.this,)
             }
         });
