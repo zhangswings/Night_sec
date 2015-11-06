@@ -51,6 +51,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 入库操作
+ */
 public class Ruku extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)

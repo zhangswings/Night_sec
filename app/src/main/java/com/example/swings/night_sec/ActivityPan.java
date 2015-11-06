@@ -22,24 +22,34 @@ import org.litepal.crud.DataSupport;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * 产品盘点页面
+ */
 public class ActivityPan extends AppCompatActivity {
 
+    //输入盘点单号
     @InjectView(R.id.pan_editText)
     ClearEditText panEditText;
+    //返回按钮
     @InjectView(R.id.pan_btn_back)
     Button panBtnBack;
+    //确认按钮
     @InjectView(R.id.pan_btn_ok)
     Button panBtnOk;
+    //菜单栏
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     @InjectView(R.id.appbar)
     AppBarLayout appbar;
+    //选择仓库
     @InjectView(R.id.cangku_spinner)
     Spinner cangkuSpinner;
     @InjectView(R.id.out_ll_content)
     LinearLayout outLlContent;
+
     @InjectView(R.id.pan_ll_bottom)
     LinearLayout panLlBottom;
+    //查看未上传盘点信息
     Button panButton;
 
     @Override

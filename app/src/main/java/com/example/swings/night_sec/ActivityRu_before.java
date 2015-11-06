@@ -20,6 +20,10 @@ import org.litepal.crud.DataSupport;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * 1.选择入库仓库
+ * 2.选择班组
+ */
 public class ActivityRu_before extends AppCompatActivity {
 
     @InjectView(R.id.before_btn_cancle)

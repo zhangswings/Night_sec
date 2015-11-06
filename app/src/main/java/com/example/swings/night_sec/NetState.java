@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 /**
  * Created by swings on 2015-09-25.
+ * 检测网络状态工具类
  */
 class NetState extends BroadcastReceiver {
     private int tag = 0;

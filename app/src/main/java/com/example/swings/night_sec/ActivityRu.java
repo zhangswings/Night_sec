@@ -48,7 +48,7 @@ import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * 入库操作
+ * 入库操作（未使用）
  */
 public class ActivityRu extends AppCompatActivity {
     //编码

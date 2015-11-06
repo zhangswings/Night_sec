@@ -38,6 +38,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 登录操作
+ */
 public class LoginActivity extends AppCompatActivity {
 
     @InjectView(R.id.edit_text_name)
