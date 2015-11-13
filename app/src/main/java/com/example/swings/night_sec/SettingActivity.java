@@ -102,7 +102,12 @@ public class SettingActivity extends AppCompatActivity {
                                                 builder.setTitle("系统提示");
                                                 builder.setMessage("是否清空所有数据数据 ?\n所有保存在本机的数据将被完全清空！" +
                                                         "\n请再次确认是否继续清空数据！");
-                                                builder.setNegativeButton("否", null);
+                                                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        showToast("已取消删除操作！");
+                                                    }
+                                                });
                                                 builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -111,13 +116,20 @@ public class SettingActivity extends AppCompatActivity {
                                                         builder.setIcon(R.mipmap.circle);
                                                         builder.setMessage("是否清空所有数据数据 ?\n所有保存在本机的数据将被完全清空！" +
                                                                 "\n请再次确认是否继续清空数据！");
-                                                        builder.setNegativeButton("否", null);
+                                                        builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                showToast("已取消删除操作！");
+                                                            }
+                                                        });
                                                         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 DataSupport.deleteAll(Pan.class);
                                                                 DataSupport.deleteAll(Bianma.class);
                                                                 DataSupport.deleteAll(Tiaoma.class);
+                                                                showToast("本机数据已经全部清空！");
+                                                                finish();
                                                             }
                                                         });
                                                         builder.create().show();
