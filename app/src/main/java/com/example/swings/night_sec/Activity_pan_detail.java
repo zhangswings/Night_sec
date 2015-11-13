@@ -122,9 +122,9 @@ public class Activity_pan_detail extends AppCompatActivity {
         lists = new ArrayList<Map<String, String>>();
         client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-//        client.setMaxRetriesAndTimeout(3, 2000);
+        client.setMaxRetriesAndTimeout(5, 2000);
         //设置超时时间，默认10s
-//        client.setTimeout(2 * 1000);
+        client.setTimeout(3 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         chejian_str = getIntent().getStringExtra("ck");
         pandian = getIntent().getStringExtra("pandian");
@@ -174,6 +174,7 @@ public class Activity_pan_detail extends AppCompatActivity {
         ruBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String pandian_str=getIntent().getStringExtra("pandian");
                 AlertDialog.Builder builder = new AlertDialog.Builder(Activity_pan_detail.this);
                 builder.setIcon(R.mipmap.right);
                 builder.setTitle("全部上传");
@@ -184,7 +185,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //获取产品信息，全部上次
                         //Todo
-                        if (!DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).isEmpty()) {
+                        if (DataSupport.where("pid = "+pandian_str).find(Tiaoma.class).size()>0) {
                             progressDialog.setTitle("上传中...");
                             progressDialog.setMessage("正在上传数据，请稍后...");
                             progressDialog.setCancelable(true);
@@ -357,14 +358,14 @@ public class Activity_pan_detail extends AppCompatActivity {
                         lists.add(map);
                         thisEditText.setText(barcodes[1]);
                         Tiaoma tiaoma=new Tiaoma();
-                        if (DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).isEmpty()){
-                            Bianma bianma=new Bianma();
-                            bianma.setBianma_id(barcodes[0]);
-                            bianma.setFukuan(barcodes[3]);
-                            bianma.setKezhong(barcodes[4]);
-                            bianma.setWuliao(barcodes[2]);
-                            bianma.setPan_id(getIntent().getStringExtra("pandian"));
-                            bianma.setNums(1);
+//                        if (DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).isEmpty()){
+//                            Bianma bianma=new Bianma();
+//                            bianma.setBianma_id(barcodes[0]);
+//                            bianma.setFukuan(barcodes[3]);
+//                            bianma.setKezhong(barcodes[4]);
+//                            bianma.setWuliao(barcodes[2]);
+//                            bianma.setPan_id(getIntent().getStringExtra("pandian"));
+//                            bianma.setNums(1);
 
                             tiaoma.setTiaoma_id(barcodes[1]);
                             tiaoma.setLength(barcodes[6]);
@@ -372,30 +373,30 @@ public class Activity_pan_detail extends AppCompatActivity {
                             tiaoma.setBianma_id(barcodes[0]);
                             tiaoma.setBid(barcodes[0]);
                             tiaoma.setPid(getIntent().getStringExtra("pandian"));
-                            tiaoma.setBianma(bianma);
+//                            tiaoma.setBianma(bianma);
                             tiaoma.save();
-                            bianma.getBianma_tiaoma().add(tiaoma);
-                            bianma.save();
+//                            bianma.getBianma_tiaoma().add(tiaoma);
+//                            bianma.save();
                             Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
-                            pan.getPan_bianma().add(bianma);
+//                            pan.getPan_bianma().add(bianma);
                             pan.setStatus("2");
                             pan.save();
-                        }else{
-                            Bianma bianma=DataSupport.where("bianma_id = "+ barcodes[0]).find(Bianma.class).get(0);
-                            tiaoma.setTiaoma_id(barcodes[1]);
-                            tiaoma.setLength(barcodes[6]);
-                            tiaoma.setWeight(barcodes[5]);
-                            tiaoma.setBianma(bianma);
-                            tiaoma.save();
-                           int nums= bianma.getNums()+1;
-                            bianma.setNums(nums);
-                            bianma.getBianma_tiaoma().add(tiaoma);
-                            bianma.save();
-                            Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
-                            pan.getPan_bianma().add(bianma);
-                            pan.setStatus("2");
-                            pan.save();
-                        }
+//                        }else{
+////                            Bianma bianma=DataSupport.where("bianma_id = "+ barcodes[0]).find(Bianma.class).get(0);
+//                            tiaoma.setTiaoma_id(barcodes[1]);
+//                            tiaoma.setLength(barcodes[6]);
+//                            tiaoma.setWeight(barcodes[5]);
+////                            tiaoma.setBianma(bianma);
+//                            tiaoma.save();
+////                           int nums= bianma.getNums()+1;
+////                            bianma.setNums(nums);
+////                            bianma.getBianma_tiaoma().add(tiaoma);
+////                            bianma.save();
+//                            Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
+////                            pan.getPan_bianma().add(bianma);
+//                            pan.setStatus("2");
+//                            pan.save();
+//                        }
                         if (lists.size() > 1) {
                             preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                         }

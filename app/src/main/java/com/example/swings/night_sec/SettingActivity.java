@@ -58,6 +58,16 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
             }
         });
+        boolean isSaved = text_isSave.getText().toString().equals("是") ? true : false;
+        if (isSaved) {
+            text_isSave.setTextColor(getResources().getColor(R.color.error_color));
+            text_isSave.setText("否");
+            edit.putBoolean("isSave", false);
+        } else {
+            text_isSave.setTextColor(getResources().getColor(R.color.background_material_dark));
+            text_isSave.setText("是");
+            edit.putBoolean("isSave", true);
+        }
         //保存登录信息
         settingView4.setOnClickListener(new View.OnClickListener() {
             @Override

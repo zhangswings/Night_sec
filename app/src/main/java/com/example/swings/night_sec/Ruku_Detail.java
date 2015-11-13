@@ -42,6 +42,8 @@ public class Ruku_Detail extends AppCompatActivity {
     TextView sacnNum;
     @InjectView(R.id.out_ll_bottom)
     LinearLayout outLlBottom;
+    @InjectView(R.id.sacn_chepai)
+    TextView sacnChepai;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
 
@@ -64,8 +66,11 @@ public class Ruku_Detail extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        sacnChepai.setText("长按纸品进行删除");
+        outEditText.setVisibility(View.GONE);
         outBtnOk.setVisibility(View.GONE);
 //        outEditText.setText(ghs + ck);
+        outBtnCancle.setText("返回");
         outBtnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +80,7 @@ public class Ruku_Detail extends AppCompatActivity {
 
         lists = new ArrayList<Map<String, String>>();
         lists = (List<Map<String, String>>) getIntent().getSerializableExtra("ruku_list");
-        sacnNum.setText("已扫描："+lists.size()+"件");
+        sacnNum.setText("已扫描：" + lists.size() + "件");
         adapter = new SimpleAdapter(this, lists, R.layout.item_paper, new String[]{"name", "kezhong", "fukuan", "weight"}, new int[]{R.id.text_name, R.id.text_kezhong, R.id.text_fukuan, R.id.text_weight});
         outGongyingshangList.setAdapter(adapter);
         outGongyingshangList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,9 +134,9 @@ public class Ruku_Detail extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
-                Intent intent =new Intent();
+                Intent intent = new Intent();
                 intent.putExtra("ruku_list", (Serializable) lists);
-                setResult(RESULT_OK,intent);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });

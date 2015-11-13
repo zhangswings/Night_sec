@@ -195,7 +195,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                 });
                                 exitbuilder.setNegativeButton("否", null);
                                 // exitbuilder.create();
-                            exitbuilder.show();
+                                exitbuilder.show();
                             }
                         } else {
                             showToast("已全部挂起！");
@@ -371,9 +371,9 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                         Log.d("zhang", content_str);
                                                                         Log.d("zhang", detail_str);
                                                                         //设置重复请求次数，间隔
-                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+//                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
-                                                                        client.setTimeout(5 * 1000);
+//                                                                        client.setTimeout(5 * 1000);
                                                                         client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

@@ -76,7 +76,7 @@ public class Activity_pan_load_list extends AppCompatActivity {
         listOffListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showToast("条码号:" + lists.get(position).get("id") + " 长度:" + lists.get(position).get("ck")+ " 重量:" + lists.get(position).get("date"));
+                showToast("条码号:" + lists.get(position).get("id") + "\n长度:" + lists.get(position).get("ck")+ " 重量:" + lists.get(position).get("date"));
 //                Intent intent=new Intent(Activity_pan_load.this,)
             }
         });
