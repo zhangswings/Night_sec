@@ -15,7 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.Bianma;
+import com.example.swings.night_sec.module.ChukuInfo;
 import com.example.swings.night_sec.module.Pan;
+import com.example.swings.night_sec.module.Papers;
+import com.example.swings.night_sec.module.Reader;
 import com.example.swings.night_sec.module.Tiaoma;
 
 import org.litepal.crud.DataSupport;
@@ -55,6 +58,12 @@ public class SettingActivity extends AppCompatActivity {
     LinearLayout settingLinear2;
     @InjectView(R.id.setting_layout_main)
     LinearLayout settingLayoutMain;
+    /**
+     * 显示Toast消息
+     *
+     * @param msg
+     */
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,9 +134,14 @@ public class SettingActivity extends AppCompatActivity {
                                                         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
+                                                                //清理数据库操作
                                                                 DataSupport.deleteAll(Pan.class);
                                                                 DataSupport.deleteAll(Bianma.class);
                                                                 DataSupport.deleteAll(Tiaoma.class);
+                                                                DataSupport.deleteAll(ChukuInfo.class);
+                                                                DataSupport.deleteAll(Papers.class);
+                                                                DataSupport.deleteAll(Reader.class);
+
                                                                 showToast("本机数据已经全部清空！");
                                                                 finish();
                                                             }
@@ -188,7 +202,6 @@ public class SettingActivity extends AppCompatActivity {
         );
     }
 
-
     @Override
     public void onBackPressed() {
         AlertDialog.Builder exitbuilder = new AlertDialog.Builder(SettingActivity.this);
@@ -207,13 +220,6 @@ public class SettingActivity extends AppCompatActivity {
         // exitbuilder.create();
         exitbuilder.show();
     }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param msg
-     */
-    private Toast mToast;
 
     private void showToast(String msg) {
         if (mToast == null) {
