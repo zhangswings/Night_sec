@@ -73,7 +73,31 @@
                         android:layout_marginRight="10dip"
                         android:src="@mipmap/setting_imgbtn_right_gray" />
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/setting_view_2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dip"
+                    android:layout_marginTop="10dip"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dip" >
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="清空数据"
+                        android:textColor="#000000"
+                        android:textSize="17.5dip" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dip"
+                        android:src="@mipmap/setting_imgbtn_right_gray" />
+                </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/setting_view_4"
                     android:layout_width="fill_parent"

@@ -115,7 +115,7 @@ public class Activity_pan_detail extends AppCompatActivity {
         pan.setUser(preferences.getString("user","admin"));
         pan.setCangku(getIntent().getStringExtra("ck"));
         pan.setPan_id(getIntent().getStringExtra("pandian"));
-        pan.setStatus("0");
+//        pan.setStatus("0");
 //        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         pan.setDate(new Date());
         pan.save();
