@@ -29,6 +29,12 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * 离线盘点单详细信息
+ * 1.查看盘点单信息
+ * 2.长按删除该条码
+ * 3.更新盘点单信息
+ */
 public class Activity_pan_load_list extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)

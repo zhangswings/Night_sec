@@ -24,6 +24,11 @@ import butterknife.InjectView;
 
 /**
  * 产品盘点页面
+ * 1.输入盘点单号
+ * 2.选择盘点仓库
+ * 3.查询未上传的盘点信息
+ * 4.盘点单号与离线盘点单号不同，才能进入盘点详情
+ * 5.返回上一级页面
  */
 public class ActivityPan extends AppCompatActivity {
 

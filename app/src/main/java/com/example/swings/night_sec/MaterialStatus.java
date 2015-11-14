@@ -1,5 +1,8 @@
 package com.example.swings.night_sec;
 
+/**
+ * 物料信息（未使用）
+ */
 public class MaterialStatus {
     private String StoreId;
 

@@ -48,6 +48,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 产品出库（1）
+ * 1.查询客户，选择对应客户
+ * 2.手动输入车牌号
+ * 3.查看是否有出库信息挂起
+ * 4.进入出库详情页面
+ * 5.返回上一级页面
+ */
 public class ActivityOut extends AppCompatActivity {
 
 

@@ -44,6 +44,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 查询未上传盘点信息列表
+ * 1.点击查看盘点单详情
+ * 2.长按选择是否上传该盘点单信息
+ * 3.返回上级页面
+ */
 public class Activity_pan_load extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)

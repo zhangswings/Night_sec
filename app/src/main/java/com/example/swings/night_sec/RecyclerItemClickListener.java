@@ -6,7 +6,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-
+/**
+ * 侧滑菜单相关点击事件
+ */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
 

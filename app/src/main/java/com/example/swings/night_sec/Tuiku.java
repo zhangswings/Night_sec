@@ -42,6 +42,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 退库操作<选择仓库>
+ */
 public class Tuiku extends AppCompatActivity {
 
     @InjectView(R.id.out_editText)

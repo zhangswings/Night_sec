@@ -16,6 +16,9 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 
+/**
+ * 带删除按钮的自定义EditText
+ */
 public class ClearEditText extends EditText implements
         OnFocusChangeListener, TextWatcher {
     /**

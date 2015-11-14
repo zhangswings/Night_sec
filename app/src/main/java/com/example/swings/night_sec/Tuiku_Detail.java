@@ -48,6 +48,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 1.扫描条码--条码必须和仓库编号一致
+ * 2.长按条码可以删除
+ * 3.上传条码
+ * 4.取消操作
+ */
 public class Tuiku_Detail extends AppCompatActivity {
 
     @InjectView(R.id.out_editText)
@@ -325,6 +331,10 @@ public class Tuiku_Detail extends AppCompatActivity {
     private int soundid;
     private String barcodeStr = "0";
     private String[] barcodes = null;
+    /**
+     * 1，接收扫描信息广播，获取二维码信息
+     * 2，验证信息，添加条码
+     */
     private BroadcastReceiver mScanReceiver = new BroadcastReceiver() {
 
         @Override

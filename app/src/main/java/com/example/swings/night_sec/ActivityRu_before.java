@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
+ * 入库前操作
  * 1.选择入库仓库
  * 2.选择班组
  */

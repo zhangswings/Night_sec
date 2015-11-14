@@ -44,6 +44,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 查询产品信息
+ * 1.扫描条码直接查询
+ * 2.输入条码，点击查询按钮进行查询
+ * 3.查询的信息包括：条码、物料名称、重量、克重、长度、幅宽、操作人、状态、仓库、时间、客户信息等
+ */
 public class ActivityInfo extends AppCompatActivity {
 
     @InjectView(R.id.info_editText)

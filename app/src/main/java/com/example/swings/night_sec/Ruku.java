@@ -52,7 +52,10 @@ import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * 入库操作
+ * 入库操作（2）
+ * 1.扫描条码
+ * 2.上传信息
+ * 3.查看已扫描信息
  */
 public class Ruku extends AppCompatActivity {
 

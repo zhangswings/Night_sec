@@ -55,6 +55,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 盘点操作
+ * 1.扫描条码
+ * 2.查看扫描信息
+ * 3.删除扫描条码
+ * 4.离线保存已扫描信息
+ * 5.上传盘点信息
+ */
 public class Activity_pan_detail extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)
@@ -111,8 +119,8 @@ public class Activity_pan_detail extends AppCompatActivity {
         setContentView(R.layout.activity_ruku);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
-        Pan pan=new Pan();
-        pan.setUser(preferences.getString("user","admin"));
+        Pan pan = new Pan();
+        pan.setUser(preferences.getString("user", "admin"));
         pan.setCangku(getIntent().getStringExtra("ck"));
         pan.setPan_id(getIntent().getStringExtra("pandian"));
 //        pan.setStatus("0");
@@ -124,7 +132,7 @@ public class Activity_pan_detail extends AppCompatActivity {
         //设置重复请求次数，间隔
         client.setMaxRetriesAndTimeout(5, 2000);
         //设置超时时间，默认10s
-        client.setTimeout(3 * 1000);
+        client.setTimeout(3 * 2000);
         //设置连接超时时间为2秒（连接初始化时间）
         chejian_str = getIntent().getStringExtra("ck");
         pandian = getIntent().getStringExtra("pandian");
@@ -174,7 +182,7 @@ public class Activity_pan_detail extends AppCompatActivity {
         ruBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String pandian_str=getIntent().getStringExtra("pandian");
+                final String pandian_str = getIntent().getStringExtra("pandian");
                 AlertDialog.Builder builder = new AlertDialog.Builder(Activity_pan_detail.this);
                 builder.setIcon(R.mipmap.right);
                 builder.setTitle("全部上传");
@@ -185,18 +193,18 @@ public class Activity_pan_detail extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //获取产品信息，全部上次
                         //Todo
-                        if (DataSupport.where("pid = "+pandian_str).find(Tiaoma.class).size()>0) {
+                        if (DataSupport.where("pid = " + pandian_str).find(Tiaoma.class).size() > 0) {
                             progressDialog.setTitle("上传中...");
                             progressDialog.setMessage("正在上传数据，请稍后...");
                             progressDialog.setCancelable(true);
                             progressDialog.show();
                             String builder_Detail = "";
-                            if (DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size() == 1) {
-                                builder_Detail = DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(0).getTiaoma_id();
+                            if (DataSupport.where("pid = " + getIntent().getStringExtra("pandian")).find(Tiaoma.class).size() == 1) {
+                                builder_Detail = DataSupport.where("pid = " + getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(0).getTiaoma_id();
                             } else {
                                 String detail_str = "";
-                                for (int i = 0; i <  DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size(); i++) {
-                                    detail_str += DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(i).getTiaoma_id() + ",";
+                                for (int i = 0; i < DataSupport.where("pid = " + getIntent().getStringExtra("pandian")).find(Tiaoma.class).size(); i++) {
+                                    detail_str += DataSupport.where("pid = " + getIntent().getStringExtra("pandian")).find(Tiaoma.class).get(i).getTiaoma_id() + ",";
 
                                 }
                                 builder_Detail = detail_str.substring(0, detail_str.length() - 1);
@@ -209,7 +217,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Log.d("detail", builder_Detail);
                             Log.d("store", getIntent().getStringExtra("ck"));
-//                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
+                            //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                             params.put("store", getIntent().getStringExtra("ck"));
                             params.put("detail", builder_Detail);
                             client.post(Activity_pan_detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetPD_Info", params, new AsyncHttpResponseHandler() {
@@ -221,7 +229,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                                     if (statusCode == 200) {
                                         String info = "";
                                         String text = new String(responseBody);
-                                        Log.d("zhang", text + ">>>>>zhang");
+//                                        Log.d("zhang", text + ">>>>>zhang");
                                         try {
                                             Document document = DocumentHelper.parseText(text);
                                             Element element = document.getRootElement();
@@ -234,9 +242,9 @@ public class Activity_pan_detail extends AppCompatActivity {
                                         if ("true".equals(info)) {
                                             clearEditText();
                                             showToast("全部上传成功!");
-                                            DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
+                                            DataSupport.deleteAll(Pan.class, "pan_id = " + getIntent().getStringExtra("pandian"));
 //                                            DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).de
-                                            DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
+                                            DataSupport.deleteAll(Tiaoma.class, "pid = " + getIntent().getStringExtra("pandian"));
                                             finish();
                                         } else {
 
@@ -260,13 +268,13 @@ public class Activity_pan_detail extends AppCompatActivity {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent=null;
+                                            Intent intent = null;
                                             //判断手机系统的版本  即API大于10 就是3.0或以上版本
-                                            if(android.os.Build.VERSION.SDK_INT>10){
+                                            if (android.os.Build.VERSION.SDK_INT > 10) {
                                                 intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
-                                            }else{
+                                            } else {
                                                 intent = new Intent();
-                                                ComponentName component = new ComponentName("com.android.settings","com.android.settings.WirelessSettings");
+                                                ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
                                                 intent.setComponent(component);
                                                 intent.setAction("android.intent.action.VIEW");
                                             }
@@ -357,7 +365,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                         map.put("tag", String.valueOf(lists.size()));
                         lists.add(map);
                         thisEditText.setText(barcodes[1]);
-                        Tiaoma tiaoma=new Tiaoma();
+                        Tiaoma tiaoma = new Tiaoma();
 //                        if (DataSupport.where("bianma_id = '"+ barcodes[0]+"'").find(Bianma.class).isEmpty()){
 //                            Bianma bianma=new Bianma();
 //                            bianma.setBianma_id(barcodes[0]);
@@ -367,20 +375,20 @@ public class Activity_pan_detail extends AppCompatActivity {
 //                            bianma.setPan_id(getIntent().getStringExtra("pandian"));
 //                            bianma.setNums(1);
 
-                            tiaoma.setTiaoma_id(barcodes[1]);
-                            tiaoma.setLength(barcodes[6]);
-                            tiaoma.setWeight(barcodes[5]);
-                            tiaoma.setBianma_id(barcodes[0]);
-                            tiaoma.setBid(barcodes[0]);
-                            tiaoma.setPid(getIntent().getStringExtra("pandian"));
+                        tiaoma.setTiaoma_id(barcodes[1]);
+                        tiaoma.setLength(barcodes[6]);
+                        tiaoma.setWeight(barcodes[5]);
+                        tiaoma.setBianma_id(barcodes[0]);
+                        tiaoma.setBid(barcodes[0]);
+                        tiaoma.setPid(getIntent().getStringExtra("pandian"));
 //                            tiaoma.setBianma(bianma);
-                            tiaoma.save();
+                        tiaoma.save();
 //                            bianma.getBianma_tiaoma().add(tiaoma);
 //                            bianma.save();
-                            Pan pan=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
+                        Pan pan = DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
 //                            pan.getPan_bianma().add(bianma);
-                            pan.setStatus("2");
-                            pan.save();
+                        pan.setStatus("2");
+                        pan.save();
 //                        }else{
 ////                            Bianma bianma=DataSupport.where("bianma_id = "+ barcodes[0]).find(Bianma.class).get(0);
 //                            tiaoma.setTiaoma_id(barcodes[1]);
@@ -401,7 +409,7 @@ public class Activity_pan_detail extends AppCompatActivity {
                             preEditText.setText(lists.get(lists.size() - 2).get("tiaoma"));
                         }
 //                        int num=DataSupport.where("pan_id = "+getIntent().getStringExtra("pandian")).find(Bianma.class).get(0).getNums();
-                        scanNum.setText( lists.size()+ "件");
+                        scanNum.setText(lists.size() + "件");
                     } else {
                         showToast("条码对应车间(仓库)不符!");
                         barcodes = null;
@@ -462,8 +470,8 @@ public class Activity_pan_detail extends AppCompatActivity {
 //        editTextRuShijian.setText("");
 //        editTextRuYonghu.setText("");
 //        DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
-        DataSupport.deleteAll(Bianma.class,"pan_id = "+getIntent().getStringExtra("pandian"));
-        DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
+        DataSupport.deleteAll(Bianma.class, "pan_id = " + getIntent().getStringExtra("pandian"));
+        DataSupport.deleteAll(Tiaoma.class, "pid = " + getIntent().getStringExtra("pandian"));
     }
 
     private void clearString() {
@@ -513,15 +521,15 @@ public class Activity_pan_detail extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 client.cancelRequests(Activity_pan_detail.this, true);
-                if(DataSupport.where("pid = "+getIntent().getStringExtra("pandian")).find(Tiaoma.class).size()>0){
-                    Pan pan=DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
+                if (DataSupport.where("pid = " + getIntent().getStringExtra("pandian")).find(Tiaoma.class).size() > 0) {
+                    Pan pan = DataSupport.where("pan_id = " + getIntent().getStringExtra("pandian")).find(Pan.class).get(0);
                     //盘点未上传
                     pan.setStatus("2");
                     pan.save();
-                }else{
-                    DataSupport.deleteAll(Pan.class,"pan_id = "+getIntent().getStringExtra("pandian"));
-                    DataSupport.deleteAll(Bianma.class,"pan_id = "+getIntent().getStringExtra("pandian"));
-                    DataSupport.deleteAll(Tiaoma.class,"pid = "+getIntent().getStringExtra("pandian"));
+                } else {
+                    DataSupport.deleteAll(Pan.class, "pan_id = " + getIntent().getStringExtra("pandian"));
+                    DataSupport.deleteAll(Bianma.class, "pan_id = " + getIntent().getStringExtra("pandian"));
+                    DataSupport.deleteAll(Tiaoma.class, "pid = " + getIntent().getStringExtra("pandian"));
                 }
                 finish();
             }

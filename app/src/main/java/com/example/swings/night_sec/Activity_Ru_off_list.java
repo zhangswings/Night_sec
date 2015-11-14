@@ -39,7 +39,10 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
-
+/**
+ * 入库离线保存（1）
+ * 离线保存信息
+ */
 public class Activity_Ru_off_list extends AppCompatActivity {
 
     @InjectView(R.id.list_off_listview)

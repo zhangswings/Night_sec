@@ -53,7 +53,18 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
-
+/**
+ * 出库操作（2）
+ * 1.扫描条码，验证通过，添加信息
+ * 2.点击商品查看该商品详细信息
+ * 3.长按该商品可以删除当前商品
+ * 4.【挂起】按钮
+ * 4.1 挂起信息为空&&扫描信息不为空，可以挂起该车出库信息
+ * 4.2 有车辆挂起，不能再次挂起
+ * 4.3 挂起车辆为当前车辆，可以再次挂起
+ * 4.4 挂起信息全部删除，挂起车辆也会被删除（即，当前挂起为空）
+ * 5.【上传】按钮，将扫描出库信息上传至服务器
+ */
 public class ActivityOut_Second extends AppCompatActivity {
 
     @InjectView(R.id.out_editText)

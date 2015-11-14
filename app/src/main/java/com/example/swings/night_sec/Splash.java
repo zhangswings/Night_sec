@@ -10,6 +10,9 @@ import android.widget.ImageView;
 
 import java.util.Random;
 
+/**
+ * 启动页
+ */
 public class Splash extends AppCompatActivity {
     /**
      * 三个切换的动画

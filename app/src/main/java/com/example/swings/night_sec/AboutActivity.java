@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * 系统介绍页面 AboutActivity
+ */
 public class AboutActivity extends AppCompatActivity {
 	private TextView titleTV;
 	private ImageView mImageView;

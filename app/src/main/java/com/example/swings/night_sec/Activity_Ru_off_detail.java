@@ -38,6 +38,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * 入库离线保存（2）详情页
+ */
 public class Activity_Ru_off_detail extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)

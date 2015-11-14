@@ -14,6 +14,9 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * 未使用该Activity
+ */
 public class ActivityOut_detail extends AppCompatActivity {
 
     @InjectView(R.id.toolbar)

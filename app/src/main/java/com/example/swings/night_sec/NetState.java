@@ -12,6 +12,7 @@ import android.widget.Toast;
 /**
  * Created by swings on 2015-09-25.
  * 检测网络状态工具类
+ * wifi网络为打开时，提示设置网络
  */
 class NetState extends BroadcastReceiver {
     private int tag = 0;

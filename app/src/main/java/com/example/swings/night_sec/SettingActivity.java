@@ -26,6 +26,15 @@ import org.litepal.crud.DataSupport;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+/**
+ * 系统设置页面
+ * 1.服务器ip设置（默认：192.168.0.187）
+ * 2.端口号：默认9002
+ * 3.清空数据库信息（一般是本地保存的离线信息）
+ * 4.保存登录信息（用户名、密码）
+ * 5.版本更新（后续版本添加）
+ * 6.版本信息
+ */
 public class SettingActivity extends AppCompatActivity {
 
     @InjectView(R.id.setting_view_1)

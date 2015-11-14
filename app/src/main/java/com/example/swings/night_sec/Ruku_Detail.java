@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * 查询已扫描入库信息（可以查看、删除）
+ * 查询已扫描入库信息（可以点击查看、长按删除）
  */
 public class Ruku_Detail extends AppCompatActivity {
 

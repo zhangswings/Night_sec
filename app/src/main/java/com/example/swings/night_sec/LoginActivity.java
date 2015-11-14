@@ -40,6 +40,9 @@ import cz.msebera.android.httpclient.Header;
 
 /**
  * 登录操作
+ * 1.帐号
+ * 2.密码
+ * 3.登陆系统，获取用户名（返回信息不为空，校验成功）
  */
 public class LoginActivity extends AppCompatActivity {
 
