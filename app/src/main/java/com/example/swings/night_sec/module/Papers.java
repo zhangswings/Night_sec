@@ -4,6 +4,7 @@ import org.litepal.crud.DataSupport;
 
 /**
  * Created by swings on 2015/9/18.
+ * 纸品信息类extends DataSupport（Litepal数据库框架）
  */
 public class Papers extends DataSupport {
     //编码

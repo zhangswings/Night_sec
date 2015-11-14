@@ -2,6 +2,7 @@ package com.example.swings.night_sec.module;
 
 /**
  * Created by swings on 2015/9/17.
+ * 物料信息
  */
 public class Material {
 

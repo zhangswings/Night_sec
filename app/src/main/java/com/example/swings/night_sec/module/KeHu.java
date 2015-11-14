@@ -2,6 +2,7 @@ package com.example.swings.night_sec.module;
 
 /**
  * Created by swings on 2015-09-28.
+ * 客户信息
  */
 public class KeHu {
 

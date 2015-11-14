@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by swings on 2015-10-10.
+ * 盘点信息类extends DataSupport（Litepal数据库框架）
  */
 public class Pan extends DataSupport {
     private String pan_id;

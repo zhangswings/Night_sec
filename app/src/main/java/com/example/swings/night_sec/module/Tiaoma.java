@@ -4,6 +4,7 @@ import org.litepal.crud.DataSupport;
 
 /**
  * Created by swings on 2015-10-10.
+ * 条码信息类extends DataSupport（Litepal数据库框架）
  */
 public class Tiaoma extends DataSupport {
     private String tiaoma_id;

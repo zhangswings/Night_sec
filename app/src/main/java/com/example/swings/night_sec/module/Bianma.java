@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by swings on 2015-10-10.
+ * 编码信息类extends DataSupport（Litepal数据库框架）
  */
 public class Bianma extends DataSupport {
     private String bianma_id;
