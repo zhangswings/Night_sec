@@ -85,6 +85,7 @@ public class Tuiku_Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_out_second);
         ButterKnife.inject(this);
+        outBtnCancle.setText("返回");
         outEditText.setHint("请扫描退库产品条码");
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         client = new AsyncHttpClient();
@@ -180,8 +181,11 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                             }
                                                             showToast(info);
                                                             barcodes = null;
+                                                            if("\"成功\"".equals(info)){
+                                                                finish();
+                                                            }
                                                         }
-                                                        finish();
+//                                                        finish();
                                                     }
 
                                                     @Override
