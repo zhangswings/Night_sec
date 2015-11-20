@@ -101,15 +101,15 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
             }
         });
-        boolean isSaved = text_isSave.getText().toString().equals("是") ? true : false;
-        if (isSaved) {
+        boolean isSaved = preferences.getBoolean("isSave",true);
+        if (!isSaved) {
             text_isSave.setTextColor(getResources().getColor(R.color.error_color));
             text_isSave.setText("否");
-            edit.putBoolean("isSave", false);
+//            edit.putBoolean("isSave", false);
         } else {
             text_isSave.setTextColor(getResources().getColor(R.color.background_material_dark));
             text_isSave.setText("是");
-            edit.putBoolean("isSave", true);
+//            edit.putBoolean("isSave", true);
         }
         //清空数据
         settingView2.setOnClickListener(new View.OnClickListener() {

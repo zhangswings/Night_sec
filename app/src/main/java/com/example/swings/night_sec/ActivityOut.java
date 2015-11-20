@@ -194,14 +194,14 @@ public class ActivityOut extends AppCompatActivity {
                 if (Chukus.size() > 0) {
                     final String chepaihao=Chukus.get(0).getChepai();
                     AlertDialog.Builder nextBuilder = new AlertDialog.Builder(ActivityOut.this);
-                    nextBuilder.setTitle("请输入车牌号进行二次确认");
+                    nextBuilder.setTitle("请输入挂起车牌号进行二次确认");
                     nextBuilder.setIcon(R.mipmap.right);
                     LayoutInflater factory = LayoutInflater.from(ActivityOut.this);
                     View view = factory.inflate(R.layout.alert_dialog, null);
                     final EditText editText = (EditText) view.findViewById(R.id.editText);
                     final TextView textView = (TextView) view.findViewById(R.id.textView2);
 
-                    textView.setText("请输入车牌号:" + chepaihao);
+                    textView.setText("请输入挂起车牌号:" + chepaihao);
                     nextBuilder.setView(view);
                     nextBuilder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override

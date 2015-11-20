@@ -108,7 +108,7 @@ public class ActivityOut_Second extends AppCompatActivity {
         ghs = getIntent().getStringExtra("ghs");
         kehu = getIntent().getStringExtra("ghsname");
         chepaihao = getIntent().getStringExtra("chepaihao");
-        sacnChepai.setText("车牌号：" + chepaihao);
+        sacnChepai.setText("车牌：" + chepaihao);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(kehu);
         setSupportActionBar(toolbar);
