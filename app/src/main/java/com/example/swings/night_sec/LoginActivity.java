@@ -1,5 +1,6 @@
 package com.example.swings.night_sec;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,9 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.swings.night_sec.module.Bianma;
-import com.example.swings.night_sec.module.Pan;
-import com.example.swings.night_sec.module.Tiaoma;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -31,12 +29,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
+//添加绑定序列号功能
 
 /**
  * 登录操作
@@ -61,13 +59,21 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences.Editor edit;
     String username = "";
     String password = "";
+    //设备管理器
+    DeviceManager deviceManager;
+    //在这里设置绑定的设备序列号数组,添加需要绑定的设备编号
+    final static private String[] deviceIDs = {"67221511246764",};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
+        //初始化设备管理器
+        deviceManager = new DeviceManager();
+        //获取设备序列号
+        final String deviceID = deviceManager.getDeviceId();
+        Log.d("deviceID", deviceID);
+        //id﹕ 67221511246764
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         edit = preferences.edit();
         username = preferences.getString("username", "");
@@ -93,9 +99,9 @@ public class LoginActivity extends AppCompatActivity {
 //        DataSupport.deleteAll(Pan.class);
 //        DataSupport.deleteAll(Tiaoma.class);
 //        DataSupport.deleteAll(Bianma.class);
-        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
-        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
-        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
+//        Log.d("zhang", DataSupport.findAll(Pan.class).toString());
+//        Log.d("zhang", DataSupport.findAll(Bianma.class).toString());
+//        Log.d("zhang", DataSupport.findAll(Tiaoma.class).toString());
 //        showToast(papers.toString());
 //        Reader reader=new Reader();
 //       reader.setName("zhangq");
@@ -129,10 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                 showToast("登录已取消");
             }
         });
-        //获取设备序列号
-        DeviceManager deviceManager = new DeviceManager();
-        String id = deviceManager.getDeviceId();
-        Log.d("id", id);
+
 //        TextInputLayout textInputEmail =(TextInputLayout)findViewById(R.id.textInputEmail);
 //        textInputEmail.setErrorEnabled(true);
 //        textInputEmail.setError("Error Message");
@@ -140,65 +143,88 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(editTextName.getText())) {
-                    showToast("用户名不能为空");
-                } else if (TextUtils.isEmpty(editTextPassword.getText())) {
-                    showToast("密码不能为空");
-                } else if (!TextUtils.isEmpty(editTextName.getText()) && !TextUtils.isEmpty(editTextPassword.getText())) {
-                    progressDialog.setTitle("登录中...");
-                    progressDialog.setMessage("正在登录，请稍后...");
-                    progressDialog.setCancelable(true);
-                    progressDialog.show();
+                //获取设备序列号
+                DeviceManager deviceManager = new DeviceManager();
+                String id = deviceManager.getDeviceId();
+//                Log.d("id", id+"\n"+deviceIDs.toString().contains(id));
+//                Log.d("ids",deviceIDs.toString());
+                boolean isDevice = false;
+                for (String ids : deviceIDs
+                        ) {
+//                    Log.d("ids",ids);
+                    if (ids.equals(id)) {
+                        isDevice = true;
+                    }
+                }
+                if (isDevice){
+                    if (TextUtils.isEmpty(editTextName.getText())) {
+                        showToast("用户名不能为空");
+                    } else if (TextUtils.isEmpty(editTextPassword.getText())) {
+                        showToast("密码不能为空");
+                    } else if (!TextUtils.isEmpty(editTextName.getText()) && !TextUtils.isEmpty(editTextPassword.getText())) {
+                        progressDialog.setTitle("登录中...");
+                        progressDialog.setMessage("正在登录，请稍后...");
+                        progressDialog.setCancelable(true);
+                        progressDialog.show();
 
 //                    client.setTimeout(2000);
-                    RequestParams params = new RequestParams();
-                    params.put("ID", editTextName.getText().toString());
-                    params.put("pwd", editTextPassword.getText().toString());
-                    client.post(LoginActivity.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetUserInfo", params, new AsyncHttpResponseHandler() {
+                        RequestParams params = new RequestParams();
+                        params.put("ID", editTextName.getText().toString());
+                        params.put("pwd", editTextPassword.getText().toString());
+                        client.post(LoginActivity.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetUserInfo", params, new AsyncHttpResponseHandler() {
 
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            progressDialog.dismiss();
-                            if (statusCode == 200) {
-                                String info = "";
-                                String text = new String(responseBody);
-                                Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                progressDialog.dismiss();
+                                if (statusCode == 200) {
+                                    String info = "";
+                                    String text = new String(responseBody);
+                                    Log.d("zhang", text + ">>>>>zhang");
+                                    try {
+                                        Document document = DocumentHelper.parseText(text);
+                                        Element element = document.getRootElement();
+                                        info = element.getText();
 
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
-                                }
-                                if (info.length() > 2) {
-                                    Log.d("zhang", info + ">>>>>zhang");
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.putExtra("user", info.substring(1, info.length() - 1));
-                                    edit.putString("user", info.substring(1, info.length() - 1));
-                                    edit.putString("username", editTextName.getText().toString());
-                                    edit.putString("password", editTextPassword.getText().toString());
-                                    edit.commit();
-                                    startActivity(intent);
-                                    finish();
+                                    } catch (DocumentException de) {
+                                        Log.e("de", de.toString());
+                                    }
+                                    if (info.length() > 2) {
+                                        Log.d("zhang", info + ">>>>>zhang");
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.putExtra("user", info.substring(1, info.length() - 1));
+                                        edit.putString("user", info.substring(1, info.length() - 1));
+                                        edit.putString("username", editTextName.getText().toString());
+                                        edit.putString("password", editTextPassword.getText().toString());
+                                        edit.commit();
+                                        startActivity(intent);
+                                        finish();
 
-                                } else {
-                                    showToast("用户名或密码有误");
+                                    } else {
+                                        showToast("用户名或密码有误");
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            progressDialog.dismiss();
-                            Log.d("zhang", error.toString());
-                            Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                progressDialog.dismiss();
+                                Log.d("zhang", error.toString());
+                                Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
 
+                    }
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setIcon(R.mipmap.circle);
+                    builder.setTitle("系统提示");
+                    builder.setMessage("设备序列号不正确，请联系万和科技！");
+                    builder.setCancelable(false);
+                    builder.setNeutralButton("确定", null);
+                    builder.create().show();
+                    showToast("设备序列号不正确，请联系万和科技！");
                 }
-
             }
         });
         btnCancle.setOnClickListener(new View.OnClickListener() {
