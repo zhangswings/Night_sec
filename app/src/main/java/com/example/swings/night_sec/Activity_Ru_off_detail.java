@@ -19,14 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.Papers;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.litepal.crud.DataSupport;
 
 import java.text.DateFormat;
@@ -75,7 +70,7 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
     Button ruBtnOk;
     @InjectView(R.id.ru_ll_bottom)
     LinearLayout ruLlBottom;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
 
@@ -101,17 +96,18 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(Activity_Ru_off_detail.this, true);
+//                client.cancelRequests(Activity_Ru_off_detail.this, true);
+                MyClient.cancleClient(Activity_Ru_off_detail.this);
                 showToast("已取消上传");
             }
         });
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-        client.setMaxRetriesAndTimeout(3, 2000);
+//        client.setMaxRetriesAndTimeout(3, 2000);
         //设置超时时间，默认10s
-        client.setTimeout(2 * 1000);
+//        client.setTimeout(2 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         ruBtnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +136,7 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
                     //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                     params.put("Content", builder_Content);
                     params.put("Detail", builder_Detail);
-                    client.post(Activity_Ru_off_detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
+                    MyClient.post(Activity_Ru_off_detail.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_InStore", params, new AsyncHttpResponseHandler() {
 
 
                         @Override
@@ -150,18 +146,18 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
                                 String info = "";
                                 String text = new String(responseBody);
                                 Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
-
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
-                                }
+//                                try {
+//                                    Document document = DocumentHelper.parseText(text);
+//                                    Element element = document.getRootElement();
+//                                    info = element.getText();
+//
+//                                } catch (DocumentException de) {
+//                                    Log.e("de", de.toString());
+//                                }
                                 Papers paper = new Papers();
                                 paper.setPaper_status("1");
                                 paper.updateAll("paper_code=" + code_str);
-                                showToast(info);
+                                showToast(text);
                                 clearEditText();
                                 clearString();
                                 finish();
@@ -212,7 +208,8 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
-                client.cancelRequests(Activity_Ru_off_detail.this, true);
+//                client.cancelRequests(Activity_Ru_off_detail.this, true);
+                MyClient.cancleClient(Activity_Ru_off_detail.this);
                 finish();
             }
         });
@@ -292,6 +289,12 @@ public class Activity_Ru_off_detail extends AppCompatActivity {
         banzu_str = "";
         shijian_str = "";
         yonghu_str = "";
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyClient.cancleClient(Activity_Ru_off_detail.this);
     }
 
     /**

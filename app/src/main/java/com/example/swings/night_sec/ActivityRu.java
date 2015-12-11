@@ -28,14 +28,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.Papers;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.litepal.crud.DataSupport;
 
 import java.io.UnsupportedEncodingException;
@@ -87,7 +82,7 @@ public class ActivityRu extends AppCompatActivity {
     //确认按钮
     @InjectView(R.id.ru_btn_ok)
     Button ruBtnOk;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
     MediaPlayer mediaPlayer;
@@ -99,10 +94,10 @@ public class ActivityRu extends AppCompatActivity {
         setContentView(R.layout.activity_activity_ru);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-        client.setMaxRetriesAndTimeout(5, 3000);
-        client.setTimeout(3000);
+//        client.setMaxRetriesAndTimeout(5, 3000);
+//        client.setTimeout(3000);
         //设置超时时间，默认10s
         //设置连接超时时间为2秒（连接初始化时间）
         // 初始化振动器
@@ -124,7 +119,8 @@ public class ActivityRu extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(ActivityRu.this, true);
+//                client.cancelRequests(ActivityRu.this, true);
+                MyClient.cancleClient(ActivityRu.this);
                 showToast("已取消上传");
             }
         });
@@ -170,21 +166,21 @@ public class ActivityRu extends AppCompatActivity {
                     //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                     params.put("Content", builder_Content);
                     params.put("Detail", builder_Detail);
-                    client.post(ActivityRu.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
+                    MyClient.post( ActivityRu.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_InStore", params, new AsyncHttpResponseHandler() {
 
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             progressDialog.dismiss();
                             if (statusCode == 200) {
-                                String info = "";
+//                                String info = "";
                                 String text = new String(responseBody);
                                 Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
-                                    if ("\"成功\"".equals(info)){
+//                                try {
+//                                    Document document = DocumentHelper.parseText(text);
+//                                    Element element = document.getRootElement();
+//                                    info = element.getText();
+                                    if ("\"成功\"".equals(text)){
                                         mediaPlayer=MediaPlayer.create(ActivityRu.this,R.raw.ru_suc);
                                         mediaPlayer.start();
                                         Log.d("tag","成功");
@@ -194,12 +190,12 @@ public class ActivityRu extends AppCompatActivity {
                                         Log.d("tag", "失败");
                                     }
 
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
-                                }
+//                                } catch (DocumentException de) {
+//                                    Log.e("de", de.toString());
+//                                }
                                 mediaPlayer=MediaPlayer.create(ActivityRu.this,R.raw.ru_suc);
                                 mediaPlayer.start();
-                                showToast(info);
+                                showToast(text);
                                 barcodes = null;
                                 clearEditText();
                                 clearString();
@@ -393,6 +389,7 @@ public class ActivityRu extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyClient.cancleClient(ActivityRu.this);
     }
 
     @Override
@@ -416,7 +413,8 @@ public class ActivityRu extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
-                client.cancelRequests(ActivityRu.this, true);
+//                client.cancelRequests(ActivityRu.this, true);
+                MyClient.cancleClient(ActivityRu.this);
                 finish();
             }
         });

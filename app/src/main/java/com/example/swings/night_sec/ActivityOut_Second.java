@@ -31,14 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.swings.night_sec.module.ChukuInfo;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.litepal.crud.DataSupport;
 
 import java.io.UnsupportedEncodingException;
@@ -53,6 +48,7 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cz.msebera.android.httpclient.Header;
+
 /**
  * 出库操作（2）
  * 1.扫描条码，验证通过，添加信息
@@ -75,7 +71,7 @@ public class ActivityOut_Second extends AppCompatActivity {
     Button outBtnCancle;
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
-    private static AsyncHttpClient client;
+    //    private static AsyncHttpClient client;
     @InjectView(R.id.sacn_num)
     TextView sacnNum;
     @InjectView(R.id.out_ll_bottom)
@@ -104,7 +100,7 @@ public class ActivityOut_Second extends AppCompatActivity {
         setContentView(R.layout.activity_activity_out_second);
         ButterKnife.inject(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         ghs = getIntent().getStringExtra("ghs");
         kehu = getIntent().getStringExtra("ghsname");
         chepaihao = getIntent().getStringExtra("chepaihao");
@@ -124,8 +120,9 @@ public class ActivityOut_Second extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(ActivityOut_Second.this, true);
+//                client.cancelRequests(ActivityOut_Second.this, true);
                 showToast("已取消上传");
+                MyClient.cancleClient(ActivityOut_Second.this);
             }
         });
         // 初始化振动器
@@ -385,23 +382,23 @@ public class ActivityOut_Second extends AppCompatActivity {
 //                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
 //                                                                        client.setTimeout(5 * 1000);
-                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+                                                                        MyClient.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                 if (statusCode == 200) {
                                                                                     progressDialog.dismiss();
-                                                                                    String info = "";
+//                                                                                    String info = "";
                                                                                     String text = new String(responseBody);
                                                                                     Log.d("zhang", text + ">>>>>zhang");
-                                                                                    try {
-                                                                                        Document document = DocumentHelper.parseText(text);
-                                                                                        Element element = document.getRootElement();
-                                                                                        info = element.getText();
-
-                                                                                    } catch (DocumentException de) {
-                                                                                        Log.e("de", de.toString());
-                                                                                    }
-                                                                                    if ("\"成功\"".equals(info)) {
+//                                                                                    try {
+//                                                                                        Document document = DocumentHelper.parseText(text);
+//                                                                                        Element element = document.getRootElement();
+//                                                                                        info = element.getText();
+//
+//                                                                                    } catch (DocumentException de) {
+//                                                                                        Log.e("de", de.toString());
+//                                                                                    }
+                                                                                    if ("\"成功\"".equals(text)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
                                                                                         DataSupport.deleteAll(ChukuInfo.class, "chejian = '01' and chepai = " + chepaihao);
@@ -435,7 +432,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                         }
                                                                                     } else {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                                        showToast(info);
+                                                                                        showToast(text);
                                                                                     }
                                                                                     barcodes = null;
                                                                                 }
@@ -459,26 +456,26 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                         Log.d("zhang", content_str);
                                                                         Log.d("zhang", detail_str);
                                                                         //设置重复请求次数，间隔
-                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+//                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
-                                                                        client.setTimeout(5 * 1000);
-                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+//                                                                        client.setTimeout(5 * 1000);
+                                                                        MyClient.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                 if (statusCode == 200) {
                                                                                     progressDialog.dismiss();
-                                                                                    String info = "";
+//                                                                                    String info = "";
                                                                                     String text = new String(responseBody);
                                                                                     Log.d("zhang", text + ">>>>>zhang");
-                                                                                    try {
-                                                                                        Document document = DocumentHelper.parseText(text);
-                                                                                        Element element = document.getRootElement();
-                                                                                        info = element.getText();
-
-                                                                                    } catch (DocumentException de) {
-                                                                                        Log.e("de", de.toString());
-                                                                                    }
-                                                                                    if ("\"成功\"".equals(info)) {
+//                                                                                    try {
+//                                                                                        Document document = DocumentHelper.parseText(text);
+//                                                                                        Element element = document.getRootElement();
+//                                                                                        info = element.getText();
+//
+//                                                                                    } catch (DocumentException de) {
+//                                                                                        Log.e("de", de.toString());
+//                                                                                    }
+                                                                                    if ("\"成功\"".equals(text)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
                                                                                         DataSupport.deleteAll(ChukuInfo.class, "chejian = '02' and chepai = " + chepaihao);
@@ -512,7 +509,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                         }
                                                                                     } else {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                                        showToast(info);
+                                                                                        showToast(text);
                                                                                     }
                                                                                     barcodes = null;
                                                                                 }
@@ -536,26 +533,26 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                         Log.d("zhang", content_str);
                                                                         Log.d("zhang", detail_str);
                                                                         //设置重复请求次数，间隔
-                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+//                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
-                                                                        client.setTimeout(5 * 1000);
-                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+//                                                                        client.setTimeout(5 * 1000);
+                                                                        MyClient.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                 if (statusCode == 200) {
                                                                                     progressDialog.dismiss();
-                                                                                    String info = "";
+//                                                                                    String info = "";
                                                                                     String text = new String(responseBody);
                                                                                     Log.d("zhang", text + ">>>>>zhang");
-                                                                                    try {
-                                                                                        Document document = DocumentHelper.parseText(text);
-                                                                                        Element element = document.getRootElement();
-                                                                                        info = element.getText();
-
-                                                                                    } catch (DocumentException de) {
-                                                                                        Log.e("de", de.toString());
-                                                                                    }
-                                                                                    if ("\"成功\"".equals(info)) {
+//                                                                                    try {
+//                                                                                        Document document = DocumentHelper.parseText(text);
+//                                                                                        Element element = document.getRootElement();
+//                                                                                        info = element.getText();
+//
+//                                                                                    } catch (DocumentException de) {
+//                                                                                        Log.e("de", de.toString());
+//                                                                                    }
+                                                                                    if ("\"成功\"".equals(text)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
                                                                                         DataSupport.deleteAll(ChukuInfo.class, "chejian = '03' and chepai = " + chepaihao);
@@ -589,7 +586,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                         }
                                                                                     } else {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                                        showToast(info);
+                                                                                        showToast(text);
                                                                                     }
                                                                                     barcodes = null;
                                                                                 }
@@ -613,26 +610,26 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                         Log.d("zhang", content_str);
                                                                         Log.d("zhang", detail_str);
                                                                         //设置重复请求次数，间隔
-                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+//                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
-                                                                        client.setTimeout(5 * 1000);
-                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+//                                                                        client.setTimeout(5 * 1000);
+                                                                        MyClient.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                 if (statusCode == 200) {
                                                                                     progressDialog.dismiss();
-                                                                                    String info = "";
+//                                                                                    String info = "";
                                                                                     String text = new String(responseBody);
                                                                                     Log.d("zhang", text + ">>>>>zhang");
-                                                                                    try {
-                                                                                        Document document = DocumentHelper.parseText(text);
-                                                                                        Element element = document.getRootElement();
-                                                                                        info = element.getText();
-
-                                                                                    } catch (DocumentException de) {
-                                                                                        Log.e("de", de.toString());
-                                                                                    }
-                                                                                    if ("\"成功\"".equals(info)) {
+//                                                                                    try {
+//                                                                                        Document document = DocumentHelper.parseText(text);
+//                                                                                        Element element = document.getRootElement();
+//                                                                                        info = element.getText();
+//
+//                                                                                    } catch (DocumentException de) {
+//                                                                                        Log.e("de", de.toString());
+//                                                                                    }
+                                                                                    if ("\"成功\"".equals(text)) {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.chu_suc).start();
                                                                                         chukunum += 1;
                                                                                         DataSupport.deleteAll(ChukuInfo.class, "chejian = '04' and chepai = " + chepaihao);
@@ -666,7 +663,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                         }
                                                                                     } else {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                                        showToast(info);
+                                                                                        showToast(text);
                                                                                     }
                                                                                     barcodes = null;
                                                                                 }
@@ -690,26 +687,26 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                         Log.d("zhang", content_str);
                                                                         Log.d("zhang", detail_str);
                                                                         //设置重复请求次数，间隔
-                                                                        client.setMaxRetriesAndTimeout(3, 2000);
+//                                                                        client.setMaxRetriesAndTimeout(3, 2000);
                                                                         //设置超时时间，默认10s
-                                                                        client.setTimeout(5 * 1000);
-                                                                        client.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_OutStore", params, new AsyncHttpResponseHandler() {
+//                                                                        client.setTimeout(5 * 1000);
+                                                                        MyClient.post(ActivityOut_Second.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_OutStore", params, new AsyncHttpResponseHandler() {
                                                                             @Override
                                                                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                 if (statusCode == 200) {
                                                                                     progressDialog.dismiss();
-                                                                                    String info = "";
+//                                                                                    String info = "";
                                                                                     String text = new String(responseBody);
                                                                                     Log.d("zhang", text + ">>>>>zhang");
-                                                                                    try {
-                                                                                        Document document = DocumentHelper.parseText(text);
-                                                                                        Element element = document.getRootElement();
-                                                                                        info = element.getText();
-
-                                                                                    } catch (DocumentException de) {
-                                                                                        Log.e("de", de.toString());
-                                                                                    }
-                                                                                    if ("\"成功\"".equals(info)) {
+//                                                                                    try {
+//                                                                                        Document document = DocumentHelper.parseText(text);
+//                                                                                        Element element = document.getRootElement();
+//                                                                                        info = element.getText();
+//
+//                                                                                    } catch (DocumentException de) {
+//                                                                                        Log.e("de", de.toString());
+//                                                                                    }
+                                                                                    if ("\"成功\"".equals(text)) {
 
                                                                                         chukunum += 1;
                                                                                         DataSupport.deleteAll(ChukuInfo.class, "chejian = '05' and chepai = " + chepaihao);
@@ -744,7 +741,7 @@ public class ActivityOut_Second extends AppCompatActivity {
                                                                                         }
                                                                                     } else {
                                                                                         MediaPlayer.create(ActivityOut_Second.this, R.raw.fail).start();
-                                                                                        showToast(info);
+                                                                                        showToast(text);
                                                                                     }
                                                                                     barcodes = null;
                                                                                 }
@@ -1035,6 +1032,7 @@ public class ActivityOut_Second extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyClient.cancleClient(ActivityOut_Second.this);
     }
 
     @Override

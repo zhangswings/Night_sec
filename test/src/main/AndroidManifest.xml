@@ -13,9 +13,10 @@
             android:name=".MainActivity"
             android:label="@string/app_name" >
         </activity>
+
         <activity
-            android:name=".RetrofitDemo"
-            android:label="@string/title_activity_retrofit_demo" >
+            android:name=".AsyncActivity"
+            android:label="@string/title_activity_async" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -31,6 +31,7 @@ import java.util.Map;
  * 4.信息查询
  * 5.产品退库
  * 6.系统设置
+ * 7.修改重量
  */
 public class MainActivity extends AppCompatActivity implements BackHandledFragment.BackHandlerInterface {
 
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements BackHandledFragme
         setupDrawerContent(mNavigationView);
 // 准备要添加的数据条目
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        Integer[] imgs = {R.mipmap.icon_ru, R.mipmap.icon_chu, R.mipmap.icon_pan, R.mipmap.icon_info, R.mipmap.tuiku, R.mipmap.setting};
-        String names[] = {"快速入库", "快速出库", "产品盘点", "信息查询", "产品退库", "系统设置"};
+        Integer[] imgs = {R.mipmap.icon_ru, R.mipmap.icon_chu, R.mipmap.icon_pan, R.mipmap.icon_info, R.mipmap.tuiku, R.mipmap.icon_ru,R.mipmap.setting};
+        String names[] = {"快速入库", "快速出库", "产品盘点", "信息查询", "产品退库","修改重量", "系统设置"};
         for (int i = 1; i <= names.length; i++) {
             Map<String, Object> item = new HashMap<String, Object>();
             item.put("imageItem", imgs[i - 1]);// 添加图像资源的ID
@@ -97,8 +98,12 @@ public class MainActivity extends AppCompatActivity implements BackHandledFragme
                         intent = new Intent(MainActivity.this, Tuiku.class);
                         startActivity(intent);
                         break;
-                    case 5:
+                    case 6:
                         intent = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 5:
+                        intent = new Intent(MainActivity.this, ActivityChangeWeight.class);
                         startActivity(intent);
                         break;
 

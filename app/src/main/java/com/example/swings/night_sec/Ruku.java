@@ -28,14 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -97,7 +91,7 @@ public class Ruku extends AppCompatActivity {
     Button ruBtnCancle;
     @InjectView(R.id.ip_btn_ok)
     Button ruBtnOk;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     private  TextView mScanNum;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
@@ -114,11 +108,11 @@ public class Ruku extends AppCompatActivity {
         ButterKnife.inject(this);
         mScanNum= (TextView) findViewById(R.id.scan_num);
         mScanNum.setText(lists.size() + "件");
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         //设置重复请求次数，间隔
-        client.setMaxRetriesAndTimeout(3, 2000);
+//        client.setMaxRetriesAndTimeout(3, 2000);
         //设置超时时间，默认10s
-        client.setTimeout(5 * 1000);
+//        client.setTimeout(5 * 1000);
         //设置连接超时时间为2秒（连接初始化时间）
         chejian_str = getIntent().getStringExtra("ruku");
         banzu_str = getIntent().getStringExtra("banzu");
@@ -139,7 +133,8 @@ public class Ruku extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(Ruku.this, true);
+//                client.cancelRequests(Ruku.this, true);
+                MyClient.cancleClient(Ruku.this);
                 showToast("已取消上传");
             }
         });
@@ -177,7 +172,7 @@ public class Ruku extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(Ruku.this);
         builder.setIcon(R.mipmap.right);
         builder.setTitle("全部上传");
-        builder.setMessage("请确认是否全部上次服务器?");
+        builder.setMessage("请确认是否全部上传服务器?");
         builder.setNegativeButton("否", null);
         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
             @Override
@@ -216,32 +211,32 @@ public class Ruku extends AppCompatActivity {
 //                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                     params.put("Content", builder_Content);
                     params.put("Detail", builder_Detail);
-                    client.post(Ruku.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/PDA_InStore", params, new AsyncHttpResponseHandler() {
+                    MyClient.post( Ruku.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_InStore", params, new AsyncHttpResponseHandler() {
 
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             progressDialog.dismiss();
                             if (statusCode == 200) {
-                                String info = "";
+//                                String info = "";
                                 String text = new String(responseBody);
                                 Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
+//                                try {
+//                                    Document document = DocumentHelper.parseText(text);
+//                                    Element element = document.getRootElement();
+//                                    info = element.getText();
+//
+//                                } catch (DocumentException de) {
+//                                    Log.e("de", de.toString());
+//                                }
 
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
-                                }
-
-                                if ("\"成功\"".equals(info)) {
+                                if ("\"成功\"".equals(text)) {
                                     MediaPlayer.create(Ruku.this, R.raw.ru_suc).start();
                                     clearEditText();
                                     showToast("全部上传成功!");
                                 } else {
                                     MediaPlayer.create(Ruku.this, R.raw.fail).start();
-                                    showToast(info);
+                                    showToast(text);
                                 }
 
 
@@ -437,6 +432,7 @@ public class Ruku extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyClient.cancleClient(Ruku.this);
     }
 
     @Override
@@ -461,7 +457,8 @@ public class Ruku extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // TODO Auto-generated method stub
-                    client.cancelRequests(Ruku.this, true);
+//                    client.cancelRequests(Ruku.this, true);
+                    MyClient.cancleClient(Ruku.this);
                     finish();
                 }
             });
@@ -484,7 +481,8 @@ public class Ruku extends AppCompatActivity {
             exitbuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    client.cancelRequests(Ruku.this, true);
+//                    client.cancelRequests(Ruku.this, true);
+                    MyClient.cancleClient(Ruku.this);
                     finish();
                 }
             });

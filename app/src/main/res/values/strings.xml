@@ -10,6 +10,7 @@
     <string name="title_ruku">请输入入库仓库</string>
     <string name="title_pan">产品盘点</string>
     <string name="title_info">信息查询</string>
+    <string name="title_weight">修改入库重量</string>
     <string name="hint_username">用户名</string>
     <string name="hint_password">密码</string>
     <string name="button_login">登 录</string>

@@ -21,14 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.litepal.tablemanager.Connector;
 
 import butterknife.ButterKnife;
@@ -41,6 +36,9 @@ import cz.msebera.android.httpclient.Header;
  * 1.帐号
  * 2.密码
  * 3.登陆系统，获取用户名（返回信息不为空，校验成功）
+ * 举例子说明：
+ 调用【GetUserInfo】方法，调用http请求
+ http://IP:8092/JsonHandler.ashx?doc=GetUserInfo&Id=9001&pwd=123
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -53,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     @InjectView(R.id.btnCancle)
     Button btnCancle;
     ProgressDialog progressDialog;
-    AsyncHttpClient client;
+//    AsyncHttpClient client;
     NetState receiver;
     SharedPreferences preferences;
     SharedPreferences.Editor edit;
@@ -123,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
 //        client.setMaxRetriesAndTimeout(3, 2000);
 //        client.setTimeout(5 * 1000);
 //        client.setResponseTimeout(2*1000);
@@ -131,7 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(LoginActivity.this, true);
+//                client.cancelRequests(LoginActivity.this, true);
+                MyClient.cancleClient(LoginActivity.this);
                 showToast("登录已取消");
             }
         });
@@ -171,28 +170,28 @@ public class LoginActivity extends AppCompatActivity {
                         RequestParams params = new RequestParams();
                         params.put("ID", editTextName.getText().toString());
                         params.put("pwd", editTextPassword.getText().toString());
-                        client.post(LoginActivity.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetUserInfo", params, new AsyncHttpResponseHandler() {
+                        MyClient.post(LoginActivity.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=GetUserInfo", params, new AsyncHttpResponseHandler() {
 
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                 progressDialog.dismiss();
                                 if (statusCode == 200) {
-                                    String info = "";
+//                                    String info = "";
                                     String text = new String(responseBody);
                                     Log.d("zhang", text + ">>>>>zhang");
-                                    try {
-                                        Document document = DocumentHelper.parseText(text);
-                                        Element element = document.getRootElement();
-                                        info = element.getText();
-
-                                    } catch (DocumentException de) {
-                                        Log.e("de", de.toString());
-                                    }
-                                    if (info.length() > 2) {
-                                        Log.d("zhang", info + ">>>>>zhang");
+//                                    try {
+//                                        Document document = DocumentHelper.parseText(text);
+//                                        Element element = document.getRootElement();
+//                                        info = element.getText();
+//
+//                                    } catch (DocumentException de) {
+//                                        Log.e("de", de.toString());
+//                                    }
+                                    if (text.length() > 2) {
+                                        Log.d("zhang", text + ">>>>>zhang");
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.putExtra("user", info.substring(1, info.length() - 1));
-                                        edit.putString("user", info.substring(1, info.length() - 1));
+                                        intent.putExtra("user", text.substring(1, text.length() - 1));
+                                        edit.putString("user", text.substring(1, text.length() - 1));
                                         edit.putString("username", editTextName.getText().toString());
                                         edit.putString("password", editTextPassword.getText().toString());
                                         edit.commit();
@@ -239,6 +238,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyClient.cancleClient(LoginActivity.this);
         this.unregisterReceiver(receiver);
     }
 

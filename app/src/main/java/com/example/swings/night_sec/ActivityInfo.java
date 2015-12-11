@@ -27,14 +27,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -58,7 +52,7 @@ public class ActivityInfo extends AppCompatActivity {
     Button infoBtnBack;
     @InjectView(R.id.info_btn_ok)
     Button infoBtnOk;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
     @InjectView(R.id.toolbar)
@@ -89,15 +83,16 @@ public class ActivityInfo extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ip_str=preferences.getString("ip", "192.168.0.187");
         progressDialog = new ProgressDialog(ActivityInfo.this);
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(ActivityInfo.this, true);
+//                client.cancelRequests(ActivityInfo.this, true);
                 showToast("已取消上传");
+                MyClient.cancleClient(ActivityInfo.this);
             }
         });
         // 初始化振动器
@@ -120,22 +115,22 @@ public class ActivityInfo extends AppCompatActivity {
                 } else {
                     RequestParams params = new RequestParams();
                     params.put("id", infoEditText.getText().toString().trim());
-                    client.cancelRequests(ActivityInfo.this, true);
-                    client.post(ActivityInfo.this, "http://" + ip_str + ":8092/Service1.asmx/GetMaterialStatus", params, new AsyncHttpResponseHandler() {
+//                    client.cancelRequests(ActivityInfo.this, true);
+                    MyClient.post( ActivityInfo.this,"http://" + ip_str + ":8092/JsonHandler.ashx?doc=GetMaterialStatus", params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             if (statusCode == 200) {
-                                String info = "";
+//                                String info = "";
                                 String text = new String(responseBody);
                                 Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
+//                                try {
+//                                    Document document = DocumentHelper.parseText(text);
+//                                    Element element = document.getRootElement();
+//                                    info = element.getText();
                                     Gson gson = new Gson();
                                     Type type = new TypeToken<List<MaterialStatus>>() {
                                     }.getType();
-                                    List<MaterialStatus> materialStatus = gson.fromJson(info, type);
+                                    List<MaterialStatus> materialStatus = gson.fromJson(text, type);
                                     String[] temp = new String[materialStatus.size()];
                                     if (materialStatus.size() > 0) {
                                         StringBuilder builder=new StringBuilder();
@@ -153,9 +148,9 @@ public class ActivityInfo extends AppCompatActivity {
                                         infoText.setText("所查询条码信息不存在");
                                     }
 
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
-                                }
+//                                } catch (DocumentException de) {
+//                                    Log.e("de", de.toString());
+//                                }
                             }
                         }
 
@@ -224,40 +219,41 @@ public class ActivityInfo extends AppCompatActivity {
                     infoEditText.setText(barcodes[1]);
                     RequestParams params = new RequestParams();
                     params.put("id", barcodes[1]);
-                    client.cancelRequests(ActivityInfo.this, true);
-                    client.post(ActivityInfo.this, "http://" + ip_str + ":8092/Service1.asmx/GetMaterialStatus", params, new AsyncHttpResponseHandler() {
+//                    client.cancelRequests(ActivityInfo.this, true);
+                    MyClient.cancleClient(ActivityInfo.this);
+                    MyClient.post(ActivityInfo.this,"http://" + ip_str + ":8092/JsonHandler.ashx?doc=GetMaterialStatus", params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             if (statusCode == 200) {
-                                String info = "";
+//                                String info = "";
                                 String text = new String(responseBody);
                                 Log.d("zhang", text + ">>>>>zhang");
-                                try {
-                                    Document document = DocumentHelper.parseText(text);
-                                    Element element = document.getRootElement();
-                                    info = element.getText();
-                                    Gson gson = new Gson();
-                                    Type type = new TypeToken<List<MaterialStatus>>() {
-                                    }.getType();
-                                    List<MaterialStatus> materialStatus = gson.fromJson(info, type);
-                                    String[] temp = new String[materialStatus.size()];
-                                    if (materialStatus.size() > 0) {
-                                        StringBuilder builder=new StringBuilder();
-                                        builder.append("条码：").append(barcodes[1]).append("\n物料：").append(barcodes[2]).append("\n重量：").append(barcodes[5]).append("\n克重：").append(barcodes[4]).append("\n长度：").append(barcodes[6]).append("\n幅宽：").append(barcodes[3]).append("\n");
+//                                try {
+//                                    Document document = DocumentHelper.parseText(text);
+//                                    Element element = document.getRootElement();
+//                                    info = element.getText();
+                                Gson gson = new Gson();
+                                Type type = new TypeToken<List<MaterialStatus>>() {
+                                }.getType();
+                                List<MaterialStatus> materialStatus = gson.fromJson(text, type);
+                                String[] temp = new String[materialStatus.size()];
+                                if (materialStatus.size() > 0) {
+                                    StringBuilder builder = new StringBuilder();
+                                    builder.append("条码：").append(barcodes[1]).append("\n物料：").append(barcodes[2]).append("\n重量：").append(barcodes[5]).append("\n克重：").append(barcodes[4]).append("\n长度：").append(barcodes[6]).append("\n幅宽：").append(barcodes[3]).append("\n");
 
-                                        builder.append("操作人：").append( materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
-                                        if("已出库".equals(materialStatus.get(0).getStatus().trim())){
-                                            builder.append("\n客户信息：").append(materialStatus.get(0).getSupplierName());
-                                            Log.d("zhang",builder.toString());
-                                        }
-                                        infoText.setText(builder);
-                                    } else {
-                                        showToast("所查询条码信息不存在");
+                                    builder.append("操作人：").append(materialStatus.get(0).getOperaName()).append("\n状态：").append(materialStatus.get(0).getStatus()).append("\n仓库：").append(materialStatus.get(0).getStoreId()).append("\n时间：").append(materialStatus.get(0).getTime());
+                                    if ("已出库".equals(materialStatus.get(0).getStatus().trim())) {
+                                        builder.append("\n客户信息：").append(materialStatus.get(0).getSupplierName());
+                                        Log.d("zhang", builder.toString());
                                     }
-
-                                } catch (DocumentException de) {
-                                    Log.e("de", de.toString());
+                                    infoText.setText(builder);
+                                } else {
+                                    showToast("所查询条码信息不存在");
                                 }
+
+//                                } catch (DocumentException de) {
+//                                    Log.e("de", de.toString());
+//                                }
                             }
                         }
 

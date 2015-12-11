@@ -23,14 +23,9 @@ import android.widget.Toast;
 import com.example.swings.night_sec.module.Bianma;
 import com.example.swings.night_sec.module.Pan;
 import com.example.swings.night_sec.module.Tiaoma;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.litepal.crud.DataSupport;
 
 import java.text.DateFormat;
@@ -64,7 +59,7 @@ public class Activity_pan_load extends AppCompatActivity {
     LinearLayout listLlButtom;
     List<Map<String, String>> lists;
     SimpleAdapter adapter;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
     private String chejian_str;
@@ -88,7 +83,7 @@ public class Activity_pan_load extends AppCompatActivity {
             }
         });
         lists = new ArrayList<Map<String, String>>();
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         //设置重复请求次数，间隔
 //        client.setMaxRetriesAndTimeout(3, 2000);
         //设置超时时间，默认10s
@@ -101,7 +96,8 @@ public class Activity_pan_load extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(Activity_pan_load.this, true);
+//                client.cancelRequests(Activity_pan_load.this, true);
+                MyClient.cancleClient(Activity_pan_load.this);
                 showToast("已取消上传");
             }
         });
@@ -185,7 +181,7 @@ public class Activity_pan_load extends AppCompatActivity {
 //                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                                     params.put("store", ck_id);
                                     params.put("detail", builder_Detail);
-                                    client.post(Activity_pan_load.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetPD_Info", params, new AsyncHttpResponseHandler() {
+                                    MyClient.post(Activity_pan_load.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=GetPD_Info", params, new AsyncHttpResponseHandler() {
 
 
                                         @Override
@@ -195,16 +191,16 @@ public class Activity_pan_load extends AppCompatActivity {
                                                 String info = "";
                                                 String text = new String(responseBody);
                                                 Log.d("zhang", text + ">>>>>zhang");
-                                                try {
-                                                    Document document = DocumentHelper.parseText(text);
-                                                    Element element = document.getRootElement();
-                                                    info = element.getText();
+//                                                try {
+//                                                    Document document = DocumentHelper.parseText(text);
+//                                                    Element element = document.getRootElement();
+//                                                    info = element.getText();
+//
+//                                                } catch (DocumentException de) {
+//                                                    Log.e("de", de.toString());
+//                                                }
 
-                                                } catch (DocumentException de) {
-                                                    Log.e("de", de.toString());
-                                                }
-
-                                                if ("true".equals(info)) {
+                                                if ("true".equals(text)) {
 //                                            clearEditText();
                                                     showToast("上传成功!");
                                                     DataSupport.deleteAll(Pan.class, "pan_id = " + pan_id);

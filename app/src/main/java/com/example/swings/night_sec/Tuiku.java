@@ -23,14 +23,8 @@ import android.widget.Toast;
 import com.example.swings.night_sec.module.KeHu;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -59,11 +53,11 @@ public class Tuiku extends AppCompatActivity {
     Spinner outCangku;
     private SimpleAdapter adapter;
     private List<Map<String, String>> lists;
-    private AsyncHttpClient client;
+//    private AsyncHttpClient client;
     SharedPreferences preferences;
     String ghs = "";
     String ghsname = "";
-
+private boolean isSelected=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,10 +94,10 @@ public class Tuiku extends AppCompatActivity {
                                              }
 
         );
-        client = new AsyncHttpClient();
-        //设置超时
-        client.setMaxRetriesAndTimeout(5, 3000);
-        client.setTimeout(5 * 1000);
+//        client = new AsyncHttpClient();
+//        //设置超时
+//        client.setMaxRetriesAndTimeout(5, 3000);
+//        client.setTimeout(5 * 1000);
         lists = new ArrayList<Map<String, String>>();
 
         adapter = new
@@ -125,13 +119,15 @@ public class Tuiku extends AppCompatActivity {
                                                     {
                                                         @Override
                                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                            isSelected=true;
                                                             showToast(lists.get(position).get("name"));
 //                outEditText.setText(lists.get(position).get("name"));
                                                             ghs = lists.get(position).get("id");
                                                             ghsname = lists.get(position).get("name");
                                                             outEditText.setText(ghsname);
                                                             outGongyingshangList.setVisibility(View.GONE);
-                                                            client.cancelRequests(Tuiku.this, true);
+
+
                                                         }
                                                     }
 
@@ -191,26 +187,27 @@ public class Tuiku extends AppCompatActivity {
                                                        @Override
                                                        public void onTextChanged(CharSequence s, int start, int before, int count) {
                                                            String str = s.toString();
-                                                           if (str.length() > 0) {
+                                                           if (str.length() > 0&&isSelected==false) {
                                                                RequestParams params = new RequestParams();
                                                                params.put("Id", str);
                                                                params.put("top", "10");
-                                                               client.cancelRequests(Tuiku.this, true);
-                                                               client.post(Tuiku.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/GetSupplier", params, new AsyncHttpResponseHandler() {
+//                                                               client.cancelRequests(Tuiku.this, true);
+                                                               MyClient.cancleClient(Tuiku.this);
+                                                               MyClient.post( Tuiku.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=GetSupplier", params, new AsyncHttpResponseHandler() {
                                                                            @Override
                                                                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                                                if (statusCode == 200) {
-                                                                                   String info = "";
+//                                                                                   String info = "";
                                                                                    String text = new String(responseBody);
                                                                                    Log.d("zhang", text + ">>>>>zhang");
-                                                                                   try {
-                                                                                       Document document = DocumentHelper.parseText(text);
-                                                                                       Element element = document.getRootElement();
-                                                                                       info = element.getText();
+//                                                                                   try {
+//                                                                                       Document document = DocumentHelper.parseText(text);
+//                                                                                       Element element = document.getRootElement();
+//                                                                                       info = element.getText();
                                                                                        Gson gson = new Gson();
                                                                                        Type type = new TypeToken<List<KeHu>>() {
                                                                                        }.getType();
-                                                                                       List<KeHu> keHus = gson.fromJson(info, type);
+                                                                                       List<KeHu> keHus = gson.fromJson(text, type);
                                                                                        String[] temp = new String[keHus.size()];
                                                                                        if (keHus.size() > 0) {
                                                                                            outGongyingshangList.setVisibility(View.VISIBLE);
@@ -229,9 +226,9 @@ public class Tuiku extends AppCompatActivity {
                                                                                            outGongyingshangList.setVisibility(View.GONE);
                                                                                        }
 
-                                                                                   } catch (DocumentException de) {
-                                                                                       Log.e("de", de.toString());
-                                                                                   }
+//                                                                                   } catch (DocumentException de) {
+//                                                                                       Log.e("de", de.toString());
+//                                                                                   }
                                                                                }
 
                                                                            }
@@ -248,6 +245,7 @@ public class Tuiku extends AppCompatActivity {
                                                            } else {
                                                                outGongyingshangList.setVisibility(View.GONE);
                                                            }
+                                                           isSelected=false;
                                                        }
 
                                                        @Override
@@ -295,5 +293,11 @@ public class Tuiku extends AppCompatActivity {
             mToast.setText(msg);
         }
         mToast.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyClient.cancleClient(Tuiku.this);
     }
 }

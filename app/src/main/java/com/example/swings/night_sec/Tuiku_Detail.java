@@ -27,14 +27,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
@@ -64,7 +58,7 @@ public class Tuiku_Detail extends AppCompatActivity {
     Button outBtnCancle;
     @InjectView(R.id.out_btn_ok)
     Button outBtnOk;
-    private static AsyncHttpClient client;
+//    private static AsyncHttpClient client;
     @InjectView(R.id.sacn_num)
     TextView sacnNum;
     @InjectView(R.id.out_ll_bottom)
@@ -88,7 +82,7 @@ public class Tuiku_Detail extends AppCompatActivity {
         outBtnCancle.setText("返回");
         outEditText.setHint("请扫描退库产品条码");
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        client = new AsyncHttpClient();
+//        client = new AsyncHttpClient();
         ghs = getIntent().getStringExtra("ghs");
         ghsname = getIntent().getStringExtra("ghsname");
         ck = getIntent().getStringExtra("ck");
@@ -107,8 +101,9 @@ public class Tuiku_Detail extends AppCompatActivity {
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                client.cancelRequests(Tuiku_Detail.this, true);
+//                client.cancelRequests(Tuiku_Detail.this, true);
                 showToast("已取消上传");
+                MyClient.cancleClient(Tuiku_Detail.this);
             }
         });
         sacnChepai.setVisibility(View.GONE);
@@ -160,28 +155,28 @@ public class Tuiku_Detail extends AppCompatActivity {
                                                 progressDialog.setCancelable(true);
                                                 progressDialog.show();
                                                 //设置重复请求次数，间隔
-                                                client.setMaxRetriesAndTimeout(5, 3000);
-                                                client.setTimeout(5 * 1000);
+//                                                client.setMaxRetriesAndTimeout(5, 3000);
+//                                                client.setTimeout(5 * 1000);
                                                 //设置超时时间，默认10s
-                                                client.post(Tuiku_Detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/Service1.asmx/AddReturnStore", params, new AsyncHttpResponseHandler() {
+                                                MyClient.post(Tuiku_Detail.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=AddReturnStore", params, new AsyncHttpResponseHandler() {
                                                     @Override
                                                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                                         if (statusCode == 200) {
                                                             progressDialog.dismiss();
-                                                            String info = "";
+//                                                            String info = "";
                                                             String text = new String(responseBody);
                                                             Log.d("zhang", text + ">>>>>zhang");
-                                                            try {
-                                                                Document document = DocumentHelper.parseText(text);
-                                                                Element element = document.getRootElement();
-                                                                info = element.getText();
-
-                                                            } catch (DocumentException de) {
-                                                                Log.e("de", de.toString());
-                                                            }
-                                                            showToast(info);
+//                                                            try {
+//                                                                Document document = DocumentHelper.parseText(text);
+//                                                                Element element = document.getRootElement();
+//                                                                info = element.getText();
+//
+//                                                            } catch (DocumentException de) {
+//                                                                Log.e("de", de.toString());
+//                                                            }
+                                                            showToast(text);
                                                             barcodes = null;
-                                                            if("\"成功\"".equals(info)){
+                                                            if("\"成功\"".equals(text)){
                                                                 finish();
                                                             }
                                                         }
@@ -406,6 +401,7 @@ public class Tuiku_Detail extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyClient.cancleClient(Tuiku_Detail.this);
     }
 
     @Override
