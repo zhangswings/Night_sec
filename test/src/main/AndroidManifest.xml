@@ -3,7 +3,7 @@
     package="com.example.test" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,15 @@
         <activity
             android:name=".AsyncActivity"
             android:label="@string/title_activity_async" >
-
         </activity>
         <activity
             android:name=".SideActivity"
             android:label="@string/title_activity_side" >
+
+        </activity>
+        <activity
+            android:name=".DatePickerActivity"
+            android:label="@string/title_activity_date_picker" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

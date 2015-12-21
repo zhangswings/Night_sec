@@ -177,6 +177,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_content"
@@ -201,9 +202,21 @@
             android:textColor="#ff311b"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-    </LinearLayout>
 
+    </LinearLayout>
+    <Button
+        android:background="@drawable/btn_lightred_green"
+        android:layout_below="@id/ll_info"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:onClick="onDate"
+        android:id="@+id/btn_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <LinearLayout
+        android:id="@+id/bto_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

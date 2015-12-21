@@ -15,4 +15,5 @@
         android:paddingRight="8dip">
     </com.yydcdut.sdlv.SlideAndDragListView>
 
+
 </RelativeLayout>

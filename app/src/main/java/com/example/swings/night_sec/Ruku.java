@@ -1,6 +1,7 @@
 package com.example.swings.night_sec;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,14 +93,19 @@ public class Ruku extends AppCompatActivity {
     Button ruBtnCancle;
     @InjectView(R.id.ip_btn_ok)
     Button ruBtnOk;
-//    private static AsyncHttpClient client;
-    private  TextView mScanNum;
+    @InjectView(R.id.btn_date)
+    Button btnDate;
+    //    private static AsyncHttpClient client;
+    private TextView mScanNum;
     ProgressDialog progressDialog;
     SharedPreferences preferences;
-    private List<Map<String, String>> lists=new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> lists = new ArrayList<Map<String, String>>();
     private String chejian_str;
     private String banzu_str;
-
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private Calendar calendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +113,39 @@ public class Ruku extends AppCompatActivity {
         setContentView(R.layout.activity_ruku);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         ButterKnife.inject(this);
-        mScanNum= (TextView) findViewById(R.id.scan_num);
+        mScanNum = (TextView) findViewById(R.id.scan_num);
         mScanNum.setText(lists.size() + "件");
+        calendar=Calendar.getInstance();
+        mYear=calendar.get(Calendar.YEAR);
+        mMonth=calendar.get(Calendar.MONTH);
+        mDay=calendar.get(Calendar.DAY_OF_MONTH);
+        btnDate.setText(new StringBuilder().append(mYear).append("-")
+                .append((mMonth + 1) < 10 ? 0 + (mMonth + 1) : (mMonth + 1))
+                .append("-")
+                .append((mDay < 10) ? 0 + mDay : mDay) );
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(Ruku.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int day) {
+                        // TODO Auto-generated method stub
+                        mYear = year;
+                        mMonth = month;
+                        mDay = day;
+                        //更新EditText控件日期 小于10加0
+                        btnDate.setText(new StringBuilder().append(mYear).append("-")
+                                .append((mMonth + 1) < 10 ? "0" + (mMonth + 1) : (mMonth + 1))
+                                .append("-")
+                                .append((mDay < 10) ? "0" + mDay : mDay) );
+                      showToast(btnDate.getText().toString());
+                    }
+
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH) ).show();
+
+            }
+        });
 //        client = new AsyncHttpClient();
         //设置重复请求次数，间隔
 //        client.setMaxRetriesAndTimeout(3, 2000);
@@ -204,14 +242,14 @@ public class Ruku extends AppCompatActivity {
                     //传递参数
 
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String builder_Content = preferences.getString("user", "admin") + "," + format.format(new Date()) + "," + chejian_str + "," + banzu_str;
+                    String builder_Content = preferences.getString("user", "admin") + "," + btnDate + "," + chejian_str + "," + banzu_str;
 //                                //Content:(oper,time,store,group) 操作人、上传时间、仓库(车间)、班组
                     Log.d("content", builder_Content);
                     Log.d("detail", builder_Detail);
 //                                //Detail:(bianma,tiaoma,weight,lenght) 编码、条码、重量、长度
                     params.put("Content", builder_Content);
                     params.put("Detail", builder_Detail);
-                    MyClient.post( Ruku.this,"http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_InStore", params, new AsyncHttpResponseHandler() {
+                    MyClient.post(Ruku.this, "http://" + preferences.getString("ip", "192.168.0.187") + ":8092/JsonHandler.ashx?doc=PDA_InStore", params, new AsyncHttpResponseHandler() {
 
 
                         @Override
@@ -308,7 +346,7 @@ public class Ruku extends AppCompatActivity {
             byte[] barcode = intent.getByteArrayExtra("barocode");
             int barocodelen = intent.getIntExtra("length", 0);
             byte temp = intent.getByteExtra("barcodeType", (byte) 0);
-            android.util.Log.i("debug", "----codetype--" + temp);
+            Log.i("debug", "----codetype--" + temp);
             try {
                 // byte转码GBK
                 barcodeStr = new String(barcode, 0, barocodelen, "GBK");
@@ -537,7 +575,7 @@ public class Ruku extends AppCompatActivity {
                 editTextRuKezhong.setText(lists.get(lists.size() - 1).get("kezhong"));
                 editTextRuWeight.setText(lists.get(lists.size() - 1).get("weight"));
                 editTextRuLength.setText(lists.get(lists.size() - 1).get("length"));
-                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian")+"/"+lists.get(lists.size() - 1).get("banzu"));
+                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian") + "/" + lists.get(lists.size() - 1).get("banzu"));
 
             } else if (lists.size() == 1) {
                 thisEditText.setText(lists.get(lists.size() - 1).get("tiaoma"));
@@ -548,7 +586,7 @@ public class Ruku extends AppCompatActivity {
                 editTextRuKezhong.setText(lists.get(lists.size() - 1).get("kezhong"));
                 editTextRuWeight.setText(lists.get(lists.size() - 1).get("weight"));
                 editTextRuLength.setText(lists.get(lists.size() - 1).get("length"));
-                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian")+"/"+lists.get(lists.size() - 1).get("banzu"));
+                editTextRuCjbz.setText(lists.get(lists.size() - 1).get("chejian") + "/" + lists.get(lists.size() - 1).get("banzu"));
 
 
             }
