@@ -12,6 +12,7 @@
         android:id="@+id/dp_date"
         android:layout_width="wrap_content"
         android:calendarViewShown="false"
+
         android:layout_height="50dp" />
     <Button
         android:onClick="onDate"
